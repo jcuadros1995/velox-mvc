@@ -4,7 +4,7 @@ class CartController extends Controller
 {
     public function index(): void
     {
-        $this->view('layouts/public_layout', [
+        $this->view('layouts/module_public_layout', [
             'contentView' => __DIR__ . '/../Views/store/cart.php',
             'title' => 'Mi carrito | ' . SiteConfig::siteName()
         ]);
@@ -24,7 +24,7 @@ class CartController extends Controller
 
         $branches = (new BranchRepository())->getActiveBranches();
 
-        $this->view('layouts/public_layout', [
+        $this->view('layouts/module_public_layout', [
             'contentView' => __DIR__ . '/../Views/store/checkout.php',
             'title' => 'Finalizar compra | ' . SiteConfig::siteName(),
             'storeCustomer' => $user,
@@ -50,7 +50,7 @@ class CartController extends Controller
             ? (new PaymentRepository())->findForCustomer($reference, (int) $user['id'])
             : null;
 
-        $this->view('layouts/public_layout', [
+        $this->view('layouts/module_public_layout', [
             'contentView' => __DIR__ . '/../Views/store/payment-result.php',
             'title' => 'Estado de tu pago | ' . SiteConfig::siteName(),
             'paymentResult' => $payment,
