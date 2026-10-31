@@ -154,38 +154,13 @@ class AuthController extends Controller
      */
     public function register(): void
     {
-        $input = $this->getJsonInput();
-
-        if (
-            empty($input['email']) ||
-            empty($input['password']) ||
-            empty($input['first_name'])
-        ) {
-            $this->json([
-                'success' => false,
-                'message' => 'Nombre, email y contraseña son obligatorios'
-            ], 400);
-
-            return;
-        }
-
-        $email = strtolower(trim($input['email']));
-
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $this->json([
-                'success' => false,
-                'message' => 'El correo electrónico no es válido'
-            ], 400);
-
-            return;
-        }
-
         try {
+            $input = $this->getJsonInput();
             $userId = $this->authService->register($input);
 
             $this->json([
                 'success' => true,
-                'message' => 'Usuario registrado con éxito',
+                'message' => 'Tu cuenta fue creada correctamente.',
                 'user_id' => $userId
             ], 201);
 
@@ -219,7 +194,7 @@ class AuthController extends Controller
 
             $this->json([
                 'success' => false,
-                'message' => 'Error interno del servidor'
+                'message' => 'No fue posible crear la cuenta en este momento.'
             ], 500);
         }
     }
