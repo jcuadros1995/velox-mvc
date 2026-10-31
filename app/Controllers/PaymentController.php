@@ -10,6 +10,40 @@ class PaymentController extends Controller
         $this->paymentService = new PaymentService();
     }
 
+
+    /**
+     * POST /api/payments/preflight
+     * Comprueba la configuración antes de registrar el pedido.
+     */
+    public function preflight(): void
+    {
+        $user = Auth::user();
+
+        if (!$user || strtolower((string) ($user['role_name'] ?? '')) !== 'customer') {
+            $this->json(['success' => false, 'message' => 'Solo los clientes pueden iniciar una compra.'], 403);
+            return;
+        }
+
+        try {
+            $this->json([
+                'success' => true,
+                'data' => $this->paymentService->assertCheckoutAvailable()
+            ]);
+        } catch (DomainException $e) {
+            $status = (int) $e->getCode();
+            $this->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $status >= 400 && $status <= 599 ? $status : 503);
+        } catch (Throwable $e) {
+            error_log('[PAYMENT_PREFLIGHT_ERROR] ' . $e->getMessage());
+            $this->json([
+                'success' => false,
+                'message' => 'No fue posible comprobar la disponibilidad de la pasarela.'
+            ], 500);
+        }
+    }
+
     /**
      * POST /api/payments/checkout
      */
