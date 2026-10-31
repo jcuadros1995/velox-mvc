@@ -47,12 +47,22 @@ class StoreController extends Controller
             $products = [];
         }
 
+        $selectedCategory = max(0, (int) ($_GET['categoria'] ?? 0));
+        $knownCategoryIds = array_map(
+            static fn (array $category): int => (int) ($category['id'] ?? 0),
+            $categories
+        );
+
+        if ($selectedCategory > 0 && !in_array($selectedCategory, $knownCategoryIds, true)) {
+            $selectedCategory = 0;
+        }
+
         $this->view('layouts/module_public_layout', [
             'title' => 'Tienda | ' . SiteConfig::siteName(),
             'contentView' => __DIR__ . '/../Views/store/products.php',
             'storeCategories' => $categories,
             'storeProducts' => $products,
-            'storeSelectedCategory' => max(0, (int) ($_GET['categoria'] ?? 0)),
+            'storeSelectedCategory' => $selectedCategory,
             'storeCatalogError' => $catalogError,
             'script' => 'store-products'
         ]);
