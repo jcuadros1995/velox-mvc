@@ -12,23 +12,32 @@ class CartController extends Controller
 
     public function checkout(): void
     {
-        $user = Auth::user();
-
-        if (!$user) {
-            $this->redirect('/login');
+        // Recupera una sesión persistente, si existe, sin bloquear
+        // la visualización del checkout para visitantes.
+        if (!Auth::check()) {
+            Auth::attemptRemember();
         }
 
-        if (strtolower((string) ($user['role_name'] ?? '')) !== 'customer') {
+        $user = Auth::user();
+
+        // Las cuentas administrativas no realizan compras públicas.
+        if (
+            $user &&
+            strtolower((string) ($user['role_name'] ?? '')) !== 'customer'
+        ) {
             $this->redirect('/');
+            return;
         }
 
         $branches = (new BranchRepository())->getActiveBranches();
+        $isAuthenticatedCustomer = $user !== null;
 
         $this->view('layouts/module_public_layout', [
             'contentView' => __DIR__ . '/../Views/store/checkout.php',
             'title' => 'Finalizar compra | ' . SiteConfig::siteName(),
             'storeCustomer' => $user,
             'storeBranches' => $branches,
+            'storeIsAuthenticated' => $isAuthenticatedCustomer,
             'script' => 'checkout'
         ]);
     }
