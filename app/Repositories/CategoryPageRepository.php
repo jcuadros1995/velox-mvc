@@ -74,6 +74,83 @@ class CategoryPageRepository
     }
 
     /**
+     * Obtiene exclusivamente las páginas de categorías publicadas
+     * para construir el catálogo principal de la tienda.
+     *
+     * Incluye imagen favorita, categoría padre y cantidad de
+     * productos activos y disponibles (incluye hijos directos).
+     */
+    public function getPublishedMenuPages(): array
+    {
+        $sql = "
+            SELECT
+                c.id AS category_id,
+                c.parent_id,
+                c.name AS category_name,
+                c.slug AS category_slug,
+                c.description AS category_description,
+                parent_category.name AS parent_name,
+
+                cp.id AS page_id,
+                cp.slug AS page_slug,
+                cp.title AS page_title,
+                cp.h1 AS page_h1,
+                cp.intro_text AS page_description,
+                cp.meta_description,
+
+                COALESCE(
+                    (
+                        SELECT cpi.image_path
+                        FROM category_page_images cpi
+                        WHERE cpi.category_page_id = cp.id
+                          AND cpi.is_active = 1
+                        ORDER BY
+                            cpi.is_favorite DESC,
+                            cpi.display_order ASC,
+                            cpi.id ASC
+                        LIMIT 1
+                    ),
+                    NULLIF(cp.hero_image, '')
+                ) AS cover_image,
+
+                (
+                    SELECT COUNT(*)
+                    FROM items i
+                    INNER JOIN categories item_category
+                        ON item_category.id = i.category_id
+                    WHERE (
+                        i.category_id = c.id
+                        OR item_category.parent_id = c.id
+                    )
+                      AND i.is_active = 1
+                      AND i.is_available = 1
+                      AND item_category.is_active = 1
+                ) AS product_count
+
+            FROM categories c
+
+            INNER JOIN category_pages cp
+                ON cp.category_id = c.id
+
+            LEFT JOIN categories parent_category
+                ON parent_category.id = c.parent_id
+
+            WHERE c.is_active = 1
+              AND cp.is_published = 1
+
+            ORDER BY
+                c.parent_id IS NOT NULL ASC,
+                COALESCE(parent_category.name, c.name) ASC,
+                c.name ASC,
+                cp.title ASC
+        ";
+
+        return $this->db
+            ->query($sql)
+            ->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
      * Obtiene una categoría.
      */
     public function getCategory(int $categoryId): ?array
