@@ -678,7 +678,59 @@ class BranchRepository
 
             /*
              * =================================================
-             * 3. ÓRDENES
+             * 3. REGISTROS DE CUPONES Y PAGOS DEL ECOMMERCE
+             *
+             * Estas tablas no tienen FK física para mantener
+             * compatibilidad con instalaciones existentes.
+             * Se limpian antes de eliminar los pedidos.
+             * =================================================
+             */
+
+            $stmt = $this->db->prepare("
+                UPDATE coupons c
+                SET usage_count = GREATEST(
+                    usage_count - (
+                        SELECT COUNT(*)
+                        FROM coupon_redemptions cr
+                        INNER JOIN orders o ON o.id = cr.order_id
+                        WHERE o.branch_id = :branch_id_usage
+                          AND cr.coupon_id = c.id
+                    ),
+                    0
+                )
+                WHERE EXISTS (
+                    SELECT 1
+                    FROM coupon_redemptions cr
+                    INNER JOIN orders o ON o.id = cr.order_id
+                    WHERE o.branch_id = :branch_id_exists
+                      AND cr.coupon_id = c.id
+                )
+            ");
+            $stmt->execute([
+                'branch_id_usage' => $branchId,
+                'branch_id_exists' => $branchId
+            ]);
+
+            $stmt = $this->db->prepare("
+                DELETE pt
+                FROM payment_transactions pt
+                INNER JOIN orders o ON o.id = pt.order_id
+                WHERE o.branch_id = :branch_id
+            ");
+            $stmt->execute(['branch_id' => $branchId]);
+
+            $stmt = $this->db->prepare("
+                DELETE cr
+                FROM coupon_redemptions cr
+                INNER JOIN orders o ON o.id = cr.order_id
+                WHERE o.branch_id = :branch_id
+            ");
+            $stmt->execute(['branch_id' => $branchId]);
+
+
+            /*
+             * =================================================
+             * 4. ÓRDENES
              *
              * order_items y payments tienen
              * ON DELETE CASCADE desde orders.
