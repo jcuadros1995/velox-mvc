@@ -156,12 +156,6 @@ foreach (array_unique($modulePublicCss) as $cssFile):
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= APP_URL ?>/public/js/toast.js"></script>
 
-<?php if (isset($script)): ?>
-    <script src="<?= APP_URL ?>/public/js/<?= $script ?>.js"></script>
-<?php endif; ?>
-
-
-
 <?php if (isset($script) && preg_match('/^[a-z0-9_-]+$/i', (string)$script)): ?>
 <script src="<?= APP_URL ?>/public/js/<?= htmlspecialchars($script, ENT_QUOTES, 'UTF-8') ?>.js"></script>
 <?php endif; ?>
