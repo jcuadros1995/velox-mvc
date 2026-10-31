@@ -19,6 +19,8 @@ $homeUrl = APP_URL;
 $reservationsUrl = APP_URL . '/reservas';
 $loginUrl = APP_URL . '/login';
 $searchReservationUrl = APP_URL . '/consultar-reserva';
+$moduleStoreUrl = APP_URL . '/tienda';
+$moduleStoreActive = (strpos($moduleCurrentPath, '/tienda') !== false);
 $moduleMenuUrl = APP_URL . '/menu';
 $moduleBranchesUrl = APP_URL . '/sedes';
 $moduleEventsUrl = APP_URL . '/eventos';
@@ -323,6 +325,11 @@ $moduleContactActive = (strpos($moduleCurrentPath, '/pages/contact') !== false);
                 </li>
 
 
+                <li class="nav-item">
+                    <a class="nav-link <?= $moduleStoreActive ? 'active' : '' ?>" href="<?= htmlspecialchars($moduleStoreUrl, ENT_QUOTES, 'UTF-8') ?>" <?= $moduleStoreActive ? 'aria-current="page"' : '' ?>>
+                        <i class="fa-solid fa-store me-1"></i> Tienda
+                    </a>
+                </li>
                 <li class="nav-item">
                     <a class="nav-link <?= $moduleMenuActive ? 'active' : '' ?>" href="<?= htmlspecialchars($moduleMenuUrl, ENT_QUOTES, 'UTF-8') ?>">
                         <i class="fa-solid fa-utensils me-1"></i> Menú
