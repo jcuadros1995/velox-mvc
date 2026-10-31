@@ -22,6 +22,19 @@ class AuthController extends Controller
     }
 
     /**
+     * GET /registro
+     *
+     * Formulario público para crear cuentas de cliente.
+     */
+    public function showRegister(): void
+    {
+        $this->view('layouts/public_layout', [
+            'contentView' => __DIR__ . '/../Views/auth/register.php',
+            'script' => 'register'
+        ]);
+    }
+
+    /**
      * GET /recuperar-contrasena
      */
     public function showForgotPassword(): void
@@ -176,11 +189,23 @@ class AuthController extends Controller
                 'user_id' => $userId
             ], 201);
 
-        } catch (DomainException $e) {
+        } catch (InvalidArgumentException $e) {
             $this->json([
                 'success' => false,
                 'message' => $e->getMessage()
-            ], $e->getCode() ?: 400);
+            ], 422);
+
+        } catch (DomainException $e) {
+            $statusCode = (int) $e->getCode();
+
+            if ($statusCode < 400 || $statusCode > 599) {
+                $statusCode = 400;
+            }
+
+            $this->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $statusCode);
 
         } catch (Throwable $e) {
             error_log(
