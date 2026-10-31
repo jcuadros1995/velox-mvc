@@ -1,58 +1,180 @@
 <?php
 // services/Gateways/WompiAdapter.php
 
-class WompiAdapter implements PaymentGatewayInterface {
+class WompiAdapter implements PaymentGatewayInterface
+{
     private string $publicKey;
     private string $privateKey;
+    private string $integritySecret;
     private string $eventsSecret;
     private bool $isSandbox;
 
-    public function __construct(array $config) {
-        $this->publicKey    = $config['public_key'] ?? '';
-        $this->privateKey   = $config['private_key'] ?? '';
-        $this->eventsSecret = $config['events_secret'] ?? '';
-        $this->isSandbox    = $config['is_sandbox'] ?? true;
+    public function __construct(array $config)
+    {
+        $this->publicKey = (string) ($config['public_key'] ?? '');
+        $this->privateKey = (string) ($config['private_key'] ?? '');
+        $this->integritySecret = (string) ($config['integrity_secret'] ?? '');
+        $this->eventsSecret = (string) ($config['events_secret'] ?? '');
+        $this->isSandbox = (bool) ($config['is_sandbox'] ?? true);
     }
 
-    public function createPayment(array $paymentData): array {
-        // En Wompi normalmente generas el widget o transacción con la firma de integridad SHA256
-        $reference = $paymentData['reference'];
-        $amountInCents = (int) ($paymentData['amount'] * 100); // Wompi requiere montos en centavos
-        $currency = $paymentData['currency'] ?? 'COP';
+    /**
+     * Prepara los parámetros para el widget / checkout web de Wompi.
+     */
+    public function createPayment(array $paymentData): array
+    {
+        if ($this->publicKey === '' || $this->integritySecret === '') {
+            throw new DomainException(
+                'La configuración de integridad de Wompi está incompleta.',
+                503
+            );
+        }
 
-        // Generar firma SHA256: Referencia + MontoEnCentavos + Moneda + EventsSecret
-        $signatureRaw = $reference . $amountInCents . $currency . $this->eventsSecret;
-        $signature = hash('sha256', $signatureRaw);
+        $reference = trim((string) ($paymentData['reference'] ?? ''));
+        $amount = (float) ($paymentData['amount'] ?? 0);
+        $amountInCents = (int) round($amount * 100);
+        $currency = (string) ($paymentData['currency'] ?? 'COP');
+
+        if ($reference === '' || $amountInCents <= 0 || $currency !== 'COP') {
+            throw new InvalidArgumentException(
+                'Los datos enviados a Wompi no son válidos.'
+            );
+        }
+
+        // La firma del checkout utiliza el secreto de integridad,
+        // que es diferente del secreto utilizado para los webhooks.
+        $signatureRaw =
+            $reference .
+            $amountInCents .
+            $currency .
+            $this->integritySecret;
 
         return [
-            'status'     => 'ready',
-            'gateway'    => 'wompi',
+            'status' => 'ready',
+            'gateway' => 'wompi',
+            'environment' => $this->isSandbox ? 'sandbox' : 'production',
             'public_key' => $this->publicKey,
-            'reference'  => $reference,
+            'reference' => $reference,
             'amount_in_cents' => $amountInCents,
-            'currency'   => $currency,
-            'signature'  => $signature
+            'currency' => $currency,
+            'signature' => hash('sha256', $signatureRaw)
         ];
     }
 
-    public function handleWebhook(array $payload): array {
-        // Validar el evento traído por la llamada webhook
-        $event = $payload['event'] ?? '';
-        $transaction = $payload['data']['transaction'] ?? [];
+    /**
+     * Valida la firma del evento antes de aceptar su contenido.
+     */
+    public function handleWebhook(array $payload): array
+    {
+        if ($this->eventsSecret === '') {
+            throw new DomainException(
+                'El secreto de eventos de Wompi no está configurado.',
+                503
+            );
+        }
 
-        $status = match ($transaction['status'] ?? '') {
+        if (($payload['event'] ?? '') !== 'transaction.updated') {
+            throw new InvalidArgumentException(
+                'Tipo de evento de Wompi no soportado.'
+            );
+        }
+
+        $signature = $payload['signature'] ?? [];
+        $properties = $signature['properties'] ?? [];
+        $checksum = strtolower(trim((string) ($signature['checksum'] ?? '')));
+        $timestamp = $payload['timestamp'] ?? null;
+        $data = $payload['data'] ?? [];
+
+        if (
+            !is_array($properties) ||
+            empty($properties) ||
+            !is_array($data) ||
+            !is_numeric($timestamp) ||
+            !preg_match('/^[a-f0-9]{64}$/', $checksum)
+        ) {
+            throw new InvalidArgumentException(
+                'La firma del evento de Wompi está incompleta.'
+            );
+        }
+
+        $signatureRaw = '';
+
+        foreach ($properties as $property) {
+            if (!is_string($property) || trim($property) === '') {
+                throw new InvalidArgumentException(
+                    'La firma del evento contiene una propiedad inválida.'
+                );
+            }
+
+            $value = $this->getNestedValue(
+                $data,
+                $property
+            );
+
+            if (!is_scalar($value)) {
+                throw new InvalidArgumentException(
+                    'No fue posible validar una propiedad de la firma del evento.'
+                );
+            }
+
+            $signatureRaw .= (string) $value;
+        }
+
+        $signatureRaw .= (string) $timestamp . $this->eventsSecret;
+        $expectedChecksum = hash('sha256', $signatureRaw);
+
+        if (!hash_equals($expectedChecksum, $checksum)) {
+            throw new DomainException(
+                'La firma del evento de Wompi no es válida.',
+                401
+            );
+        }
+
+        $transaction = $data['transaction'] ?? [];
+
+        if (!is_array($transaction)) {
+            throw new InvalidArgumentException(
+                'El evento de Wompi no contiene una transacción válida.'
+            );
+        }
+
+        $status = match (strtoupper((string) ($transaction['status'] ?? ''))) {
             'APPROVED' => 'approved',
             'DECLINED' => 'declined',
-            'VOIDED'   => 'refunded',
-            default    => 'error'
+            'VOIDED' => 'refunded',
+            'ERROR' => 'error',
+            default => 'pending'
         };
 
         return [
-            'reference'            => $transaction['reference'] ?? null,
-            'gateway_reference'    => $transaction['id'] ?? null,
-            'status'               => $status,
-            'amount'               => isset($transaction['amount_in_cents']) ? ($transaction['amount_in_cents'] / 100) : 0,
-            'raw'                  => $payload
+            'reference' => $transaction['reference'] ?? null,
+            'gateway_reference' => $transaction['id'] ?? null,
+            'status' => $status,
+            'amount' => isset($transaction['amount_in_cents'])
+                ? ((float) $transaction['amount_in_cents'] / 100)
+                : 0,
+            'currency' => $transaction['currency'] ?? null,
+            'raw' => $payload
         ];
+    }
+
+    /**
+     * Resuelve propiedades del evento con formato transaction.id.
+     */
+    private function getNestedValue(
+        array $source,
+        string $path
+    ): mixed {
+        $value = $source;
+
+        foreach (explode('.', $path) as $segment) {
+            if (!is_array($value) || !array_key_exists($segment, $value)) {
+                return null;
+            }
+
+            $value = $value[$segment];
+        }
+
+        return $value;
     }
 }
