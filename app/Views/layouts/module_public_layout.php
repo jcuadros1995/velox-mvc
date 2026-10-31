@@ -127,7 +127,8 @@ if ($modulePublicBase !== '' && $modulePublicBase !== '/' && str_starts_with($mo
     $modulePublicPath = substr($modulePublicPath, strlen($modulePublicBase));
 }
 $modulePublicPath = '/' . trim($modulePublicPath, '/');
-$modulePublicCss = [];\nif (str_starts_with($modulePublicPath, '/mi-cuenta')) {\n    $modulePublicCss[] = 'customer-account.css';\n}
+$modulePublicCss = [];
+if (str_starts_with($modulePublicPath, '/mi-cuenta')) {\n    $modulePublicCss[] = 'customer-account.css';\n}
 if (str_starts_with($modulePublicPath, '/mi-cuenta')) {
     $modulePublicCss[] = 'customer-account.css';
 }
