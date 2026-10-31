@@ -128,7 +128,8 @@
             'redirect-url': checkout.redirect_url,
             'customer-data:email': checkout.customer_email || '',
             'customer-data:full-name': checkout.customer_full_name || '',
-            'customer-data:phone-number': checkout.customer_phone || ''
+            'customer-data:phone-number': checkout.customer_phone || '',
+            'customer-data:phone-number-prefix': checkout.customer_phone_prefix || ''
         };
 
         Object.entries(fields).forEach(([name,value]) => {
