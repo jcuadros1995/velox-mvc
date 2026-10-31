@@ -15,33 +15,62 @@ class OrderController extends Controller
      */
     public function create(): void
     {
-        $input = $this->getInput();
+        $user = Auth::user();
 
         if (
-            empty($input['customer_id']) ||
-            empty($input['items']) ||
-            !is_array($input['items'])
+            !$user ||
+            strtolower((string) ($user['role_name'] ?? '')) !== 'customer'
         ) {
             $this->json([
-                'error' => 'Datos de pedido inválidos o sin ítems'
-            ], 400);
+                'success' => false,
+                'message' => 'Solo los clientes pueden realizar pedidos desde la tienda.'
+            ], 403);
 
             return;
         }
 
+        $input = $this->getInput();
+
         try {
-            $result = $this->orderService->createOrder($input);
+            $result = $this->orderService->createOrder(
+                $input,
+                (int) $user['id']
+            );
 
             $this->json([
-                'status'   => 'success',
-                'message'  => 'Pedido registrado exitosamente',
-                'order_id' => $result['order_id'],
-                'total'    => $result['total']
+                'success' => true,
+                'message' => 'Pedido registrado exitosamente.',
+                'data' => $result
             ], 201);
 
-        } catch (Exception $e) {
+        } catch (InvalidArgumentException $e) {
             $this->json([
-                'error' => 'Error al procesar la orden: ' . $e->getMessage()
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 400);
+
+        } catch (DomainException $e) {
+            $statusCode = (int) $e->getCode();
+
+            if ($statusCode < 400 || $statusCode > 599) {
+                $statusCode = 409;
+            }
+
+            $this->json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], $statusCode);
+
+        } catch (Throwable $e) {
+            error_log(
+                '[PUBLIC_ORDER_CREATE_ERROR] ' .
+                $e->getMessage() . ' | ' .
+                $e->getFile() . ':' . $e->getLine()
+            );
+
+            $this->json([
+                'success' => false,
+                'message' => 'No fue posible registrar el pedido en este momento.'
             ], 500);
         }
     }
@@ -51,21 +80,39 @@ class OrderController extends Controller
      */
     public function show(): void
     {
+        $user = Auth::user();
+
+        if (
+            !$user ||
+            strtolower((string) ($user['role_name'] ?? '')) !== 'customer'
+        ) {
+            $this->json([
+                'success' => false,
+                'message' => 'No tienes autorización para consultar pedidos.'
+            ], 403);
+
+            return;
+        }
+
         $id = (int) ($_GET['id'] ?? 0);
 
-        $order = $this->orderService->getOrderDetails($id);
+        $order = $this->orderService->getOrderDetails(
+            $id,
+            (int) $user['id']
+        );
 
         if (!$order) {
             $this->json([
-                'error' => 'Orden no encontrada'
+                'success' => false,
+                'message' => 'Pedido no encontrado.'
             ], 404);
 
             return;
         }
 
         $this->json([
-            'status' => 'success',
-            'data'   => $order
+            'success' => true,
+            'data' => $order
         ]);
     }
 
@@ -74,9 +121,13 @@ class OrderController extends Controller
      */
     private function getInput(): array
     {
-        return json_decode(
-            file_get_contents('php://input'),
-            true
-        ) ?? $_POST;
+        $rawInput = file_get_contents('php://input');
+        $decoded = json_decode($rawInput ?: '', true);
+
+        if (is_array($decoded)) {
+            return $decoded;
+        }
+
+        return is_array($_POST) ? $_POST : [];
     }
 }
