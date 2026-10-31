@@ -6,6 +6,11 @@
 $menuCategories = is_array($menuCategories ?? null) ? $menuCategories : [];
 $menuBurgerPage = is_array($menuBurgerPage ?? null) ? $menuBurgerPage : null;
 $menuPdfAvailable = !empty($menuPdfAvailable);
+$menuLowercase = static function (string $value): string {
+    return function_exists('mb_strtolower')
+        ? mb_strtolower($value, 'UTF-8')
+        : strtolower($value);
+};
 
 $resolveMenuImage = static function ($path): string {
     $path = trim(str_replace('\\', '/', (string) $path));
@@ -106,7 +111,7 @@ $menuPdfUrl = APP_URL . '/assets/docs/menu-burguer-town.pdf';
                     class="velox-menu-category-card velox-menu-category-card-featured"
                     href="<?= htmlspecialchars($burgerUrl, ENT_QUOTES, 'UTF-8') ?>"
                     data-menu-card
-                    data-menu-search="<?= htmlspecialchars(mb_strtolower('Hamburguesas recetas de la casa burgers', 'UTF-8'), ENT_QUOTES, 'UTF-8') ?>"
+                    data-menu-search="<?= htmlspecialchars($menuLowercase('Hamburguesas recetas de la casa burgers'), ENT_QUOTES, 'UTF-8') ?>"
                 >
                     <div class="velox-menu-category-image">
                         <img src="<?= htmlspecialchars($burgerImage, ENT_QUOTES, 'UTF-8') ?>" alt="Hamburguesas" loading="lazy">
@@ -127,9 +132,8 @@ $menuPdfUrl = APP_URL . '/assets/docs/menu-burguer-town.pdf';
                     $categoryDescription = trim((string) ($category['page_description'] ?? $category['category_description'] ?? ''));
                     $categoryImage = $resolveMenuImage($category['cover_image'] ?? '');
                     $categoryUrl = APP_URL . '/menu/' . rawurlencode((string) ($category['page_slug'] ?? ''));
-                    $categorySearch = mb_strtolower(
-                        $categoryName . ' ' . $categoryTitle . ' ' . $categoryDescription . ' ' . (string) ($category['parent_name'] ?? ''),
-                        'UTF-8'
+                    $categorySearch = $menuLowercase(
+                        $categoryName . ' ' . $categoryTitle . ' ' . $categoryDescription . ' ' . (string) ($category['parent_name'] ?? '')
                     );
                     ?>
                     <a
