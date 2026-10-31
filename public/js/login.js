@@ -7,8 +7,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
     initLoginForm();
     initTogglePassword();
+    showRegistrationFeedback();
 
 });
+
+
+/**
+ * Confirma al cliente que su cuenta fue creada.
+ */
+function showRegistrationFeedback() {
+    const params = new URLSearchParams(window.location.search);
+
+    if (params.get('registered') === '1') {
+        showToast(
+            'success',
+            'Tu cuenta fue creada correctamente. Ya puedes iniciar sesión.'
+        );
+    }
+}
 
 
 /**
