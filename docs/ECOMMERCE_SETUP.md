@@ -6,6 +6,7 @@ Antes de desplegar el código, ejecutar una sola vez:
 
 \`\`\`sql
 SOURCE database/migrations/20261031_store_cart_coupons_payments.sql;
+SOURCE database/migrations/20261031_store_fulfillment.sql;
 \`\`\`
 
 La migración crea:
