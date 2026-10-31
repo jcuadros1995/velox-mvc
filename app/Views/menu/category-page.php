@@ -1632,11 +1632,37 @@ $featuredIcons = [
                                 )
                             );
 
+                        $cartPriceOptions = $product['price_options'] ?? [];
+                        $cartHasComboPrice = (float) ($product['combo_price'] ?? 0) > 0;
+                        foreach ($cartPriceOptions as $cartOption) {
+                            if ((float) ($cartOption['combo_price'] ?? 0) > 0) {
+                                $cartHasComboPrice = true;
+                                break;
+                            }
+                        }
+
+                        $cartProductJson = json_encode(
+                            [
+                                'id' => (int) ($product['id'] ?? 0),
+                                'name' => (string) ($product['name'] ?? ''),
+                                'image' => $productImageUrl,
+                                'price' => (float) ($product['price'] ?? 0),
+                                'combo_price' => (float) ($product['combo_price'] ?? 0)
+                            ],
+                            JSON_UNESCAPED_UNICODE |
+                            JSON_UNESCAPED_SLASHES |
+                            JSON_HEX_APOS |
+                            JSON_HEX_QUOT |
+                            JSON_HEX_AMP |
+                            JSON_HEX_TAG
+                        );
+
                         ?>
 
 
                         <article
                                 class="bt-burger-classic-card"
+                                data-cart-product="<?= htmlspecialchars($cartProductJson ?: '{}', ENT_QUOTES, 'UTF-8') ?>"
                         >
 
 
@@ -2027,6 +2053,40 @@ $featuredIcons = [
 
                             <?php endif; ?>
 
+                            <div class="store-product-cart-controls">
+                                <?php if (!empty($cartPriceOptions)): ?>
+                                    <label class="store-product-cart-option-label">
+                                        Presentación
+                                        <select class="form-select" data-cart-option aria-label="Seleccionar presentación">
+                                            <?php foreach ($cartPriceOptions as $cartOption): ?>
+                                                <option
+                                                    value="<?= (int) ($cartOption['id'] ?? 0) ?>"
+                                                    data-price="<?= htmlspecialchars((string) ($cartOption['price'] ?? 0), ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-combo-price="<?= htmlspecialchars((string) ($cartOption['combo_price'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-label="<?= htmlspecialchars((string) ($cartOption['quantity_label'] ?? ($cartOption['quantity'] . ' unidades')), ENT_QUOTES, 'UTF-8') ?>"
+                                                    data-quantity="<?= (int) ($cartOption['quantity'] ?? 1) ?>"
+                                                >
+                                                    <?= htmlspecialchars((string) ($cartOption['quantity_label'] ?? ($cartOption['quantity'] . ' unidades')), ENT_QUOTES, 'UTF-8') ?>
+                                                </option>
+                                            <?php endforeach; ?>
+                                        </select>
+                                    </label>
+                                <?php endif; ?>
+
+                                <?php if ($showComboPrice && $cartHasComboPrice): ?>
+                                    <label class="store-product-cart-combo">
+                                        <input type="checkbox" data-cart-combo>
+                                        <span>Convertir en combo</span>
+                                    </label>
+                                <?php endif; ?>
+
+                                <div class="store-product-cart-actions">
+                                    <input class="form-control" type="number" min="1" max="99" value="1" data-cart-quantity aria-label="Cantidad">
+                                    <button type="button" class="btn store-product-add-button" data-cart-add>
+                                        <i class="fa-solid fa-cart-plus me-2"></i>Agregar
+                                    </button>
+                                </div>
+                            </div>
 
                         </article>
 
