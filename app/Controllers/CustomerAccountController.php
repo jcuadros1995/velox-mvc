@@ -121,7 +121,7 @@ class CustomerAccountController extends Controller
         $document = trim(strip_tags((string)($input['document_number'] ?? '')));
         $allowedTypes = ['CC','CE','NIT','PP'];
 
-        if ($first === '' || $last === '' || mb_strlen($first) > 60 || mb_strlen($last) > 60) {
+        if ($first === '' || $last === '' || strlen($first) > 240 || strlen($last) > 240 || (function_exists('mb_strlen') && (mb_strlen($first) > 60 || mb_strlen($last) > 60))) {
             $this->json(['success' => false, 'message' => 'Ingresa un nombre y apellido válidos.'], 422);
             return;
         }
