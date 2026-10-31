@@ -46,6 +46,10 @@ $moduleMenuActive = (strpos($moduleCurrentPath, '/menu') !== false);
 $moduleBranchesActive = (strpos($moduleCurrentPath, '/sedes') !== false);
 $moduleEventsActive = (strpos($moduleCurrentPath, '/eventos') !== false);
 $moduleContactActive = (strpos($moduleCurrentPath, '/pages/contact') !== false);
+
+$userMenu = Auth::user();
+$isCustomer = $userMenu && strtolower((string)($userMenu['role_name'] ?? '')) === 'customer';
+$customerAccountUrl = APP_URL . '/mi-cuenta';
 ?>
 
 <!-- =========================================================
@@ -365,7 +369,10 @@ $moduleContactActive = (strpos($moduleCurrentPath, '/pages/contact') !== false);
 
                 <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
 
-                    <a
+<?php if ($isCustomer): ?>
+                    <a href="<?= htmlspecialchars($customerAccountUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-velox-primary"><i class="fa-solid fa-user-circle me-2"></i> Mi cuenta</a>
+                    <?php else: ?>
+                                        <a
                         href="<?= htmlspecialchars($loginUrl) ?>"
                         class="btn btn-velox-primary <?= $isLogin ? 'active' : '' ?>"
                         <?= $isLogin ? 'aria-current="page"' : '' ?>
@@ -376,6 +383,7 @@ $moduleContactActive = (strpos($moduleCurrentPath, '/pages/contact') !== false);
                         <i class="fa-solid fa-arrow-right ms-2"></i>
 
                     </a>
+                    <?php endif; ?>
 
                 </li>
 
