@@ -38,6 +38,11 @@ $isSearchReservation = ( $currentPath === rtrim(parse_url($searchReservationUrl,
 
 $isHomeMenuActive = $isHome;
 
+// Customer account shortcut (public navbar).
+$userMenu = Auth::user();
+$isCustomer = $userMenu && strtolower((string)($userMenu['role_name'] ?? '')) === 'customer';
+$customerAccountUrl = APP_URL . '/mi-cuenta';
+
 ?>
 
 <!-- =========================================================
