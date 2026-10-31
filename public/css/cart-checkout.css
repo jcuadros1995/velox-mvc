@@ -439,3 +439,66 @@
     .velox-cart-assurances { grid-template-columns: 1fr; }
     .velox-cart-summary { padding: 1.15rem; }
 }
+
+
+/* Acceso al checkout sin sesión: el carrito permanece visible y conservado. */
+.store-checkout-access {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.1rem;
+    border: 1px solid #e6def5;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #fbfaff, #f7f4fd);
+}
+.store-checkout-access-icon {
+    display: grid;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    place-items: center;
+    border-radius: 13px;
+    background: #eee8fb;
+    color: #6d4cab;
+    font-size: 1rem;
+}
+.store-checkout-access-copy { min-width: 0; }
+.store-checkout-access-copy > strong {
+    display: block;
+    margin: .1rem 0 .35rem;
+    color: #28223a;
+    font-size: .9rem;
+    font-weight: 800;
+}
+.store-checkout-access-copy > p {
+    margin: 0;
+    color: #777184;
+    font-size: .77rem;
+    line-height: 1.6;
+}
+.store-checkout-access-actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: .85rem;
+    margin-top: .9rem;
+}
+.store-checkout-access-actions .btn {
+    padding: .65rem .9rem;
+    border-radius: 9px;
+    font-size: .75rem;
+    font-weight: 750;
+}
+.store-checkout-register-link {
+    color: #6849a6;
+    font-size: .76rem;
+    font-weight: 800;
+    text-decoration: none;
+}
+.store-checkout-register-link:hover { color: #42257e; text-decoration: underline; }
+
+@media (max-width: 575px) {
+    .store-checkout-access { gap: .7rem; padding: .9rem; }
+    .store-checkout-access-icon { width: 36px; height: 36px; flex-basis: 36px; }
+    .store-checkout-access-actions { align-items: flex-start; flex-direction: column; gap: .65rem; }
+}
