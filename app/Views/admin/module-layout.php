@@ -474,6 +474,7 @@ if (str_starts_with($moduleAdminPath, '/admin/items')) $moduleAdminCss = ['admin
 elseif (str_starts_with($moduleAdminPath, '/admin/categories')) $moduleAdminCss = ['admin-categories.css'];
 elseif (str_starts_with($moduleAdminPath, '/admin/pages')) $moduleAdminCss = ['admin-pages.css', 'admin-page-form.css'];
 elseif (str_starts_with($moduleAdminPath, '/admin/events')) $moduleAdminCss = ['admin-events.css'];
+elseif (str_starts_with($moduleAdminPath, '/admin/coupons')) $moduleAdminCss = ['admin-coupons.css'];
 foreach ($moduleAdminCss as $cssFile):
     $cssPath = __DIR__ . '/../../../public/css/' . $cssFile;
     if (is_file($cssPath)):
@@ -611,7 +612,8 @@ foreach ($moduleAdminCss as $cssFile):
                     ['/admin/items', 'Productos', 'fa-box'],
                     ['/admin/categories', 'Categorías', 'fa-tags'],
                     ['/admin/pages', 'Páginas', 'fa-file-lines'],
-                    ['/admin/events', 'Eventos', 'fa-calendar-days']
+                    ['/admin/events', 'Eventos', 'fa-calendar-days'],
+                    ['/admin/coupons', 'Cupones', 'fa-ticket']
                 ] as [$moduleRoute, $moduleLabel, $moduleIcon]): ?>
                     <li class="nav-item">
                         <a href="<?= APP_URL . $moduleRoute ?>" class="nav-link <?= $adminMenuActive($moduleRoute, true) ? 'active' : '' ?>">
@@ -1328,6 +1330,7 @@ if (isset($contentView)) {
     if (str_ends_with($contentView, '/admin/pages.php')) $moduleAdminScripts[] = 'admin-pages.js';
     if (str_ends_with($contentView, '/admin/page-form.php')) $moduleAdminScripts[] = 'admin-page-form.js';
     if (str_ends_with($contentView, '/admin/events.php')) $moduleAdminScripts[] = 'admin-events.js';
+    if (str_ends_with($contentView, '/admin/coupons.php')) $moduleAdminScripts[] = 'admin-coupons.js';
 }
 foreach ($moduleAdminScripts as $jsFile):
     $jsPath = __DIR__ . '/../../../public/js/' . $jsFile;
