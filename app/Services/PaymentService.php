@@ -104,7 +104,8 @@ class PaymentService
             '/checkout/resultado?reference=' . rawurlencode($reference);
         $payment['customer_email'] = (string) ($customerData['email'] ?? '');
         $payment['customer_full_name'] = $fullName;
-        $payment['customer_phone'] = (string) ($customerData['phone'] ?? '');
+        $payment['customer_phone'] = preg_replace('/\\D+/', '', (string) ($customerData['phone'] ?? '')) ?: '';
+        $payment['customer_phone_prefix'] = $payment['customer_phone'] !== '' ? '+57' : '';
 
         return $payment;
     }
