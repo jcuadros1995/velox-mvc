@@ -304,6 +304,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
 
+                // Una sede nueva ya tiene ID: asociar ahora las mesas e imágenes pendientes.
+                if (!isEdit) {
+                    window.BRANCH_FORM = window.BRANCH_FORM || {};
+                    window.BRANCH_FORM.mode = 'edit';
+                    window.BRANCH_FORM.branchId = savedBranchId;
+                    const branchIdInput = document.getElementById('branchId');
+                    if (branchIdInput) branchIdInput.value = String(savedBranchId);
+                }
+
+                await savePendingTables(savedBranchId);
+                await branchImageManager.save(savedBranchId);
+
                 /* ==================================================
                    ÉXITO
                 ================================================== */
@@ -1087,6 +1099,15 @@ function createTableRow() {
                     <i class="fa-solid fa-xmark"></i>
                 </button>
 
+                <button
+                    type="button"
+                    class="branch-table-delete-permanent"
+                    title="Eliminar definitivamente"
+                    aria-label="Eliminar definitivamente"
+                >
+                    <i class="fa-solid fa-trash-can"></i>
+                </button>
+
             </div>
 
         `;
@@ -1695,11 +1716,15 @@ if (tablesList) {
                     );
 
                 if (row) {
-
-                    deleteTable(
-                        row
-                    );
+                    deleteTable(row);
                 }
+                return;
+            }
+
+            const permanentDeleteButton = event.target.closest('.branch-table-delete-permanent');
+            if (permanentDeleteButton) {
+                const row = permanentDeleteButton.closest('.branch-table-item');
+                if (row) deleteTablePermanently(row);
             }
         }
     );
@@ -1723,3 +1748,463 @@ if (tablesList) {
 
 
 updateTablesSummary();
+
+/* ==========================================================
+   GUARDADO DE MESAS PENDIENTES AL CREAR UNA SEDE
+========================================================== */
+async function savePendingTables(savedBranchId) {
+    const branchId = Number(savedBranchId || 0);
+    if (!branchId) {
+        throw new Error('No fue posible determinar la sede para guardar las mesas.');
+    }
+
+    const rows = getTablesData();
+    const pendingRows = rows.filter(row => !Number(row.dataset.tableId || 0));
+    if (!pendingRows.length) return true;
+
+    const usedNumbers = new Set();
+    rows.forEach(row => {
+        if (pendingRows.includes(row)) return;
+        const number = Number(row.querySelector('.table-number')?.value || 0);
+        if (number > 0) usedNumbers.add(number);
+    });
+
+    const pendingData = pendingRows.map(row => {
+        const tableNumber = Number(row.querySelector('.table-number')?.value || 0);
+        const capacity = Number(row.querySelector('.table-capacity')?.value || 0);
+        if (!tableNumber || tableNumber < 1 || tableNumber > 999) {
+            throw new Error('Todas las mesas deben tener un número válido entre 1 y 999.');
+        }
+        if (usedNumbers.has(tableNumber)) {
+            throw new Error('El número de mesa ' + tableNumber + ' está repetido.');
+        }
+        usedNumbers.add(tableNumber);
+        if (!capacity || capacity < 1 || capacity > 100) {
+            throw new Error('La mesa #' + tableNumber + ' debe tener una capacidad entre 1 y 100 personas.');
+        }
+        return {
+            row,
+            payload: {
+                branch_id: branchId,
+                table_number: tableNumber,
+                name: row.querySelector('.table-name')?.value.trim() || ('Mesa ' + tableNumber),
+                capacity,
+                location: row.querySelector('.table-location')?.value.trim() || '',
+                status: row.querySelector('.table-status')?.value || 'available',
+                is_active: row.querySelector('.table-active')?.checked ? 1 : 0
+            }
+        };
+    });
+
+    for (const item of pendingData) {
+        const row = item.row;
+        const button = row.querySelector('.branch-table-save');
+        if (button) {
+            button.disabled = true;
+            button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+        }
+
+        try {
+            const response = await fetch(window.APP_URL + '/api/admin/branches/tables/create', {
+                method: 'POST',
+                credentials: 'same-origin',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(item.payload)
+            });
+            const result = await response.json();
+            if (!response.ok || !result.success) {
+                throw new Error(result.message || ('No fue posible crear la mesa #' + item.payload.table_number + '.'));
+            }
+
+            const id = Number(result.data?.id || 0);
+            if (!id) {
+                throw new Error('El servidor no devolvió el identificador de la mesa #' + item.payload.table_number + '.');
+            }
+
+            row.dataset.tableId = String(id);
+            row.dataset.tablePending = '0';
+            row.classList.remove('is-new', 'is-pending');
+            const label = row.querySelector('.branch-table-item-number span');
+            if (label) label.textContent = 'Mesa';
+        } finally {
+            if (button) {
+                button.disabled = false;
+                button.innerHTML = '<i class="fa-solid fa-floppy-disk"></i>';
+                button.title = 'Guardar mesa';
+            }
+        }
+    }
+
+    updateTablesSummary();
+    return true;
+}
+
+/* ==========================================================
+   ELIMINACIÓN DEFINITIVA DE MESAS
+========================================================== */
+async function deleteTablePermanently(row) {
+    const tableId = Number(row.dataset.tableId || 0);
+    if (!tableId) {
+        row.remove();
+        updateTablesSummary();
+        return;
+    }
+
+    let confirmed = false;
+    if (typeof Swal !== 'undefined') {
+        const result = await Swal.fire({
+            icon: 'warning',
+            title: '¿Eliminar definitivamente?',
+            text: 'Esta acción es irreversible. Las mesas con historial de reservas no se pueden eliminar.',
+            showCancelButton: true,
+            confirmButtonText: 'Eliminar definitivamente',
+            cancelButtonText: 'Cancelar',
+            confirmButtonColor: '#dc2626',
+            reverseButtons: true
+        });
+        confirmed = result.isConfirmed;
+    } else {
+        confirmed = window.confirm('¿Eliminar definitivamente esta mesa? Las mesas con historial de reservas no se pueden eliminar.');
+    }
+    if (!confirmed) return;
+
+    const button = row.querySelector('.branch-table-delete-permanent');
+    if (button) {
+        button.disabled = true;
+        button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+    }
+
+    try {
+        const response = await fetch(window.APP_URL + '/api/admin/branches/tables/delete-permanently', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: {
+                'Content-Type': 'application/json',
+                'Accept': 'application/json'
+            },
+            body: JSON.stringify({ id: tableId })
+        });
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+            if (response.status === 409 && Array.isArray(result.reservations)) {
+                const details = result.reservations.map(item =>
+                    [item.reservation_code || '', item.reservation_date || '', item.start_time || '', item.status || ''].filter(Boolean).join(' · ')
+                ).join('\n');
+                if (typeof Swal !== 'undefined') {
+                    await Swal.fire({
+                        icon: 'info',
+                        title: 'No se puede eliminar esta mesa',
+                        text: (result.message || 'La mesa tiene reservas asociadas.') + (details ? '\n' + details : '')
+                    });
+                } else {
+                    showError((result.message || 'La mesa tiene reservas asociadas.') + (details ? '\n' + details : ''));
+                }
+                return;
+            }
+            throw new Error(result.message || 'No fue posible eliminar la mesa.');
+        }
+
+        row.remove();
+        updateTablesSummary();
+        showSuccess(result.message || 'Mesa eliminada definitivamente.');
+    } catch (error) {
+        console.error('[BRANCH TABLE PERMANENT DELETE]', error);
+        showError(error.message || 'No fue posible eliminar la mesa.');
+    } finally {
+        if (button && button.isConnected) {
+            button.disabled = false;
+            button.innerHTML = '<i class="fa-solid fa-trash-can"></i>';
+        }
+    }
+}
+
+/* ==========================================================
+   ADMINISTRADOR DE IMÁGENES DE SEDE
+========================================================== */
+const branchImageManager = (function () {
+    const config = window.BRANCH_FORM || {};
+    const input = document.getElementById('branchImagesInput');
+    const dropzone = document.getElementById('branchImagesDropzone');
+    const thumbs = document.getElementById('branchImagesThumbs');
+    const counter = document.getElementById('branchImagesCounter');
+    const stage = document.getElementById('branchImagesStage');
+    const mainView = document.getElementById('branchImagesMainView');
+    const mainEmpty = document.getElementById('branchImagesMainEmpty');
+    const mainImage = document.getElementById('branchImagesMainImage');
+    const favoriteBadge = document.getElementById('branchImagesFavoriteBadge');
+    const newBadge = document.getElementById('branchImagesNewBadge');
+    const emptyGallery = document.getElementById('branchImagesEmptyGallery');
+
+    if (!input || !thumbs) return { save: async function () { return true; } };
+
+    const maxImages = 20;
+    const maxSize = 8 * 1024 * 1024;
+    const state = {
+        items: [],
+        deletedIds: new Set(),
+        favoriteKey: null,
+        activeKey: null,
+        dirty: false
+    };
+
+    function escapeHtml(value) {
+        return String(value == null ? '' : value).replace(/[&<>"']/g, function (char) {
+            return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' })[char];
+        });
+    }
+
+    function makeKey() {
+        return 'new-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+    }
+
+    function normalizeExisting(images) {
+        state.items = (Array.isArray(images) ? images : []).map(function (item) {
+            return {
+                type: 'existing',
+                id: Number(item.id),
+                key: 'existing-' + Number(item.id),
+                url: item.url || (window.APP_URL + '/public/' + String(item.file_path || '').replace(/^\/+/, '')),
+                name: item.original_name || ('Imagen ' + item.id),
+                file: null,
+                objectUrl: null,
+                sortOrder: Number(item.sort_order || 0)
+            };
+        });
+        state.items.sort(function (a, b) { return a.sortOrder - b.sortOrder; });
+        const favorite = (Array.isArray(images) ? images : []).find(function (item) { return Boolean(item.is_favorite); });
+        state.favoriteKey = favorite ? 'existing-' + Number(favorite.id) : (state.items[0]?.key || null);
+        state.activeKey = state.favoriteKey || state.items[0]?.key || null;
+    }
+
+    function render() {
+        const count = state.items.length;
+        if (counter) counter.textContent = count + ' / ' + maxImages + ' imágenes';
+        if (emptyGallery) emptyGallery.hidden = count > 0;
+        if (!count) {
+            stage?.classList.add('is-empty');
+            if (mainView) mainView.hidden = true;
+            if (mainEmpty) mainEmpty.hidden = false;
+            thumbs.innerHTML = '';
+            return;
+        }
+
+        stage?.classList.remove('is-empty');
+        if (mainView) mainView.hidden = false;
+        if (mainEmpty) mainEmpty.hidden = true;
+
+        let active = state.items.find(function (item) { return item.key === state.activeKey; });
+        if (!active) {
+            active = state.items[0];
+            state.activeKey = active.key;
+        }
+        if (mainImage) {
+            mainImage.src = active.url;
+            mainImage.alt = active.name;
+        }
+        if (favoriteBadge) favoriteBadge.hidden = active.key !== state.favoriteKey;
+        if (newBadge) newBadge.hidden = active.type !== 'new';
+
+        thumbs.innerHTML = '';
+        state.items.forEach(function (item, index) {
+            const card = document.createElement('div');
+            card.className = 'branch-image-thumb';
+            card.draggable = true;
+            card.dataset.imageKey = item.key;
+            if (item.key === state.activeKey) card.classList.add('is-active');
+            if (item.key === state.favoriteKey) card.classList.add('is-favorite');
+
+            card.innerHTML =
+                '<span class="branch-image-drag-handle"><i class="fa-solid fa-grip-vertical"></i></span>' +
+                '<button type="button" class="branch-image-thumb-view" title="Ver imagen">' +
+                    '<img src="' + escapeHtml(item.url) + '" alt="' + escapeHtml(item.name) + '">' +
+                '</button>' +
+                '<div class="branch-image-thumb-overlay">' +
+                    '<span class="branch-image-order">' + (index + 1) + '</span>' +
+                    '<div class="branch-image-thumb-actions">' +
+                        '<button type="button" class="branch-image-favorite" title="Marcar como portada"><i class="fa-' +
+                            (item.key === state.favoriteKey ? 'solid' : 'regular') + ' fa-star"></i></button>' +
+                        '<button type="button" class="branch-image-remove" title="Eliminar imagen"><i class="fa-solid fa-trash"></i></button>' +
+                    '</div>' +
+                '</div>' +
+                (item.key === state.favoriteKey ? '<span class="branch-image-favorite-label"><i class="fa-solid fa-star"></i> Portada</span>' : '');
+
+            card.querySelector('.branch-image-thumb-view')?.addEventListener('click', function () {
+                state.activeKey = item.key;
+                render();
+            });
+            card.querySelector('.branch-image-favorite')?.addEventListener('click', function (event) {
+                event.stopPropagation();
+                state.favoriteKey = item.key;
+                state.activeKey = item.key;
+                state.dirty = true;
+                render();
+            });
+            card.querySelector('.branch-image-remove')?.addEventListener('click', function (event) {
+                event.stopPropagation();
+                removeImage(item.key);
+            });
+            card.addEventListener('dragstart', function (event) {
+                event.dataTransfer.effectAllowed = 'move';
+                event.dataTransfer.setData('text/plain', item.key);
+                card.classList.add('is-dragging');
+            });
+            card.addEventListener('dragend', function () {
+                card.classList.remove('is-dragging');
+                thumbs.querySelectorAll('.branch-image-thumb').forEach(function (node) {
+                    node.classList.remove('is-drop-target');
+                });
+            });
+            card.addEventListener('dragover', function (event) {
+                event.preventDefault();
+                card.classList.add('is-drop-target');
+            });
+            card.addEventListener('dragleave', function () {
+                card.classList.remove('is-drop-target');
+            });
+            card.addEventListener('drop', function (event) {
+                event.preventDefault();
+                const sourceKey = event.dataTransfer.getData('text/plain');
+                card.classList.remove('is-drop-target');
+                if (!sourceKey || sourceKey === item.key) return;
+                moveBefore(sourceKey, item.key);
+            });
+            thumbs.appendChild(card);
+        });
+    }
+
+    function moveBefore(sourceKey, targetKey) {
+        const from = state.items.findIndex(function (item) { return item.key === sourceKey; });
+        const to = state.items.findIndex(function (item) { return item.key === targetKey; });
+        if (from < 0 || to < 0 || from === to) return;
+        const moved = state.items.splice(from, 1)[0];
+        state.items.splice(from < to ? to - 1 : to, 0, moved);
+        state.activeKey = moved.key;
+        state.dirty = true;
+        render();
+    }
+
+    function removeImage(key) {
+        const index = state.items.findIndex(function (item) { return item.key === key; });
+        if (index < 0) return;
+        const item = state.items[index];
+        if (item.type === 'existing') state.deletedIds.add(item.id);
+        if (item.objectUrl) URL.revokeObjectURL(item.objectUrl);
+        state.items.splice(index, 1);
+        if (state.favoriteKey === key) state.favoriteKey = state.items[0]?.key || null;
+        if (state.activeKey === key) state.activeKey = state.items[0]?.key || null;
+        state.dirty = true;
+        render();
+    }
+
+    function addFiles(fileList) {
+        const selected = Array.from(fileList || []);
+        if (!selected.length) return;
+        if (state.items.length + selected.length > maxImages) {
+            showError('Una sede puede tener máximo ' + maxImages + ' imágenes.');
+            return;
+        }
+        for (const file of selected) {
+            if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
+                showError('El archivo "' + file.name + '" no es una imagen JPG, PNG o WEBP válida.');
+                return;
+            }
+            if (file.size > maxSize) {
+                showError('La imagen "' + file.name + '" supera los 8 MB.');
+                return;
+            }
+        }
+        selected.forEach(function (file) {
+            const key = makeKey();
+            const objectUrl = URL.createObjectURL(file);
+            state.items.push({
+                type: 'new',
+                id: null,
+                key,
+                url: objectUrl,
+                name: file.name,
+                file,
+                objectUrl
+            });
+            if (!state.favoriteKey) state.favoriteKey = key;
+            if (!state.activeKey) state.activeKey = key;
+        });
+        state.dirty = true;
+        input.value = '';
+        render();
+    }
+
+    input.addEventListener('change', function () { addFiles(input.files); });
+    if (dropzone) {
+        ['dragenter', 'dragover'].forEach(function (eventName) {
+            dropzone.addEventListener(eventName, function (event) {
+                event.preventDefault();
+                dropzone.classList.add('is-drag-over');
+            });
+        });
+        ['dragleave', 'drop'].forEach(function (eventName) {
+            dropzone.addEventListener(eventName, function (event) {
+                event.preventDefault();
+                dropzone.classList.remove('is-drag-over');
+            });
+        });
+        dropzone.addEventListener('drop', function (event) {
+            addFiles(event.dataTransfer?.files || []);
+        });
+    }
+
+    async function save(savedBranchId) {
+        if (!state.dirty) return true;
+        const formData = new FormData();
+        formData.append('branch_id', String(savedBranchId));
+        formData.append('order', JSON.stringify(state.items.map(function (item) {
+            return item.type === 'existing' ? { type: 'existing', id: item.id } : { type: 'new', key: item.key };
+        })));
+        formData.append('delete_ids', JSON.stringify(Array.from(state.deletedIds)));
+
+        const favorite = state.items.find(function (item) { return item.key === state.favoriteKey; });
+        formData.append('favorite', JSON.stringify(favorite ? (
+            favorite.type === 'existing' ? { type: 'existing', id: favorite.id } : { type: 'new', key: favorite.key }
+        ) : null));
+
+        const newItems = state.items.filter(function (item) { return item.type === 'new'; });
+        formData.append('new_keys', JSON.stringify(newItems.map(function (item) { return item.key; })));
+        newItems.forEach(function (item) { formData.append('images[]', item.file, item.file.name); });
+
+        const response = await fetch(window.APP_URL + '/api/admin/branches/images/save', {
+            method: 'POST',
+            credentials: 'same-origin',
+            headers: { 'Accept': 'application/json' },
+            body: formData
+        });
+        const result = await response.json();
+        if (!response.ok || !result.success) {
+            throw new Error(result.message || 'No fue posible guardar las imágenes de la sede.');
+        }
+
+        if (Array.isArray(result.data?.images)) {
+            result.data.images.forEach(function (image) {
+                if (image && image.id) {
+                    image.url = image.url || (window.APP_URL + '/public/' + String(image.file_path || '').replace(/^\/+/, ''));
+                }
+            });
+            config.images = result.data.images;
+            state.items.forEach(function (item) {
+                if (item.objectUrl) URL.revokeObjectURL(item.objectUrl);
+            });
+            normalizeExisting(config.images);
+        }
+        state.deletedIds.clear();
+        state.dirty = false;
+        render();
+        return true;
+    }
+
+    normalizeExisting(config.images);
+    render();
+    return { save };
+})();
+

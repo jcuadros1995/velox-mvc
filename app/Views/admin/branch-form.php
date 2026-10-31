@@ -19,6 +19,30 @@ $tables =
         $branchFormTables
         ?? [];
 
+
+$images =
+    $branchFormImages
+    ?? [];
+
+$imagesForJs = array_map(
+    static function (array $image): array {
+        $filePath = (string) ($image['file_path'] ?? '');
+
+        return [
+            'id' => (int) ($image['id'] ?? 0),
+            'file_path' => $filePath,
+            'original_name' => (string) ($image['original_name'] ?? ''),
+            'mime_type' => (string) ($image['mime_type'] ?? ''),
+            'width' => (int) ($image['width'] ?? 0),
+            'height' => (int) ($image['height'] ?? 0),
+            'sort_order' => (int) ($image['sort_order'] ?? 0),
+            'is_favorite' => (int) ($image['is_favorite'] ?? 0) === 1,
+            'url' => APP_URL . '/public/' . ltrim($filePath, '/\\')
+        ];
+    },
+    $images
+);
+
 $days = [
     1 => 'Lunes',
     2 => 'Martes',
@@ -81,6 +105,74 @@ $days = [
             ?>"
         >
 
+
+
+        <!-- GALERÍA DE IMÁGENES DE LA SEDE -->
+        <section class="branch-form-card branch-images-card">
+            <div class="branch-form-card-header branch-images-card-header">
+                <div class="branch-form-card-icon branch-images-card-icon">
+                    <i class="fa-regular fa-images"></i>
+                </div>
+                <div>
+                    <h2>Imágenes de la sede</h2>
+                    <p>Administra la galería, el orden de las fotografías y la imagen de portada.</p>
+                </div>
+                <span class="branch-images-counter" id="branchImagesCounter">0 / 20 imágenes</span>
+            </div>
+
+            <div class="branch-images-manager" id="branchImagesManager">
+                <input
+                    type="file"
+                    id="branchImagesInput"
+                    accept="image/jpeg,image/png,image/webp"
+                    multiple
+                    hidden
+                >
+
+                <label for="branchImagesInput" class="branch-images-dropzone" id="branchImagesDropzone">
+                    <span class="branch-images-dropzone-icon"><i class="fa-solid fa-cloud-arrow-up"></i></span>
+                    <span class="branch-images-dropzone-content">
+                        <strong>Agrega imágenes de esta sede</strong>
+                        <span>Arrastra archivos aquí o selecciónalos desde tu equipo.</span>
+                        <small>JPG, PNG o WEBP · máximo 8 MB por imagen · hasta 20 imágenes</small>
+                    </span>
+                    <span class="branch-images-select-button">Seleccionar imágenes</span>
+                </label>
+
+                <div class="branch-images-stage is-empty" id="branchImagesStage">
+                    <div class="branch-images-main-empty" id="branchImagesMainEmpty">
+                        <i class="fa-regular fa-image"></i>
+                        <strong>No hay imágenes seleccionadas</strong>
+                        <span>La imagen marcada como portada se mostrará primero en la página pública.</span>
+                    </div>
+                    <div class="branch-images-main-view" id="branchImagesMainView" hidden>
+                        <img src="" alt="Vista previa de la sede" id="branchImagesMainImage">
+                        <span class="branch-images-favorite-badge" id="branchImagesFavoriteBadge">
+                            <i class="fa-solid fa-star"></i> Portada de la sede
+                        </span>
+                        <span class="branch-images-new-badge" id="branchImagesNewBadge" hidden>Nueva</span>
+                    </div>
+                </div>
+
+                <div class="branch-images-gallery-head">
+                    <div>
+                        <strong>Galería</strong>
+                        <span>Selecciona una fotografía, márcala como portada o arrástrala para cambiar su orden.</span>
+                    </div>
+                    <span class="branch-images-gallery-hint"><i class="fa-solid fa-grip-vertical"></i> Arrastra para ordenar</span>
+                </div>
+
+                <div class="branch-images-thumbs" id="branchImagesThumbs"></div>
+                <div class="branch-images-empty-gallery" id="branchImagesEmptyGallery">
+                    <i class="fa-regular fa-images"></i>
+                    <span>Tus imágenes aparecerán aquí.</span>
+                </div>
+                <p class="branch-images-help">
+                    <i class="fa-solid fa-circle-info"></i>
+                    La imagen marcada con <i class="fa-solid fa-star"></i> será la portada de la sede.
+                </p>
+            </div>
+        </section>
 
         <!-- INFORMACIÓN -->
 
@@ -714,6 +806,16 @@ $days = [
                                         <i class="fa-solid fa-trash"></i>
                                     </button>
 
+
+                                    <button
+                                        type="button"
+                                        class="branch-table-delete-permanent"
+                                        title="Eliminar definitivamente"
+                                        aria-label="Eliminar definitivamente"
+                                    >
+                                        <i class="fa-solid fa-trash-can"></i>
+                                    </button>
+
                                 </div>
 
                             </div>
@@ -780,6 +882,17 @@ $days = [
                         $tables ?? [],
                         JSON_UNESCAPED_UNICODE |
                         JSON_UNESCAPED_SLASHES
+                ) ?>,
+
+        images:
+                <?= json_encode(
+                        $imagesForJs ?? [],
+                        JSON_UNESCAPED_UNICODE |
+                        JSON_UNESCAPED_SLASHES |
+                        JSON_HEX_TAG |
+                        JSON_HEX_APOS |
+                        JSON_HEX_AMP |
+                        JSON_HEX_QUOT
                 ) ?>
 
     };

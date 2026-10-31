@@ -283,6 +283,44 @@ require __DIR__ .
 
 </div>
 
+
+<!-- CONFIRMACIÓN DE ELIMINACIÓN DE SEDE -->
+<div
+    class="modal fade"
+    id="deleteBranchModal"
+    tabindex="-1"
+    aria-labelledby="deleteBranchModalTitle"
+    aria-hidden="true"
+>
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content branches-delete-modal">
+            <div class="modal-body">
+                <div class="branches-delete-icon">
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+                </div>
+                <h5 id="deleteBranchModalTitle">¿Eliminar sede?</h5>
+                <p>
+                    Estás a punto de eliminar:
+                    <strong id="deleteBranchName">esta sede</strong>
+                </p>
+                <p class="branches-delete-warning">
+                    Esta acción eliminará permanentemente la información asociada a la sede,
+                    incluyendo reservas, mesas, fotografías, inventario, pedidos y empleados
+                    exclusivos. No se puede deshacer.
+                </p>
+                <div class="branches-delete-actions">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+                        <i class="fa-solid fa-xmark"></i> Cancelar
+                    </button>
+                    <button type="button" class="btn btn-danger" id="btnConfirmDeleteBranch">
+                        <i class="fa-solid fa-trash"></i> Sí, eliminar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
     window.BRANCHES_PAGE = {
