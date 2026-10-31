@@ -163,6 +163,10 @@
         payButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Preparando pedido...';
 
         try {
+            // Evita crear pedidos y reservar inventario si la pasarela
+            // no está configurada en el servidor.
+            await post('/api/payments/preflight', {gateway:'wompi'});
+
             const orderResult = await post('/api/orders/create', {
                 branch_id:Number(branchSelect.value),
                 notes:document.getElementById('checkoutNotes').value.trim(),
