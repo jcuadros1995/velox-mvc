@@ -344,6 +344,14 @@ $moduleContactActive = (strpos($moduleCurrentPath, '/pages/contact') !== false);
                     </a>
                 </li>
 
+                <li class="nav-item">
+                    <a href="<?= htmlspecialchars(APP_URL . '/carrito', ENT_QUOTES, 'UTF-8') ?>" class="nav-link store-cart-nav-link">
+                        <i class="fa-solid fa-basket-shopping"></i>
+                        Carrito
+                        <span class="store-cart-nav-count d-none" data-cart-count>0</span>
+                    </a>
+                </li>
+
                 <!-- =================================================
                      ACCESO AL PANEL
                 ================================================== -->
