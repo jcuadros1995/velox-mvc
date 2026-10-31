@@ -537,12 +537,16 @@
 }
 .store-fulfillment-option > input {
     position: absolute;
-    top: 1rem;
-    right: 1rem;
-    width: 16px;
-    height: 16px;
+    top: .85rem;
+    right: .85rem;
+    width: 1px;
+    height: 1px;
     margin: 0;
-    accent-color: var(--velox-primary, #6d28d9);
+    opacity: 0;
+}
+.store-fulfillment-option:focus-within {
+    outline: 3px solid rgba(139, 92, 246, .22);
+    outline-offset: 2px;
 }
 .store-fulfillment-option-icon {
     display: grid;
@@ -579,10 +583,10 @@
 .store-fulfillment-option-check {
     display: none;
     position: absolute;
-    right: .85rem;
-    bottom: .75rem;
+    top: .8rem;
+    right: .8rem;
     color: #7954bd;
-    font-size: .82rem;
+    font-size: .9rem;
 }
 .store-fulfillment-option.is-selected .store-fulfillment-option-check { display: block; }
 .store-fulfillment-panel {
