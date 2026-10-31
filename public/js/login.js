@@ -88,6 +88,9 @@ function initLoginForm() {
         const passwordInput =
             document.getElementById('password');
 
+        const rememberInput =
+            document.getElementById('rememberSession');
+
         const btnSubmit =
             document.getElementById('btnLoginSubmit');
 
@@ -97,6 +100,9 @@ function initLoginForm() {
 
         const password =
             passwordInput?.value || '';
+
+        const remember =
+            rememberInput?.checked === true;
 
 
         /**
@@ -163,7 +169,8 @@ function initLoginForm() {
 
                     body: JSON.stringify({
                         email: email,
-                        password: password
+                        password: password,
+                        remember: remember
                     })
                 }
             );
@@ -224,8 +231,13 @@ function initLoginForm() {
 
                 setTimeout(() => {
 
-                    window.location.href =
-                        `${window.APP_URL}/admin/dashboard`;
+                    const roleName = String(
+                        data.data?.role_name || ''
+                    ).toLowerCase();
+
+                    window.location.href = roleName === 'customer'
+                        ? `${window.APP_URL}/`
+                        : `${window.APP_URL}/admin/dashboard`;
 
                 }, 700);
 
