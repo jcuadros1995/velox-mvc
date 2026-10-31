@@ -184,8 +184,7 @@
                         </h2>
 
                         <p>
-                            Ingresa tus credenciales para acceder
-                            a tu panel de administración.
+                            Ingresa tus credenciales para acceder a tu cuenta.
                         </p>
 
                     </div>
@@ -312,7 +311,7 @@
                             <span class="btn-login-content">
 
                                 <span>
-                                    Ingresar al panel
+                                    Iniciar sesión
                                 </span>
 
                                 <i class="fa-solid fa-arrow-right"></i>
@@ -368,7 +367,7 @@
                         <span class="footer-separator">•</span>
 
                         <span>
-                            Plataforma Administrativa
+                            Acceso a tu cuenta
                         </span>
 
                     </div>
