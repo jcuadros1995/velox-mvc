@@ -125,7 +125,6 @@
         const optionSelect = card.querySelector('[data-cart-option]');
         const selectedOption = optionSelect?.options?.[optionSelect.selectedIndex];
         const priceNode = card.querySelector('[data-store-current-price]');
-        const comboNode = card.querySelector('[data-store-current-combo]');
         const comboInput = card.querySelector('[data-cart-combo]');
 
         if (selectedOption) {
@@ -133,7 +132,6 @@
             const comboPrice = Number(selectedOption.dataset.comboPrice || 0);
 
             if (priceNode) priceNode.textContent = currency(price);
-            if (comboNode && comboPrice > 0) comboNode.textContent = currency(comboPrice);
 
             if (comboInput) {
                 comboInput.disabled = comboPrice <= 0;
