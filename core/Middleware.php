@@ -93,22 +93,28 @@ class Middleware
     public static function webGuest(): bool
     {
         if (!Auth::check()) {
-
             Auth::attemptRemember();
         }
 
+        $user = Auth::user();
 
-        if (Auth::check()) {
+        if ($user) {
+            $role = strtolower(
+                trim((string) ($user['role_name'] ?? ''))
+            );
+
+            $destination = $role === 'customer'
+                ? '/'
+                : '/admin/dashboard';
 
             header(
                 'Location: ' .
-                APP_URL .
-                '/admin/dashboard'
+                rtrim(APP_URL, '/') .
+                $destination
             );
 
             exit;
         }
-
 
         return true;
     }
