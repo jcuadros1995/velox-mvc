@@ -45,6 +45,73 @@ function updateDashboardKpis(metrics) {
             Number(metrics.product_count || 0)
                 .toLocaleString('es-CO');
     }
+
+    const lowStockValue = Number(metrics.low_stock_count || 0)
+        .toLocaleString('es-CO');
+
+    document.querySelectorAll('[data-kpi="low-stock"]').forEach(element => {
+        element.textContent = lowStockValue;
+    });
+}
+
+
+/**
+ * Renderiza los productos por debajo del mínimo de inventario.
+ * La API existente entrega el listado y el contador por sede.
+ */
+function renderDashboardLowStock(metrics) {
+    const container = document.getElementById('dashboardLowStockList');
+    const counter = document.getElementById('dashboardLowStockCount');
+
+    if (!container) return;
+
+    const items = Array.isArray(metrics?.low_stock) ? metrics.low_stock : [];
+    const rawCount = Number(metrics?.low_stock_count);
+    const count = Number.isFinite(rawCount) ? rawCount : items.length;
+
+    if (counter) {
+        counter.textContent = count.toLocaleString('es-CO');
+    }
+
+    if (items.length === 0) {
+        container.innerHTML = `
+            <div class="stock-empty" role="status">
+                <i class="fa-solid fa-circle-check"></i>
+                <span>Inventario saludable. No hay productos por debajo del mínimo.</span>
+            </div>
+        `;
+        return;
+    }
+
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    })[character]);
+
+    container.innerHTML = items.map(item => {
+        const stock = Number(item.stock_quantity || 0);
+        const minimum = Number(item.min_stock_alert || 0);
+        const quantityClass = stock <= 0 ? 'critical' : 'warning';
+        const branchName = item.branch_name || 'Sede sin identificar';
+
+        return `
+            <div class="stock-item">
+                <div class="stock-product-icon">
+                    <i class="fa-solid fa-box-open"></i>
+                </div>
+                <div class="stock-product">
+                    <strong>${escapeHtml(item.name || 'Producto sin nombre')}</strong>
+                    <span>${escapeHtml(branchName)} · mínimo ${minimum.toLocaleString('es-CO')} uds.</span>
+                </div>
+                <div class="stock-quantity ${quantityClass}">
+                    ${Math.max(0, stock).toLocaleString('es-CO')} uds.
+                </div>
+            </div>
+        `;
+    }).join('');
 }
 
 async function loadDashboardMetrics(from, to, branchId = '') {
@@ -113,6 +180,7 @@ async function refreshDashboardMetrics(from, to, branchId = '') {
     }
 
     updateDashboardKpis(metrics);
+    renderDashboardLowStock(metrics);
 
     initRevenueChart(metrics);
     initSalesChart(metrics);
@@ -150,6 +218,7 @@ document.addEventListener('DOMContentLoaded', async function () {
         if (metrics) {
 
             updateDashboardKpis(metrics);
+            renderDashboardLowStock(metrics);
             initRevenueChart(metrics);
             initSalesChart(metrics);
             initCategoryChart(metrics);

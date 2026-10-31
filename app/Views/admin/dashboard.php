@@ -371,6 +371,7 @@ $scopeName = $isSuperAdmin ? 'Todas las sedes' : ($user['branch_name'] ?? 'Sede 
             <div
                     class="kpi-value"
                     data-counter="24"
+                    data-kpi="products"
             >
                 0
             </div>
@@ -380,7 +381,7 @@ $scopeName = $isSuperAdmin ? 'Todas las sedes' : ($user['branch_name'] ?? 'Sede 
 
                 <span class="kpi-growth negative">
                     <i class="fa-solid fa-arrow-trend-down"></i>
-                    2 críticos
+                    <b data-kpi="low-stock">0</b> críticos
                 </span>
 
                 <span>
@@ -1054,89 +1055,16 @@ $scopeName = $isSuperAdmin ? 'Todas las sedes' : ($user['branch_name'] ?? 'Sede 
 
                 </div>
 
-                <span class="critical-count">
-                    2
-                </span>
+                <span class="critical-count" id="dashboardLowStockCount">0</span>
 
             </div>
 
 
-            <div class="stock-list">
-
-                <div class="stock-item">
-
-                    <div class="stock-product-icon">
-                        <i class="fa-solid fa-laptop"></i>
-                    </div>
-
-                    <div class="stock-product">
-
-                        <strong>
-                            Laptop Pro
-                        </strong>
-
-                        <span>
-                            SKU: LAP-001
-                        </span>
-
-                    </div>
-
-                    <div class="stock-quantity critical">
-                        2 uds.
-                    </div>
-
+            <div class="stock-list" id="dashboardLowStockList">
+                <div class="stock-empty" role="status">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>
+                    <span>Cargando inventario...</span>
                 </div>
-
-
-                <div class="stock-item">
-
-                    <div class="stock-product-icon">
-                        <i class="fa-solid fa-mobile-screen"></i>
-                    </div>
-
-                    <div class="stock-product">
-
-                        <strong>
-                            Smartphone X
-                        </strong>
-
-                        <span>
-                            SKU: SMX-002
-                        </span>
-
-                    </div>
-
-                    <div class="stock-quantity warning">
-                        4 uds.
-                    </div>
-
-                </div>
-
-
-                <div class="stock-item">
-
-                    <div class="stock-product-icon">
-                        <i class="fa-solid fa-headphones"></i>
-                    </div>
-
-                    <div class="stock-product">
-
-                        <strong>
-                            Audífonos Pro
-                        </strong>
-
-                        <span>
-                            SKU: AUD-008
-                        </span>
-
-                    </div>
-
-                    <div class="stock-quantity warning">
-                        5 uds.
-                    </div>
-
-                </div>
-
             </div>
 
 

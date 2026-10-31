@@ -2599,6 +2599,45 @@ input:checked + .slider:before { transform: translateX(20px); }
 }
 
 
+.stock-empty {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    min-height: 88px;
+
+    padding: 16px 10px;
+
+    color: #64748b;
+
+    font-size: 11px;
+
+    line-height: 1.5;
+
+}
+
+
+.stock-empty i {
+
+    flex: 0 0 auto;
+
+    color: #16a34a;
+
+    font-size: 15px;
+
+}
+
+
+.stock-list .stock-item:last-child {
+
+    border-bottom: 0;
+
+}
+
+
 .stock-item {
 
     display: flex;
