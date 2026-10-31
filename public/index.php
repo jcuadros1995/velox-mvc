@@ -26,6 +26,11 @@ $router->get(
 );
 
 $router->get(
+    '/tienda',
+    'StoreController@index'
+);
+
+$router->get(
     '/sedes',
     'BranchController@publicPage'
 );
