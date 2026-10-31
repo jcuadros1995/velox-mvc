@@ -372,7 +372,10 @@ $customerAccountUrl = APP_URL . '/mi-cuenta';
 <?php if ($isCustomer): ?>
                     <a href="<?= htmlspecialchars($customerAccountUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-velox-primary"><i class="fa-solid fa-user-circle me-2"></i> Mi cuenta</a>
                     <?php else: ?>
-                                        <a
+                                        <?php if ($isCustomer): ?>
+                    <a href="<?= htmlspecialchars($customerAccountUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-velox-primary"><i class="fa-solid fa-user-circle me-2"></i> Mi cuenta</a>
+                    <?php else: ?>
+                    <a
                         href="<?= htmlspecialchars($loginUrl) ?>"
                         class="btn btn-velox-primary <?= $isLogin ? 'active' : '' ?>"
                         <?= $isLogin ? 'aria-current="page"' : '' ?>
@@ -383,6 +386,7 @@ $customerAccountUrl = APP_URL . '/mi-cuenta';
                         <i class="fa-solid fa-arrow-right ms-2"></i>
 
                     </a>
+                    <?php endif; ?>
                     <?php endif; ?>
 
                 </li>
