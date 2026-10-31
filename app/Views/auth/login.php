@@ -235,7 +235,11 @@
                                 </label>
 
                                 <a
-                                        href="#"
+                                        href="<?= htmlspecialchars(
+                                            rtrim(APP_URL, '/') . '/recuperar-contrasena',
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>"
                                         class="forgot-password-link"
                                 >
                                     ¿Olvidaste tu contraseña?
