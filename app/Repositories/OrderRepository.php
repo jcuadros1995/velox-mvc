@@ -342,6 +342,112 @@ class OrderRepository
      * Obtiene el detalle de una orden solamente si pertenece
      * al cliente que realiza la consulta.
      */
+
+    /**
+     * Historial paginado de pedidos e-commerce pertenecientes a un usuario.
+     */
+    public function getCustomerOrders(int $customerId, int $limit = 10, int $offset = 0): array
+    {
+        $limit = max(1, min(50, $limit));
+        $offset = max(0, $offset);
+        $sql = "
+            SELECT o.*,
+                   COALESCE(f.fulfillment_type, 'pickup') AS fulfillment_type,
+                   (SELECT COUNT(*) FROM order_items oi WHERE oi.order_id = o.id) AS item_lines,
+                   (SELECT COALESCE(SUM(oi.quantity), 0) FROM order_items oi WHERE oi.order_id = o.id) AS item_quantity
+            FROM orders o
+            LEFT JOIN order_fulfillment_details f ON f.order_id = o.id
+            WHERE o.customer_id = :customer_id
+              AND o.order_type = 'ecommerce'
+            ORDER BY o.created_at DESC, o.id DESC
+            LIMIT {$limit} OFFSET {$offset}
+        ";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['customer_id' => $customerId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function countCustomerOrders(int $customerId): int
+    {
+        $stmt = $this->db->prepare("
+            SELECT COUNT(*) FROM orders
+            WHERE customer_id = :customer_id AND order_type = 'ecommerce'
+        ");
+        $stmt->execute(['customer_id' => $customerId]);
+        return (int) $stmt->fetchColumn();
+    }
+
+    public function getCustomerOrderStats(int $customerId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT
+                COUNT(*) AS total_orders,
+                COALESCE(SUM(CASE WHEN status IN ('pending','processing') THEN 1 ELSE 0 END),0) AS active_orders,
+                COALESCE(SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END),0) AS completed_orders,
+                COALESCE(SUM(CASE WHEN status = 'cancelled' THEN 1 ELSE 0 END),0) AS cancelled_orders,
+                COALESCE(SUM(CASE WHEN status <> 'cancelled' THEN total ELSE 0 END),0) AS total_spent
+            FROM orders
+            WHERE customer_id = :customer_id AND order_type = 'ecommerce'
+        ");
+        $stmt->execute(['customer_id' => $customerId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC) ?: [];
+    }
+
+    public function getCustomerPurchasedProducts(int $customerId): array
+    {
+        $stmt = $this->db->prepare("
+            SELECT
+                i.id AS item_id,
+                i.name AS item_name,
+                i.type AS item_type,
+                i.slug,
+                i.description,
+                SUM(oi.quantity) AS quantity_purchased,
+                MAX(o.created_at) AS last_purchased_at,
+                MAX(oi.unit_price) AS last_unit_price,
+                (
+                    SELECT im.image_path
+                    FROM item_images im
+                    WHERE im.item_id = i.id AND im.is_active = 1
+                    ORDER BY im.is_favorite DESC, im.display_order ASC, im.id ASC
+                    LIMIT 1
+                ) AS image_path
+            FROM order_items oi
+            INNER JOIN orders o ON o.id = oi.order_id
+            INNER JOIN items i ON i.id = oi.item_id
+            WHERE o.customer_id = :customer_id
+              AND o.order_type = 'ecommerce'
+              AND o.status NOT IN ('cancelled','refunded')
+            GROUP BY i.id, i.name, i.type, i.slug, i.description
+            ORDER BY last_purchased_at DESC
+        ");
+        $stmt->execute(['customer_id' => $customerId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function getCustomerRecentOrderItems(int $customerId, int $limit = 5): array
+    {
+        $limit = max(1, min(20, $limit));
+        $stmt = $this->db->prepare("
+            SELECT oi.order_id, oi.quantity, oi.unit_price, oi.total_price,
+                   o.order_number, o.created_at,
+                   i.id AS item_id, i.name AS item_name,
+                   (SELECT im.image_path FROM item_images im
+                    WHERE im.item_id = i.id AND im.is_active = 1
+                    ORDER BY im.is_favorite DESC, im.display_order ASC, im.id ASC LIMIT 1) AS image_path
+            FROM order_items oi
+            INNER JOIN orders o ON o.id = oi.order_id
+            INNER JOIN items i ON i.id = oi.item_id
+            WHERE o.customer_id = :customer_id
+              AND o.order_type = 'ecommerce'
+              AND o.status NOT IN ('cancelled','refunded')
+            ORDER BY o.created_at DESC, oi.id DESC
+            LIMIT {$limit}
+        ");
+        $stmt->execute(['customer_id' => $customerId]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public function getOrderDetailsForCustomer(
         int $orderId,
         int $customerId
