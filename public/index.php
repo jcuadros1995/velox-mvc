@@ -1050,6 +1050,14 @@ $router->get(
 */
 
 $router->post(
+    '/api/payments/preflight',
+    'PaymentController@preflight',
+    [
+        ['Middleware', 'auth', []]
+    ]
+);
+
+$router->post(
     '/api/payments/checkout',
     'PaymentController@checkout',
     [
