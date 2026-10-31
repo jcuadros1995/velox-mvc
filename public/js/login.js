@@ -251,9 +251,14 @@ function initLoginForm() {
                         data.data?.role_name || ''
                     ).toLowerCase();
 
-                    window.location.href = roleName === 'customer'
+                    const requestedRedirect = new URLSearchParams(window.location.search).get('redirect');
+                    const safeRedirect = requestedRedirect === '/checkout'
+                        ? `${window.APP_URL}/checkout`
+                        : null;
+
+                    window.location.href = safeRedirect || (roleName === 'customer'
                         ? `${window.APP_URL}/`
-                        : `${window.APP_URL}/admin/dashboard`;
+                        : `${window.APP_URL}/admin/dashboard`);
 
                 }, 700);
 
