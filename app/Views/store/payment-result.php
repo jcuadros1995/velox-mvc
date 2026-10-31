@@ -11,15 +11,15 @@
                 <?php
                 $initialStatus = (string)($paymentResult['payment_status'] ?? 'pending');
                 $initialApproved = $initialStatus === 'approved';
-                $initialRejected = in_array($initialStatus, ['declined', 'error'], true);
+                $initialRejected = in_array($initialStatus, ['declined', 'error', 'voided'], true);
                 ?>
                 <div class="store-payment-result-icon <?= $initialApproved ? 'is-success' : ($initialRejected ? 'is-error' : 'is-pending') ?>" id="paymentResultIcon">
                     <i class="fa-solid <?= $initialApproved ? 'fa-check' : ($initialRejected ? 'fa-xmark' : 'fa-spinner fa-spin') ?>"></i>
                 </div>
                 <span class="store-eyebrow">PEDIDO <?= htmlspecialchars((string)$paymentResult['order_number'], ENT_QUOTES, 'UTF-8') ?></span>
-                <h1 id="paymentResultTitle"><?= $initialApproved ? '¡Pago aprobado!' : ($initialRejected ? 'No se pudo aprobar el pago' : 'Estamos confirmando tu pago') ?></h1>
+                <h1 id="paymentResultTitle"><?= $initialApproved ? '¡Pago aprobado!' : ($initialRejected ? ($initialStatus === 'voided' ? 'El pago fue anulado' : 'No se pudo aprobar el pago') : 'Estamos confirmando tu pago') ?></h1>
                 <p id="paymentResultMessage">
-                    <?= $initialApproved ? 'Tu pedido quedó confirmado. Gracias por comprar con nosotros.' : ($initialRejected ? 'El pago fue rechazado o presentó un error. Puedes revisar tu pedido o intentarlo de nuevo.' : 'Hemos recibido la respuesta de la pasarela. Actualizaremos este estado cuando Wompi confirme la transacción.') ?>
+                    <?= $initialApproved ? 'Tu pedido quedó confirmado. Gracias por comprar con nosotros.' : ($initialRejected ? ($initialStatus === 'voided' ? 'La transacción fue anulada y el pedido se canceló.' : 'El pago fue rechazado o presentó un error. Puedes revisar tu pedido o intentarlo de nuevo.') : 'Hemos recibido la respuesta de la pasarela. Actualizaremos este estado cuando Wompi confirme la transacción.') ?>
                 </p>
                 <div class="store-payment-receipt">
                     <div><span>Referencia</span><strong><?= htmlspecialchars((string)$paymentResult['reference'], ENT_QUOTES, 'UTF-8') ?></strong></div>
