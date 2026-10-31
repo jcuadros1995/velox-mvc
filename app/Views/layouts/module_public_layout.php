@@ -128,6 +128,9 @@ if ($modulePublicBase !== '' && $modulePublicBase !== '/' && str_starts_with($mo
 }
 $modulePublicPath = '/' . trim($modulePublicPath, '/');
 $modulePublicCss = [];
+if ($modulePublicPath === '/menu') {
+    $modulePublicCss[] = 'menu-public.css';
+}
 if (in_array($modulePublicPath, ['/menu', '/sedes', '/eventos'], true)
     || str_starts_with($modulePublicPath, '/menu/')
     || str_starts_with($modulePublicPath, '/pages/')) {
