@@ -144,7 +144,10 @@ function renderDashboardTopProducts(metrics) {
 
     container.innerHTML = products.map((item, index) => {
         const name = item.name || 'Producto sin nombre';
-        const imagePath = String(item.favorite_image || '').replace(/^\\/+/, '');
+        let imagePath = String(item.favorite_image || '').trim();
+        while (imagePath.startsWith('/')) {
+            imagePath = imagePath.slice(1);
+        }
         const imageUrl = imagePath ? `${window.APP_URL}/public/${imagePath}` : '';
         const unitsSold = Number(item.units_sold || 0);
         const revenue = Number(item.revenue || 0);
