@@ -18,9 +18,8 @@ class MenuController extends Controller
         $menuCategories = [];
 
         foreach ($publishedPages as $page) {
-            $categoryName = mb_strtolower(
-                trim((string) ($page['category_name'] ?? '')),
-                'UTF-8'
+            $categoryName = strtolower(
+                trim((string) ($page['category_name'] ?? ''))
             );
             $categorySlug = strtolower((string) ($page['category_slug'] ?? ''));
             $pageSlug = strtolower((string) ($page['page_slug'] ?? ''));
