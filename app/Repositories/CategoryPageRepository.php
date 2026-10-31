@@ -137,6 +137,8 @@ class CategoryPageRepository
 
             WHERE c.is_active = 1
               AND cp.is_published = 1
+              AND cp.slug IS NOT NULL
+              AND cp.slug <> ''
 
             ORDER BY
                 c.parent_id IS NOT NULL ASC,
