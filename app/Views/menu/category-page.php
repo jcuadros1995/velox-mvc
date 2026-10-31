@@ -1090,6 +1090,31 @@ $featuredIcons = [
                                 ? 'FAVORITA'
                                 : 'DESTACADA';
 
+                        $featuredCartOptions = $product['price_options'] ?? [];
+                        $featuredHasCombo = (float) ($product['combo_price'] ?? 0) > 0;
+                        foreach ($featuredCartOptions as $featuredCartOption) {
+                            if ((float) ($featuredCartOption['combo_price'] ?? 0) > 0) {
+                                $featuredHasCombo = true;
+                                break;
+                            }
+                        }
+
+                        $featuredCartJson = json_encode(
+                            [
+                                'id' => (int) ($product['id'] ?? 0),
+                                'name' => (string) ($product['name'] ?? ''),
+                                'image' => $productImageUrl,
+                                'price' => (float) ($product['price'] ?? 0),
+                                'combo_price' => (float) ($product['combo_price'] ?? 0)
+                            ],
+                            JSON_UNESCAPED_UNICODE |
+                            JSON_UNESCAPED_SLASHES |
+                            JSON_HEX_APOS |
+                            JSON_HEX_QUOT |
+                            JSON_HEX_AMP |
+                            JSON_HEX_TAG
+                        );
+
                         ?>
 
 
@@ -1097,6 +1122,7 @@ $featuredIcons = [
                                 class="bt-burger-featured-card <?= $featuredIndex === 2
                                     ? 'featured'
                                     : '' ?>"
+                                data-cart-product="<?= htmlspecialchars($featuredCartJson ?: '{}', ENT_QUOTES, 'UTF-8') ?>"
                         >
 
 
@@ -1512,6 +1538,41 @@ $featuredIcons = [
                                     ></i>
 
                                 </a>
+
+                                <div class="store-product-cart-controls store-featured-cart-controls">
+                                    <?php if (!empty($featuredCartOptions)): ?>
+                                        <label class="store-product-cart-option-label">
+                                            Presentación
+                                            <select class="form-select" data-cart-option aria-label="Seleccionar presentación">
+                                                <?php foreach ($featuredCartOptions as $featuredOption): ?>
+                                                    <option
+                                                        value="<?= (int) ($featuredOption['id'] ?? 0) ?>"
+                                                        data-price="<?= htmlspecialchars((string) ($featuredOption['price'] ?? 0), ENT_QUOTES, 'UTF-8') ?>"
+                                                        data-combo-price="<?= htmlspecialchars((string) ($featuredOption['combo_price'] ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                                                        data-label="<?= htmlspecialchars((string) ($featuredOption['quantity_label'] ?? ($featuredOption['quantity'] . ' unidades')), ENT_QUOTES, 'UTF-8') ?>"
+                                                        data-quantity="<?= (int) ($featuredOption['quantity'] ?? 1) ?>"
+                                                    >
+                                                        <?= htmlspecialchars((string) ($featuredOption['quantity_label'] ?? ($featuredOption['quantity'] . ' unidades')), ENT_QUOTES, 'UTF-8') ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </label>
+                                    <?php endif; ?>
+
+                                    <?php if ($showComboPrice && $featuredHasCombo): ?>
+                                        <label class="store-product-cart-combo">
+                                            <input type="checkbox" data-cart-combo>
+                                            <span>Convertir en combo</span>
+                                        </label>
+                                    <?php endif; ?>
+
+                                    <div class="store-product-cart-actions">
+                                        <input class="form-control" type="number" min="1" max="99" value="1" data-cart-quantity aria-label="Cantidad">
+                                        <button type="button" class="btn store-product-add-button" data-cart-add>
+                                            <i class="fa-solid fa-cart-plus me-2"></i>Agregar al carrito
+                                        </button>
+                                    </div>
+                                </div>
 
                             </div>
 
