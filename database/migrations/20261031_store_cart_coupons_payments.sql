@@ -46,7 +46,7 @@ CREATE TABLE IF NOT EXISTS payment_transactions (
     gateway_transaction_id VARCHAR(120) NULL,
     amount DECIMAL(12,2) NOT NULL,
     currency CHAR(3) NOT NULL DEFAULT 'COP',
-    status ENUM('pending', 'approved', 'declined', 'refunded', 'error') NOT NULL DEFAULT 'pending',
+    status ENUM('pending', 'approved', 'declined', 'voided', 'refunded', 'error') NOT NULL DEFAULT 'pending',
     raw_payload LONGTEXT NULL,
     processed_at DATETIME NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
