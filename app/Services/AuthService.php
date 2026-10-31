@@ -24,6 +24,25 @@ class AuthService
      */
     public function register(array $input): int
     {
+        foreach (['first_name', 'email', 'password'] as $requiredField) {
+            if (!isset($input[$requiredField]) || !is_string($input[$requiredField])) {
+                throw new InvalidArgumentException(
+                    'Los datos enviados para el registro no son válidos.'
+                );
+            }
+        }
+
+        foreach (['last_name', 'phone'] as $optionalField) {
+            if (
+                isset($input[$optionalField]) &&
+                !is_string($input[$optionalField])
+            ) {
+                throw new InvalidArgumentException(
+                    'Los datos enviados para el registro no son válidos.'
+                );
+            }
+        }
+
         $firstName = trim(strip_tags((string) ($input['first_name'] ?? '')));
         $lastName = trim(strip_tags((string) ($input['last_name'] ?? '')));
         $email = strtolower(trim((string) ($input['email'] ?? '')));
