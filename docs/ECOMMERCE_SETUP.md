@@ -47,14 +47,17 @@ La redirección del navegador lleva al cliente a \`/checkout/resultado\`, pero n
 
 1. El visitante agrega productos desde las tarjetas del catálogo. El carrito se conserva en el navegador mediante \`localStorage\`.
 2. El cliente inicia sesión y abre \`/checkout\`.
-3. Selecciona la sede para recoger el pedido, aplica opcionalmente un cupón y confirma.
-4. El servidor vuelve a consultar los productos, opciones, combos, precios, impuestos e inventario.
-5. El servidor valida el cupón de nuevo y lo consume dentro de la transacción que registra el pedido.
-6. Se prepara un intento de pago único para Web Checkout de Wompi.
-7. El webhook confirma el pago, rechaza/anula la transacción o la marca como reembolsada.
-8. La pantalla de resultado consulta el estado persistido del pago.
+3. Elige entre **recoger en tienda** o **envío a domicilio**.
+4. Para recogida, selecciona una sede activa. Para domicilio, registra dirección, barrio, ciudad y teléfono de contacto; el servidor asigna una sede activa con inventario suficiente para preparar el pedido.
+5. La tarifa de domicilio se lee desde `STORE_DELIVERY_FEE`, se muestra en el resumen y se incluye en el total enviado a Wompi. Si la variable no está definida, la tarifa predeterminada es $0 COP.
+6. El servidor vuelve a consultar los productos, opciones, combos, precios, impuestos e inventario.
+7. El servidor valida el cupón de nuevo y lo consume dentro de la transacción que registra el pedido.
+8. La modalidad y los datos de domicilio se guardan en `order_fulfillment_details` junto con la orden.
+9. Se prepara un intento de pago único para Web Checkout de Wompi.
+10. El webhook confirma el pago, rechaza/anula la transacción o la marca como reembolsada.
+11. La pantalla de resultado consulta el estado persistido del pago.
 
-El checkout implementado es de **recogida en sede**. No incluye cálculo de domicilios, direcciones de entrega ni tarifas de envío.
+**Configuración operativa de domicilios:** esta versión captura la dirección y aplica una tarifa fija global. Todavía no calcula tarifas por barrio/distancia ni valida polígonos o municipios de cobertura. Antes de producción, configura `STORE_DELIVERY_FEE` y define/procesa la cobertura real de reparto para no aceptar direcciones que el comercio no pueda atender.
 
 ## 5. Gestión de cupones
 
