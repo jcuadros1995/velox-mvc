@@ -141,7 +141,7 @@ class WompiAdapter implements PaymentGatewayInterface
         $status = match (strtoupper((string) ($transaction['status'] ?? ''))) {
             'APPROVED' => 'approved',
             'DECLINED' => 'declined',
-            'VOIDED' => 'refunded',
+            'VOIDED' => 'voided',
             'ERROR' => 'error',
             default => 'pending'
         };
