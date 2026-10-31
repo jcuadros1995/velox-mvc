@@ -375,6 +375,74 @@ class BranchRepository
     }
 
     /**
+     * Selecciona una sede activa que tenga inventario suficiente
+     * para preparar todos los productos que requieren control de stock.
+     *
+     * Si ningún producto exige inventario, utiliza la primera sede activa.
+     */
+    public function findActiveBranchWithInventory(array $orderItems): ?array
+    {
+        $requiredByItem = [];
+
+        foreach ($orderItems as $item) {
+            if (empty($item['requires_inventory'])) {
+                continue;
+            }
+
+            $itemId = (int) ($item['item_id'] ?? 0);
+            $quantity = (int) ($item['inventory_quantity'] ?? 0);
+
+            if ($itemId <= 0 || $quantity <= 0) {
+                return null;
+            }
+
+            $requiredByItem[$itemId] = ($requiredByItem[$itemId] ?? 0) + $quantity;
+        }
+
+        $sql = "
+            SELECT
+                b.id,
+                b.code,
+                b.name,
+                b.phone,
+                b.email,
+                b.address,
+                b.is_active
+            FROM branches b
+            WHERE b.is_active = 1
+        ";
+
+        $params = [];
+
+        foreach ($requiredByItem as $index => $required) {
+            $itemParameter = 'inventory_item_' . $index;
+            $quantityParameter = 'inventory_quantity_' . $index;
+
+            $sql .= "
+                AND EXISTS (
+                    SELECT 1
+                    FROM inventory inventory_check
+                    WHERE inventory_check.branch_id = b.id
+                      AND inventory_check.item_id = :" . $itemParameter . "
+                      AND inventory_check.stock_quantity >= :" . $quantityParameter . "
+                )
+            ";
+
+            $params[$itemParameter] = (int) $index;
+            $params[$quantityParameter] = (int) $required;
+        }
+
+        $sql .= " ORDER BY b.name ASC, b.id ASC LIMIT 1";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        $branch = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $branch ?: null;
+    }
+
+    /**
      * Buscar sede por código.
      */
     public function findByCode(
