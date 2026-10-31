@@ -2,13 +2,13 @@
 $storeDeliveryFeeSetting = getenv('STORE_DELIVERY_FEE');
 $storeDeliveryFee = ($storeDeliveryFeeSetting === false || trim((string) $storeDeliveryFeeSetting) === '')
     ? 0.0
-    : max(0, (float) $storeDeliveryFeeSetting);
+    : max(0, round((float) $storeDeliveryFeeSetting, 0));
 $storeFormatDeliveryFee = '
     <div class="container py-5">
         <div class="store-page-heading">
             <span class="store-eyebrow">ÚLTIMO PASO</span>
             <h1>Finalizar compra</h1>
-            <p>Confirma tu sede de recogida, aplica tu cupón y continúa al pago seguro.</p>
+            <p>Elige cómo recibir tu pedido, completa los datos necesarios y continúa al pago seguro.</p>
         </div>
 
         <div class="store-checkout-steps">
@@ -35,7 +35,7 @@ $storeFormatDeliveryFee = '
                                 <span class="store-checkout-access-icon"><i class="fa-solid fa-user-lock"></i></span>
                                 <div class="store-checkout-access-copy">
                                     <strong>Continúa con tu cuenta de cliente</strong>
-                                    <p>Ya puedes revisar tu pedido y elegir la sede de recogida. Para confirmar la orden y realizar el pago seguro, inicia sesión o crea tu cuenta. Tus productos permanecerán guardados en el carrito.</p>
+                                    <p>Ya puedes revisar tu pedido y elegir cómo recibirlo. Para confirmar la orden y realizar el pago seguro, inicia sesión o crea tu cuenta. Tus productos permanecerán guardados en el carrito.</p>
                                     <div class="store-checkout-access-actions">
                                         <a class="btn btn-velox-primary" href="<?= htmlspecialchars(APP_URL . '/login?redirect=%2Fcheckout', ENT_QUOTES, 'UTF-8') ?>">
                                             Iniciar sesión <i class="fa-solid fa-arrow-right ms-2"></i>
