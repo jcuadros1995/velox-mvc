@@ -159,7 +159,7 @@ class CouponService
             ? null
             : filter_var($usageLimitRaw, FILTER_VALIDATE_INT);
         $perCustomer = filter_var($input['per_customer_limit'] ?? 1, FILTER_VALIDATE_INT);
-        $isActive = !empty($input['is_active']) ? 1 : 0;
+        $isActive = filter_var($input['is_active'] ?? false, FILTER_VALIDATE_BOOLEAN) ? 1 : 0;
 
         if (!preg_match('/^[A-Z0-9_-]{3,40}$/', $code)) {
             throw new InvalidArgumentException('El código debe tener entre 3 y 40 caracteres: letras, números, guion o guion bajo.');
@@ -192,7 +192,11 @@ class CouponService
             throw new InvalidArgumentException('La fecha de vencimiento debe ser posterior a la fecha de inicio.');
         }
 
-        if (strlen($description) > 255) {
+        if (function_exists('mb_strlen') && function_exists('mb_substr')) {
+            if (mb_strlen($description, 'UTF-8') > 255) {
+                $description = mb_substr($description, 0, 255, 'UTF-8');
+            }
+        } elseif (strlen($description) > 255) {
             $description = substr($description, 0, 255);
         }
 
