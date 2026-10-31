@@ -153,8 +153,7 @@
                         <h2>Regístrate</h2>
 
                         <p>
-                            Completa tus datos para crear tu cuenta de cliente.
-                            Los campos marcados son obligatorios.
+                            Completa tus datos para crear tu cuenta. Nombre, apellido, correo y contraseña son obligatorios; el teléfono es opcional.
                         </p>
                     </div>
 
@@ -261,7 +260,7 @@
                                     <i class="fa-regular fa-eye" id="registerPasswordIcon"></i>
                                 </button>
                             </div>
-                            <span class="register-field-hint">Utiliza entre 8 y 72 caracteres.</span>
+                            <span class="register-field-hint">Utiliza mínimo 8 caracteres y máximo 72 bytes.</span>
                         </div>
 
                         <div class="login-field">
