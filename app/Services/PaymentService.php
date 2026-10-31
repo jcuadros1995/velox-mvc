@@ -111,6 +111,21 @@ class PaymentService
     }
 
     /**
+     * Verifica la configuración de Wompi antes de crear la orden,
+     * para no reservar inventario ni consumir cupones por un checkout
+     * que no puede iniciar.
+     */
+    public function assertCheckoutAvailable(): array
+    {
+        $config = $this->getGatewayConfig();
+
+        return [
+            'gateway' => 'wompi',
+            'environment' => $config['is_sandbox'] ? 'sandbox' : 'production'
+        ];
+    }
+
+    /**
      * Procesa y valida la autenticidad de un webhook de Wompi.
      *
      * El resultado validado se guarda y actualiza la orden de forma
@@ -120,7 +135,7 @@ class PaymentService
     {
         $adapter = PaymentFactory::create(
             'wompi',
-            $this->getGatewayConfig()
+            $this->getGatewayConfig(true)
         );
 
         $verifiedEvent = $adapter->handleWebhook($payload);
@@ -132,7 +147,7 @@ class PaymentService
      * Lee los secretos desde variables de entorno.
      * No se deben almacenar llaves reales dentro del repositorio.
      */
-    private function getGatewayConfig(): array
+    private function getGatewayConfig(bool $forWebhook = false): array
     {
         $config = [
             'public_key' => trim((string) getenv('WOMPI_PUBLIC_KEY')),
@@ -144,11 +159,11 @@ class PaymentService
             ) !== 'production'
         ];
 
-        foreach ([
-            'public_key',
-            'integrity_secret',
-            'events_secret'
-        ] as $key) {
+        $requiredKeys = $forWebhook
+            ? ['events_secret']
+            : ['public_key', 'integrity_secret', 'events_secret'];
+
+        foreach ($requiredKeys as $key) {
             if ($config[$key] === '') {
                 throw new DomainException(
                     'La pasarela Wompi no está configurada en el servidor.',
