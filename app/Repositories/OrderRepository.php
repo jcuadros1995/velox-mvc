@@ -71,10 +71,15 @@ class OrderRepository
      */
     public function createOrderWithItems(
         array $orderData,
-        array $items
+        array $items,
+        ?array $couponData = null
     ): int {
         try {
             $this->db->beginTransaction();
+
+            if ($couponData !== null) {
+                $this->applyCouponRedemption($orderData, $couponData);
+            }
 
             $orderId = $this->create($orderData);
 
@@ -157,6 +162,10 @@ class OrderRepository
                 }
             }
 
+            if ($couponData !== null) {
+                $this->recordCouponRedemption($orderId, $orderData, $couponData);
+            }
+
             $this->db->commit();
 
             return $orderId;
@@ -168,6 +177,119 @@ class OrderRepository
 
             throw $e;
         }
+    }
+
+
+    /**
+     * Revalida y consume el cupón dentro de la misma transacción
+     * que registra la orden. SELECT ... FOR UPDATE evita superar
+     * el límite global cuando llegan compras simultáneas.
+     */
+    private function applyCouponRedemption(array &$orderData, array $couponData): void
+    {
+        $couponId = (int) ($couponData['id'] ?? 0);
+        $customerId = (int) ($couponData['customer_id'] ?? 0);
+        $code = strtoupper(trim((string) ($couponData['code'] ?? '')));
+        $subtotal = (float) ($orderData['subtotal'] ?? 0);
+
+        if ($couponId <= 0 || $customerId <= 0 || $code === '') {
+            throw new DomainException('El cupón enviado no es válido.', 422);
+        }
+
+        $stmt = $this->db->prepare("
+            SELECT *
+            FROM coupons
+            WHERE id = :id AND code = :code
+            LIMIT 1
+            FOR UPDATE
+        ");
+        $stmt->execute(['id' => $couponId, 'code' => $code]);
+        $coupon = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$coupon || (int) $coupon['is_active'] !== 1) {
+            throw new DomainException('El cupón ya no está disponible.', 422);
+        }
+
+        $now = new DateTimeImmutable('now', new DateTimeZone('America/Bogota'));
+        if (!empty($coupon['starts_at']) && new DateTimeImmutable((string) $coupon['starts_at'], new DateTimeZone('America/Bogota')) > $now) {
+            throw new DomainException('El cupón todavía no está vigente.', 422);
+        }
+        if (!empty($coupon['expires_at']) && new DateTimeImmutable((string) $coupon['expires_at'], new DateTimeZone('America/Bogota')) < $now) {
+            throw new DomainException('El cupón ya venció.', 422);
+        }
+        if ($subtotal < (float) $coupon['minimum_purchase']) {
+            throw new DomainException('El pedido ya no cumple la compra mínima del cupón.', 422);
+        }
+        if ($coupon['usage_limit'] !== null && (int) $coupon['usage_count'] >= (int) $coupon['usage_limit']) {
+            throw new DomainException('El cupón alcanzó su límite total de usos.', 422);
+        }
+
+        $perCustomerLimit = (int) $coupon['per_customer_limit'];
+        if ($perCustomerLimit > 0) {
+            $uses = $this->db->prepare("
+                SELECT COUNT(*)
+                FROM coupon_redemptions
+                WHERE coupon_id = :coupon_id
+                  AND customer_id = :customer_id
+            ");
+            $uses->execute(['coupon_id' => $couponId, 'customer_id' => $customerId]);
+            if ((int) $uses->fetchColumn() >= $perCustomerLimit) {
+                throw new DomainException('Ya alcanzaste el límite de uso de este cupón.', 422);
+            }
+        }
+
+        $value = (float) $coupon['discount_value'];
+        $discount = $coupon['discount_type'] === 'percentage'
+            ? ($subtotal * $value / 100)
+            : min($value, $subtotal);
+        $discount = round(min($discount, $subtotal), 2);
+
+        if (
+            abs($discount - (float) ($couponData['discount_amount'] ?? -1)) > 0.01 ||
+            abs($discount - (float) ($orderData['discount_amount'] ?? 0)) > 0.01
+        ) {
+            throw new DomainException('El descuento del cupón cambió. Vuelve a validar el código.', 409);
+        }
+
+        $expectedTotal = round(
+            (float) $orderData['subtotal'] +
+            (float) $orderData['tax_amount'] -
+            $discount,
+            2
+        );
+
+        if (abs($expectedTotal - (float) $orderData['total']) > 0.01 || $expectedTotal <= 0) {
+            throw new DomainException('El total del pedido no es válido.', 409);
+        }
+    }
+
+    /**
+     * Registra el uso del cupón y actualiza el contador.
+     */
+    private function recordCouponRedemption(int $orderId, array $orderData, array $couponData): void
+    {
+        $stmt = $this->db->prepare("
+            INSERT INTO coupon_redemptions (
+                coupon_id, order_id, customer_id, code, discount_amount
+            ) VALUES (
+                :coupon_id, :order_id, :customer_id, :code, :discount_amount
+            )
+        ");
+        $stmt->execute([
+            'coupon_id' => (int) $couponData['id'],
+            'order_id' => $orderId,
+            'customer_id' => (int) $couponData['customer_id'],
+            'code' => (string) $couponData['code'],
+            'discount_amount' => (float) $orderData['discount_amount']
+        ]);
+
+        $update = $this->db->prepare("
+            UPDATE coupons
+            SET usage_count = usage_count + 1,
+                updated_at = CURRENT_TIMESTAMP
+            WHERE id = :id
+        ");
+        $update->execute(['id' => (int) $couponData['id']]);
     }
 
     /**
