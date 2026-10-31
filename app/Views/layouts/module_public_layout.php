@@ -128,6 +128,9 @@ if ($modulePublicBase !== '' && $modulePublicBase !== '/' && str_starts_with($mo
 }
 $modulePublicPath = '/' . trim($modulePublicPath, '/');
 $modulePublicCss = [];
+if (str_starts_with($modulePublicPath, '/mi-cuenta')) {
+    $modulePublicCss[] = 'customer-account.css';
+}
 if ($modulePublicPath === '/menu') {
     $modulePublicCss[] = 'menu-public.css';
 }
