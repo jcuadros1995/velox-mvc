@@ -24,11 +24,13 @@
             polling.classList.add('d-none');
             return true;
         }
-        if (value === 'declined' || value === 'error') {
+        if (value === 'declined' || value === 'error' || value === 'voided') {
             icon.className = 'store-payment-result-icon is-error';
             icon.innerHTML = '<i class="fa-solid fa-xmark"></i>';
-            title.textContent = 'No se pudo aprobar el pago';
-            message.textContent = 'El pago fue rechazado o presentó un error. Puedes volver al menú e iniciar una nueva compra.';
+            title.textContent = value === 'voided' ? 'El pago fue anulado' : 'No se pudo aprobar el pago';
+            message.textContent = value === 'voided'
+                ? 'La transacción fue anulada y el pedido se canceló.'
+                : 'El pago fue rechazado o presentó un error. Puedes volver al menú e iniciar una nueva compra.';
             polling.classList.add('d-none');
             return true;
         }
