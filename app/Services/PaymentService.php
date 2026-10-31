@@ -4,10 +4,12 @@
 class PaymentService
 {
     private OrderRepository $orderRepository;
+    private PaymentRepository $paymentRepository;
 
     public function __construct()
     {
         $this->orderRepository = new OrderRepository();
+        $this->paymentRepository = new PaymentRepository();
     }
 
     /**
@@ -18,7 +20,8 @@ class PaymentService
      */
     public function checkout(
         array $input,
-        int $customerId
+        int $customerId,
+        array $customerData = []
     ): array {
         $orderId = filter_var(
             $input['order_id'] ?? null,
@@ -74,18 +77,43 @@ class PaymentService
             $gatewayConfig
         );
 
-        return $adapter->createPayment([
-            'reference' => (string) $order['order_number'],
+        // Cada intento de pago usa una referencia exclusiva de Wompi.
+        $reference = (string) $order['order_number'] . '-' . strtoupper(bin2hex(random_bytes(4)));
+
+        $this->paymentRepository->createPendingAttempt(
+            (int) $order['id'],
+            $customerId,
+            $reference,
+            $amount,
+            'COP'
+        );
+
+        $payment = $adapter->createPayment([
+            'reference' => $reference,
             'amount' => $amount,
             'currency' => 'COP'
         ]);
+
+        $fullName = trim(
+            (string) ($customerData['first_name'] ?? '') . ' ' .
+            (string) ($customerData['last_name'] ?? '')
+        );
+
+        $payment['checkout_url'] = 'https://checkout.wompi.co/p/';
+        $payment['redirect_url'] = rtrim(APP_URL, '/') .
+            '/checkout/resultado?reference=' . rawurlencode($reference);
+        $payment['customer_email'] = (string) ($customerData['email'] ?? '');
+        $payment['customer_full_name'] = $fullName;
+        $payment['customer_phone'] = (string) ($customerData['phone'] ?? '');
+
+        return $payment;
     }
 
     /**
      * Procesa y valida la autenticidad de un webhook de Wompi.
      *
-     * La persistencia del pago y la transición del estado de la
-     * orden requieren completar el repositorio de pagos.
+     * El resultado validado se guarda y actualiza la orden de forma
+     * idempotente mediante PaymentRepository.
      */
     public function processWebhook(array $payload): array
     {
@@ -94,7 +122,9 @@ class PaymentService
             $this->getGatewayConfig()
         );
 
-        return $adapter->handleWebhook($payload);
+        $verifiedEvent = $adapter->handleWebhook($payload);
+
+        return $this->paymentRepository->processVerifiedEvent($verifiedEvent);
     }
 
     /**
@@ -115,7 +145,6 @@ class PaymentService
 
         foreach ([
             'public_key',
-            'private_key',
             'integrity_secret',
             'events_secret'
         ] as $key) {
