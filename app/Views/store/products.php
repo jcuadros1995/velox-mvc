@@ -174,19 +174,23 @@ $categoryIsSelected = static function (array $category) use ($selectedCategory):
                         $imageAlt = trim((string) ($product['favorite_image_alt'] ?? $productName));
                         $priceOptions = is_array($product['price_options'] ?? null) ? $product['price_options'] : [];
                         $firstOption = $priceOptions[0] ?? null;
-                        $basePrice = $firstOption !== null
-                            ? (float) ($firstOption['price'] ?? 0)
+                        $availablePrices = array_values(array_filter(
+                            array_map(static fn (array $option): float => (float) ($option['price'] ?? 0), $priceOptions),
+                            static fn (float $price): bool => $price > 0
+                        ));
+                        $availableComboPrices = array_values(array_filter(
+                            array_map(static fn (array $option): float => (float) ($option['combo_price'] ?? 0), $priceOptions),
+                            static fn (float $price): bool => $price > 0
+                        ));
+                        $basePrice = !empty($availablePrices)
+                            ? min($availablePrices)
                             : (float) ($product['price'] ?? 0);
-                        $baseComboPrice = $firstOption !== null
-                            ? (float) ($firstOption['combo_price'] ?? 0)
+                        $hasCombo = !empty($priceOptions)
+                            ? !empty($availableComboPrices)
+                            : (float) ($product['combo_price'] ?? 0) > 0;
+                        $baseComboPrice = !empty($priceOptions)
+                            ? (!empty($availableComboPrices) ? min($availableComboPrices) : 0)
                             : (float) ($product['combo_price'] ?? 0);
-                        $hasCombo = (float) ($product['combo_price'] ?? 0) > 0;
-                        foreach ($priceOptions as $priceOption) {
-                            if ((float) ($priceOption['combo_price'] ?? 0) > 0) {
-                                $hasCombo = true;
-                                break;
-                            }
-                        }
 
                         $cartProductJson = json_encode(
                             [
@@ -257,12 +261,12 @@ $categoryIsSelected = static function (array $category) use ($selectedCategory):
                                 <div class="storefront-product-price-row">
                                     <div>
                                         <span><?= !empty($priceOptions) ? 'DESDE' : 'PRECIO' ?></span>
-                                        <strong><?= $formatStorePrice($basePrice) ?></strong>
+                                        <strong data-store-current-price><?= $formatStorePrice($basePrice) ?></strong>
                                     </div>
                                     <?php if ($hasCombo): ?>
                                         <div class="storefront-combo-price">
                                             <span>COMBO DESDE</span>
-                                            <strong><?= $formatStorePrice($baseComboPrice > 0 ? $baseComboPrice : ($product['combo_price'] ?? 0)) ?></strong>
+                                            <strong data-store-current-combo><?= $formatStorePrice($baseComboPrice) ?></strong>
                                         </div>
                                     <?php endif; ?>
                                 </div>
@@ -296,7 +300,7 @@ $categoryIsSelected = static function (array $category) use ($selectedCategory):
 
                                     <?php if ($hasCombo): ?>
                                         <label class="storefront-combo-toggle">
-                                            <input type="checkbox" data-cart-combo>
+                                            <input type="checkbox" data-cart-combo <?= !empty($priceOptions) && (float) ($firstOption['combo_price'] ?? 0) <= 0 ? 'disabled' : '' ?>>
                                             <span>Convertir en combo</span>
                                         </label>
                                     <?php endif; ?>
