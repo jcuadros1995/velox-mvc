@@ -387,7 +387,6 @@ $customerAccountUrl = APP_URL . '/mi-cuenta';
 
                     </a>
                     <?php endif; ?>
-                    <?php endif; ?>
 
                 </li>
 
