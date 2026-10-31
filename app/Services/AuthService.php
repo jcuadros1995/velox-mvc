@@ -24,34 +24,78 @@ class AuthService
      */
     public function register(array $input): int
     {
-        $email = strtolower(
-            trim($input['email'])
-        );
+        $firstName = trim(strip_tags((string) ($input['first_name'] ?? '')));
+        $lastName = trim(strip_tags((string) ($input['last_name'] ?? '')));
+        $email = strtolower(trim((string) ($input['email'] ?? '')));
+        $phone = trim((string) ($input['phone'] ?? ''));
+        $password = (string) ($input['password'] ?? '');
 
-        if (
-            $this->userRepository
-                ->findByEmail($email)
-        ) {
+        if ($firstName === '' || $email === '' || $password === '') {
+            throw new InvalidArgumentException(
+                'Nombre, correo electrónico y contraseña son obligatorios.'
+            );
+        }
+
+        $firstNameLength = function_exists('mb_strlen')
+            ? mb_strlen($firstName)
+            : strlen($firstName);
+
+        $lastNameLength = function_exists('mb_strlen')
+            ? mb_strlen($lastName)
+            : strlen($lastName);
+
+        if ($firstNameLength > 100 || $lastNameLength > 100) {
+            throw new InvalidArgumentException(
+                'Los nombres no pueden superar los 100 caracteres.'
+            );
+        }
+
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL) || strlen($email) > 190) {
+            throw new InvalidArgumentException(
+                'Ingresa un correo electrónico válido.'
+            );
+        }
+
+        if (strlen($phone) > 30) {
+            throw new InvalidArgumentException(
+                'El teléfono no puede superar los 30 caracteres.'
+            );
+        }
+
+        // PASSWORD_BCRYPT utiliza como máximo 72 bytes.
+        if (strlen($password) < 8 || strlen($password) > 72) {
+            throw new InvalidArgumentException(
+                'La contraseña debe tener entre 8 y 72 caracteres.'
+            );
+        }
+
+        if ($this->userRepository->findByEmail($email)) {
             throw new DomainException(
-                'El correo electrónico ya está registrado',
+                'El correo electrónico ya está registrado.',
                 409
             );
         }
 
-        $passwordHash =
-            password_hash(
-                $input['password'],
-                PASSWORD_BCRYPT
-            );
+        $passwordHash = password_hash(
+            $password,
+            PASSWORD_BCRYPT
+        );
 
-        return $this->userRepository
-            ->createCustomer(
-                trim($input['first_name']),
-                trim($input['last_name'] ?? ''),
-                $email,
-                trim($input['phone'] ?? ''),
-                $passwordHash
+        if ($passwordHash === false) {
+            throw new RuntimeException(
+                'No fue posible proteger la contraseña.'
             );
+        }
+
+        // El rol y la sede se asignan exclusivamente en el repositorio:
+        // el formulario público nunca puede crear usuarios administrativos.
+        return $this->userRepository->createCustomer(
+            $firstName,
+            $lastName,
+            $email,
+            $phone,
+            $passwordHash
+        );
     }
 
 
