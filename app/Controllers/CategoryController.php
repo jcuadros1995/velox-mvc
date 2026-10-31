@@ -2449,7 +2449,7 @@ class CategoryController extends Controller
          */
 
         $this->view(
-            'layouts/public_layout',
+            'layouts/module_public_layout',
             [
 
                 'title' =>
