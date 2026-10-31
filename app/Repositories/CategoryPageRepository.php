@@ -957,4 +957,134 @@ class CategoryPageRepository
 
         return $rules;
     }
+
+    /**
+     * Categorías activas que tienen productos disponibles para la tienda.
+     * El conteo de una categoría principal incluye sus subcategorías directas.
+     */
+    public function getPublicCatalogCategories(): array
+    {
+        $sql = "
+            SELECT
+                c.id,
+                c.parent_id,
+                c.name,
+                c.slug,
+                parent_category.name AS parent_name,
+                (
+                    SELECT COUNT(*)
+                    FROM items catalog_item
+                    INNER JOIN categories item_category
+                        ON item_category.id = catalog_item.category_id
+                    WHERE (
+                        item_category.id = c.id
+                        OR item_category.parent_id = c.id
+                    )
+                      AND catalog_item.is_active = 1
+                      AND catalog_item.is_available = 1
+                      AND item_category.is_active = 1
+                ) AS product_count
+            FROM categories c
+            LEFT JOIN categories parent_category
+                ON parent_category.id = c.parent_id
+            WHERE c.is_active = 1
+              AND (c.parent_id IS NULL OR parent_category.is_active = 1)
+              AND (
+                    EXISTS (
+                        SELECT 1
+                        FROM items direct_item
+                        WHERE direct_item.category_id = c.id
+                          AND direct_item.is_active = 1
+                          AND direct_item.is_available = 1
+                    )
+                    OR EXISTS (
+                        SELECT 1
+                        FROM items child_item
+                        INNER JOIN categories child_category
+                            ON child_category.id = child_item.category_id
+                        WHERE child_category.parent_id = c.id
+                          AND child_category.is_active = 1
+                          AND child_item.is_active = 1
+                          AND child_item.is_available = 1
+                    )
+              )
+            ORDER BY
+                COALESCE(parent_category.name, c.name) ASC,
+                c.parent_id IS NOT NULL ASC,
+                c.name ASC
+        ";
+
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    /**
+     * Catálogo público completo: únicamente productos activos,
+     * disponibles y pertenecientes a categorías activas.
+     */
+    public function getPublicCatalogProducts(): array
+    {
+        $sql = "
+            SELECT
+                i.id,
+                i.category_id,
+                i.type,
+                i.sku,
+                i.name,
+                i.slug,
+                i.description,
+                i.ingredients,
+                i.price,
+                i.combo_price,
+                i.portion_size,
+                i.spicy_level,
+                i.allergens,
+                i.preparation_notes,
+                i.is_featured,
+                i.display_order,
+                c.name AS category_name,
+                c.slug AS category_slug,
+                c.parent_id AS parent_category_id,
+                COALESCE(parent_category.name, c.name) AS parent_category_name,
+                (
+                    SELECT ii.image_path
+                    FROM item_images ii
+                    WHERE ii.item_id = i.id
+                      AND ii.is_active = 1
+                    ORDER BY
+                        ii.is_favorite DESC,
+                        ii.display_order ASC,
+                        ii.id ASC
+                    LIMIT 1
+                ) AS favorite_image,
+                (
+                    SELECT ii.image_alt
+                    FROM item_images ii
+                    WHERE ii.item_id = i.id
+                      AND ii.is_active = 1
+                    ORDER BY
+                        ii.is_favorite DESC,
+                        ii.display_order ASC,
+                        ii.id ASC
+                    LIMIT 1
+                ) AS favorite_image_alt
+            FROM items i
+            INNER JOIN categories c
+                ON c.id = i.category_id
+            LEFT JOIN categories parent_category
+                ON parent_category.id = c.parent_id
+            WHERE i.is_active = 1
+              AND i.is_available = 1
+              AND c.is_active = 1
+              AND (c.parent_id IS NULL OR parent_category.is_active = 1)
+            ORDER BY
+                i.is_featured DESC,
+                c.name ASC,
+                i.display_order ASC,
+                i.name ASC,
+                i.id ASC
+        ";
+
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+    }
+
 }
