@@ -30,7 +30,7 @@ class OrderRepository
 
         $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $order ?: null;
+        return $this->attachFulfillmentDetails($order ?: null);
     }
 
     /**
@@ -59,7 +59,7 @@ class OrderRepository
 
         $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $order ?: null;
+        return $this->attachFulfillmentDetails($order ?: null);
     }
 
     /**
@@ -81,7 +81,52 @@ class OrderRepository
                 $this->applyCouponRedemption($orderData, $couponData);
             }
 
+            $fulfillmentDetails = is_array($orderData['fulfillment_details'] ?? null)
+                ? $orderData['fulfillment_details']
+                : ['fulfillment_type' => 'pickup'];
+
+            $deliveryFee = round((float) ($orderData['delivery_fee'] ?? 0), 2);
+            unset($orderData['fulfillment_details'], $orderData['delivery_fee']);
+
             $orderId = $this->create($orderData);
+
+            $stmtFulfillment = $this->db->prepare("
+                INSERT INTO order_fulfillment_details
+                (
+                    order_id,
+                    fulfillment_type,
+                    delivery_address,
+                    delivery_neighborhood,
+                    delivery_city,
+                    delivery_reference,
+                    contact_phone,
+                    delivery_fee
+                )
+                VALUES
+                (
+                    :order_id,
+                    :fulfillment_type,
+                    :delivery_address,
+                    :delivery_neighborhood,
+                    :delivery_city,
+                    :delivery_reference,
+                    :contact_phone,
+                    :delivery_fee
+                )
+            ");
+
+            $stmtFulfillment->execute([
+                'order_id' => $orderId,
+                'fulfillment_type' => ($fulfillmentDetails['fulfillment_type'] ?? 'pickup') === 'delivery'
+                    ? 'delivery'
+                    : 'pickup',
+                'delivery_address' => $fulfillmentDetails['delivery_address'] ?? null,
+                'delivery_neighborhood' => $fulfillmentDetails['delivery_neighborhood'] ?? null,
+                'delivery_city' => $fulfillmentDetails['delivery_city'] ?? null,
+                'delivery_reference' => $fulfillmentDetails['delivery_reference'] ?? null,
+                'contact_phone' => $fulfillmentDetails['contact_phone'] ?? null,
+                'delivery_fee' => $deliveryFee
+            ]);
 
             $stmtItem = $this->db->prepare("
                 INSERT INTO order_items
@@ -253,7 +298,8 @@ class OrderRepository
 
         $expectedTotal = round(
             (float) $orderData['subtotal'] +
-            (float) $orderData['tax_amount'] -
+            (float) $orderData['tax_amount'] +
+            (float) ($orderData['delivery_fee'] ?? 0) -
             $discount,
             2
         );
@@ -326,6 +372,51 @@ class OrderRepository
         ]);
 
         $order['items'] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return $order;
+    }
+
+    /**
+     * Adjunta al pedido la modalidad y los datos de entrega.
+     * Los pedidos anteriores a esta funcionalidad se interpretan como recogida.
+     */
+    private function attachFulfillmentDetails(?array $order): ?array
+    {
+        if (!$order) {
+            return null;
+        }
+
+        $stmt = $this->db->prepare("
+            SELECT
+                fulfillment_type,
+                delivery_address,
+                delivery_neighborhood,
+                delivery_city,
+                delivery_reference,
+                contact_phone,
+                delivery_fee
+            FROM order_fulfillment_details
+            WHERE order_id = :order_id
+            LIMIT 1
+        ");
+
+        $stmt->execute(['order_id' => (int) $order['id']]);
+        $fulfillment = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$fulfillment) {
+            $fulfillment = [
+                'fulfillment_type' => 'pickup',
+                'delivery_address' => null,
+                'delivery_neighborhood' => null,
+                'delivery_city' => null,
+                'delivery_reference' => null,
+                'contact_phone' => null,
+                'delivery_fee' => 0
+            ];
+        }
+
+        $order['fulfillment_type'] = (string) ($fulfillment['fulfillment_type'] ?? 'pickup');
+        $order['fulfillment'] = $fulfillment;
 
         return $order;
     }
