@@ -129,6 +129,32 @@ $router->post(
 
 
 
+
+/*
+|--------------------------------------------------------------------------
+| CUSTOMER ACCOUNT
+|--------------------------------------------------------------------------
+*/
+$router->get('/mi-cuenta', 'CustomerAccountController@dashboard', [
+    ['Middleware', 'webRole', ['customer']]
+]);
+$router->get('/mi-cuenta/pedidos', 'CustomerAccountController@orders', [
+    ['Middleware', 'webRole', ['customer']]
+]);
+$router->get('/mi-cuenta/pedido', 'CustomerAccountController@orderDetail', [
+    ['Middleware', 'webRole', ['customer']]
+]);
+$router->get('/mi-cuenta/productos', 'CustomerAccountController@products', [
+    ['Middleware', 'webRole', ['customer']]
+]);
+$router->get('/mi-cuenta/perfil', 'CustomerAccountController@profile', [
+    ['Middleware', 'webRole', ['customer']]
+]);
+$router->post('/api/customer/profile/update', 'CustomerAccountController@updateProfile', [
+    ['Middleware', 'auth', []],
+    ['Middleware', 'role', ['customer']]
+]);
+
 /*
 |--------------------------------------------------------------------------
 | ADMIN
