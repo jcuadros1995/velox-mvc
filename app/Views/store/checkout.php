@@ -187,6 +187,7 @@ $storeFormatDeliveryFee = '
                     <div id="checkoutOrderItems" class="store-checkout-order-items"></div>
                     <div class="store-summary-divider"></div>
                     <div class="store-summary-row"><span>Subtotal estimado</span><strong id="checkoutSubtotal">$0</strong></div>
+                    <div class="store-summary-row d-none" id="checkoutDeliveryFeeRow"><span>Envío a domicilio</span><strong id="checkoutDeliveryFee">$0</strong></div>
                     <div class="store-summary-row store-discount-row d-none" id="checkoutDiscountRow"><span>Descuento</span><strong id="checkoutDiscount">−$0</strong></div>
                     <div class="store-summary-row store-summary-total"><span>Total estimado</span><strong id="checkoutTotal">$0</strong></div>
                     <p class="store-summary-note">El importe definitivo se calcula nuevamente en el servidor usando los precios e impuestos vigentes del catálogo.</p>
