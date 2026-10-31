@@ -1,0 +1,57 @@
+
+/* Customer area – isolated namespace */
+.customer-area{--ca-ink:#17212b;--ca-muted:#77818d;--ca-line:#e9edf1;--ca-brand:#d91f2b;--ca-soft:#fff4f4;color:var(--ca-ink);padding:34px 0 70px;background:#f7f8fa;min-height:70vh}
+.customer-area .ca-shell{max-width:1240px;margin:auto;padding:0 22px}
+.customer-area .ca-heading{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:28px}
+.customer-area .ca-eyebrow{font-size:11px;font-weight:800;letter-spacing:1.8px;text-transform:uppercase;color:var(--ca-brand);margin-bottom:8px}
+.customer-area h1{font-size:clamp(27px,4vw,38px);font-weight:800;letter-spacing:-1.3px;margin:0 0 8px}
+.customer-area .ca-subtitle{color:var(--ca-muted);margin:0}
+.customer-area .ca-grid{display:grid;grid-template-columns:250px minmax(0,1fr);gap:24px;align-items:start}
+.customer-area .ca-sidebar,.customer-area .ca-card{background:#fff;border:1px solid var(--ca-line);border-radius:18px;box-shadow:0 8px 26px rgba(20,31,45,.035)}
+.customer-area .ca-sidebar{padding:18px;position:sticky;top:18px}
+.customer-area .ca-user{display:flex;gap:12px;align-items:center;padding:8px 4px 18px;border-bottom:1px solid var(--ca-line);margin-bottom:14px}
+.customer-area .ca-avatar{width:46px;height:46px;border-radius:50%;background:#17212b;color:white;display:grid;place-items:center;font-weight:800;font-size:17px;flex:none}
+.customer-area .ca-user strong{display:block;font-size:14px;line-height:1.3}
+.customer-area .ca-user small{display:block;color:var(--ca-muted);font-size:11px;overflow-wrap:anywhere;margin-top:3px}
+.customer-area .ca-nav{display:grid;gap:5px}
+.customer-area .ca-nav a{display:flex;align-items:center;gap:11px;text-decoration:none;color:#53606e;padding:11px 12px;border-radius:11px;font-size:13px;font-weight:650;transition:.18s}
+.customer-area .ca-nav a:hover,.customer-area .ca-nav a.active{background:var(--ca-soft);color:var(--ca-brand)}
+.customer-area .ca-nav i{width:18px;text-align:center;font-size:15px}
+.customer-area .ca-logout{border-top:1px solid var(--ca-line);margin-top:14px;padding-top:12px}
+.customer-area .ca-logout a{color:#bf2833}
+.customer-area .ca-content{min-width:0}
+.customer-area .ca-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}
+.customer-area .ca-stat{padding:19px}
+.customer-area .ca-stat span{display:block;color:var(--ca-muted);font-size:12px;font-weight:600}
+.customer-area .ca-stat strong{display:block;font-size:25px;letter-spacing:-.8px;margin-top:9px}
+.customer-area .ca-stat i{float:right;color:var(--ca-brand);background:var(--ca-soft);padding:10px;border-radius:11px}
+.customer-area .ca-card{padding:22px;margin-bottom:18px}
+.customer-area .ca-card-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:17px}
+.customer-area .ca-card h2{font-size:17px;font-weight:800;margin:0}
+.customer-area .ca-link{color:var(--ca-brand);font-size:12px;font-weight:750;text-decoration:none}
+.customer-area .ca-table-wrap{overflow:auto}
+.customer-area table{width:100%;border-collapse:collapse;min-width:590px}
+.customer-area th{text-align:left;color:#89929c;font-size:10px;text-transform:uppercase;letter-spacing:.8px;padding:12px;border-bottom:1px solid var(--ca-line)}
+.customer-area td{padding:15px 12px;border-bottom:1px solid #f0f2f4;font-size:12px;vertical-align:middle}
+.customer-area tbody tr:last-child td{border-bottom:0}
+.customer-area .ca-status{display:inline-flex;align-items:center;padding:6px 10px;border-radius:20px;font-size:10px;font-weight:800;background:#f1f3f5;color:#64707c;text-transform:capitalize}
+.customer-area .ca-status--pending{background:#fff5dc;color:#936500}.customer-area .ca-status--processing{background:#eaf2ff;color:#285bb0}.customer-area .ca-status--completed{background:#e8f7ef;color:#187347}.customer-area .ca-status--cancelled,.customer-area .ca-status--refunded{background:#fff0f0;color:#b32d36}
+.customer-area .ca-button{border:0;background:var(--ca-brand);color:white;text-decoration:none;padding:11px 16px;border-radius:10px;font-size:12px;font-weight:750;display:inline-flex;align-items:center;gap:8px}
+.customer-area .ca-button:hover{background:#b81924;color:#fff}
+.customer-area .ca-button--light{background:#fff;color:#34404c;border:1px solid var(--ca-line)}
+.customer-area .ca-product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.customer-area .ca-product{display:flex;gap:13px;align-items:center;border:1px solid var(--ca-line);border-radius:13px;padding:11px;min-width:0}
+.customer-area .ca-product img{width:62px;height:62px;object-fit:cover;border-radius:10px;background:#f0f2f4}
+.customer-area .ca-product strong{display:block;font-size:12px}.customer-area .ca-product small{color:var(--ca-muted);font-size:11px}
+.customer-area .ca-empty{text-align:center;padding:42px 15px;color:var(--ca-muted)}.customer-area .ca-empty i{font-size:34px;color:#b7c0c9;margin-bottom:12px}
+.customer-area .ca-form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+.customer-area .ca-field label{font-size:11px;font-weight:750;display:block;margin-bottom:7px;color:#56616c}
+.customer-area .ca-field input,.customer-area .ca-field select{width:100%;border:1px solid #dfe4e9;border-radius:10px;padding:12px 13px;font:inherit;font-size:13px;background:white}
+.customer-area .ca-field input:focus,.customer-area .ca-field select:focus{outline:0;border-color:#e05d65;box-shadow:0 0 0 3px rgba(217,31,43,.08)}
+.customer-area .ca-note{font-size:11px;color:var(--ca-muted);margin-top:6px}
+.customer-area .ca-total{font-size:24px;font-weight:850}
+.customer-area .ca-detail-list{display:grid;gap:10px}
+.customer-area .ca-detail-row{display:flex;justify-content:space-between;gap:15px;padding:11px 0;border-bottom:1px solid var(--ca-line);font-size:12px}
+.customer-area .ca-detail-row span{color:var(--ca-muted)}
+@media(max-width:900px){.customer-area .ca-grid{grid-template-columns:1fr}.customer-area .ca-sidebar{position:static}.customer-area .ca-nav{grid-template-columns:repeat(3,minmax(0,1fr))}.customer-area .ca-nav a{justify-content:center;flex-direction:column;text-align:center;font-size:10px;gap:6px}.customer-area .ca-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:560px){.customer-area{padding-top:24px}.customer-area .ca-shell{padding:0 13px}.customer-area .ca-heading{align-items:flex-start;flex-direction:column}.customer-area .ca-stats{gap:9px}.customer-area .ca-stat{padding:14px}.customer-area .ca-stat strong{font-size:21px}.customer-area .ca-card{padding:16px}.customer-area .ca-product-grid,.customer-area .ca-form-grid{grid-template-columns:1fr}.customer-area .ca-nav{grid-template-columns:repeat(3,minmax(0,1fr))}}
