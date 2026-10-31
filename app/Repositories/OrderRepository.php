@@ -17,27 +17,57 @@ class OrderRepository
      */
     public function find(int $id): ?array
     {
-        $sql = "
+        $stmt = $this->db->prepare("
             SELECT *
             FROM {$this->table}
             WHERE id = :id
             LIMIT 1
-        ";
-
-        $stmt = $this->db->prepare($sql);
+        ");
 
         $stmt->execute([
             'id' => $id
         ]);
 
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        return $result ?: null;
+        return $order ?: null;
     }
 
     /**
-     * Crea una orden junto con sus ítems
-     * y descuenta el inventario correspondiente.
+     * Busca una orden que pertenezca al cliente autenticado.
+     */
+    public function findForCustomer(
+        int $orderId,
+        int $customerId
+    ): ?array {
+        if ($orderId <= 0 || $customerId <= 0) {
+            return null;
+        }
+
+        $stmt = $this->db->prepare("
+            SELECT *
+            FROM {$this->table}
+            WHERE id = :id
+              AND customer_id = :customer_id
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'id' => $orderId,
+            'customer_id' => $customerId
+        ]);
+
+        $order = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $order ?: null;
+    }
+
+    /**
+     * Crea la orden y sus detalles en una sola transacción.
+     *
+     * El inventario se descuenta únicamente cuando la categoría
+     * del producto tiene requires_inventory = 1. Si no existe
+     * inventario suficiente, la orden completa se revierte.
      */
     public function createOrderWithItems(
         array $orderData,
@@ -46,14 +76,8 @@ class OrderRepository
         try {
             $this->db->beginTransaction();
 
-            /*
-             * 1. Crear cabecera de la orden.
-             */
             $orderId = $this->create($orderData);
 
-            /*
-             * 2. Preparar inserción de ítems.
-             */
             $stmtItem = $this->db->prepare("
                 INSERT INTO order_items
                 (
@@ -75,53 +99,62 @@ class OrderRepository
                 )
             ");
 
-            /*
-             * 3. Preparar actualización de inventario.
-             *
-             * IMPORTANTE:
-             * Se utilizan dos placeholders diferentes para quantity.
-             *
-             * Esto evita el problema HY093 provocado por reutilizar
-             * :qty en más de una posición de la misma sentencia.
-             */
             $stmtStock = $this->db->prepare("
                 UPDATE inventory
-                SET stock_quantity = stock_quantity - :qty_update
+                SET stock_quantity = stock_quantity - :quantity_to_subtract
                 WHERE item_id = :item_id
                   AND branch_id = :branch_id
-                  AND stock_quantity >= :qty_check
+                  AND stock_quantity >= :minimum_quantity
             ");
 
             foreach ($items as $item) {
-
+                $quantity = (int) $item['quantity'];
+                $inventoryQuantity = (int) ($item['inventory_quantity'] ?? 0);
                 $unitPrice = (float) $item['unit_price'];
-                $qty = (int) $item['quantity'];
+                $totalPrice = (float) $item['total_price'];
 
-                $totalPrice = $unitPrice * $qty;
+                $metadata = json_encode(
+                    $item['metadata'] ?? [],
+                    JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
+                );
 
-                /*
-                 * Insertar detalle de la orden.
-                 */
+                if ($metadata === false) {
+                    throw new RuntimeException(
+                        'No fue posible preparar los datos del producto.'
+                    );
+                }
+
                 $stmtItem->execute([
                     'order_id' => $orderId,
-                    'item_id' => $item['item_id'],
-                    'quantity' => $qty,
+                    'item_id' => (int) $item['item_id'],
+                    'quantity' => $quantity,
                     'unit_price' => $unitPrice,
                     'total_price' => $totalPrice,
-                    'metadata' => !empty($item['metadata'])
-                        ? json_encode($item['metadata'])
-                        : null
+                    'metadata' => $metadata
                 ]);
 
-                /*
-                 * Descontar inventario.
-                 */
-                $stmtStock->execute([
-                    'qty_update' => $qty,
-                    'qty_check' => $qty,
-                    'item_id' => $item['item_id'],
-                    'branch_id' => $orderData['branch_id']
-                ]);
+                if (!empty($item['requires_inventory'])) {
+                    if ($inventoryQuantity <= 0) {
+                        throw new DomainException(
+                            'La cantidad de inventario solicitada no es válida.',
+                            409
+                        );
+                    }
+
+                    $stmtStock->execute([
+                        'quantity_to_subtract' => $inventoryQuantity,
+                        'minimum_quantity' => $inventoryQuantity,
+                        'item_id' => (int) $item['item_id'],
+                        'branch_id' => (int) $orderData['branch_id']
+                    ]);
+
+                    if ($stmtStock->rowCount() !== 1) {
+                        throw new DomainException(
+                            'Uno de los productos no tiene inventario suficiente en la sede seleccionada.',
+                            409
+                        );
+                    }
+                }
             }
 
             $this->db->commit();
@@ -129,7 +162,6 @@ class OrderRepository
             return $orderId;
 
         } catch (Throwable $e) {
-
             if ($this->db->inTransaction()) {
                 $this->db->rollBack();
             }
@@ -139,11 +171,17 @@ class OrderRepository
     }
 
     /**
-     * Obtiene una orden con todos sus ítems.
+     * Obtiene el detalle de una orden solamente si pertenece
+     * al cliente que realiza la consulta.
      */
-    public function getOrderDetails(int $orderId): ?array
-    {
-        $order = $this->find($orderId);
+    public function getOrderDetailsForCustomer(
+        int $orderId,
+        int $customerId
+    ): ?array {
+        $order = $this->findForCustomer(
+            $orderId,
+            $customerId
+        );
 
         if (!$order) {
             return null;
@@ -158,6 +196,7 @@ class OrderRepository
             INNER JOIN items i
                 ON oi.item_id = i.id
             WHERE oi.order_id = :order_id
+            ORDER BY oi.id ASC
         ");
 
         $stmt->execute([
@@ -170,27 +209,20 @@ class OrderRepository
     }
 
     /**
-     * Crea un registro en orders.
+     * Inserta la cabecera de la orden.
      */
     private function create(array $data): int
     {
         $fields = array_keys($data);
-
         $fieldNames = implode(', ', $fields);
+        $placeholders = ':' . implode(', :', $fields);
 
-        $placeholders = ':' . implode(
-                ', :',
-                $fields
-            );
-
-        $sql = "
+        $stmt = $this->db->prepare("
             INSERT INTO {$this->table}
             ({$fieldNames})
             VALUES
             ({$placeholders})
-        ";
-
-        $stmt = $this->db->prepare($sql);
+        ");
 
         $stmt->execute($data);
 
