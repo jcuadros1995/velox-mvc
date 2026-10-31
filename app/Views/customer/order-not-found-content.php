@@ -1,0 +1,1 @@
+<section class="ca-card"><div class="ca-empty"><i class="fa-solid fa-file-circle-question"></i><h2 class="h5 fw-bold text-dark">No encontramos ese pedido</h2><p>El pedido no existe o no está asociado a tu cuenta.</p><a href="<?= APP_URL ?>/mi-cuenta/pedidos" class="ca-button">Volver a mis pedidos</a></div></section>
