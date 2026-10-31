@@ -103,39 +103,55 @@
 
         const empty = document.getElementById('storeCartEmpty');
         const count = document.getElementById('storeCartItemCount');
+        const summaryCount = document.getElementById('storeCartSummaryCount');
         const checkoutLink = document.getElementById('storeCartCheckout');
         const hasItems = items.length > 0;
+        const itemCount = getCount();
 
         empty?.classList.toggle('d-none', hasItems);
         container.classList.toggle('d-none', !hasItems);
-        if (count) count.textContent = getCount() + (getCount() === 1 ? ' producto' : ' productos');
+
+        if (count) count.textContent = itemCount + (itemCount === 1 ? ' producto' : ' productos');
+        if (summaryCount) summaryCount.textContent = String(itemCount);
+
         if (checkoutLink) {
-            checkoutLink.classList.toggle('disabled', !hasItems);
+            checkoutLink.classList.toggle('is-disabled', !hasItems);
             checkoutLink.setAttribute('aria-disabled', hasItems ? 'false' : 'true');
+            checkoutLink.setAttribute('tabindex', hasItems ? '0' : '-1');
         }
 
         container.innerHTML = items.map((item) => {
             const image = item.image
                 ? '<img src="' + escapeHtml(item.image) + '" alt="' + escapeHtml(item.name) + '" loading="lazy">'
                 : '<span class="store-cart-placeholder"><i class="fa-solid fa-utensils"></i></span>';
-            const detail = [item.option_label, item.is_combo ? 'Combo' : ''].filter(Boolean).join(' · ');
-            return '<article class="store-cart-line" data-cart-key="' + escapeHtml(item.key) + '">' +
-                '<div class="store-cart-line-image">' + image + '</div>' +
-                '<div class="store-cart-line-info"><strong>' + escapeHtml(item.name) + '</strong>' +
-                (detail ? '<small>' + escapeHtml(detail) + '</small>' : '') +
-                '<span class="store-cart-line-price">' + currency(item.price) + '</span></div>' +
-                '<div class="store-cart-line-actions"><div class="store-quantity-control">' +
-                '<button type="button" data-cart-action="decrease" aria-label="Disminuir">−</button>' +
-                '<span>' + Number(item.quantity) + '</span>' +
-                '<button type="button" data-cart-action="increase" aria-label="Aumentar">+</button></div>' +
-                '<button type="button" class="store-cart-remove" data-cart-action="remove"><i class="fa-regular fa-trash-can"></i><span>Eliminar</span></button></div>' +
-                '<strong class="store-cart-line-total">' + currency(Number(item.price) * Number(item.quantity)) + '</strong>' +
-                '</article>';
+
+            const details = [item.option_label, item.is_combo ? 'Combo' : ''].filter(Boolean).join(' · ');
+            const lineTotal = Number(item.price) * Number(item.quantity);
+
+            return '<article class="velox-cart-line" data-cart-key="' + escapeHtml(item.key) + '">' +
+                '<div class="velox-cart-line-media">' + image + '</div>' +
+                '<div class="velox-cart-line-info">' +
+                    '<span class="velox-cart-line-kicker">PRODUCTO SELECCIONADO</span>' +
+                    '<h3>' + escapeHtml(item.name) + '</h3>' +
+                    (details ? '<p class="velox-cart-line-details">' + escapeHtml(details) + '</p>' : '<p class="velox-cart-line-details">Preparado para tu pedido</p>') +
+                    '<button type="button" class="velox-cart-remove" data-cart-action="remove"><i class="fa-regular fa-trash-can"></i> Eliminar</button>' +
+                '</div>' +
+                '<div class="velox-cart-line-controls">' +
+                    '<div class="velox-cart-unit-price"><span>Precio unitario</span><strong>' + currency(item.price) + '</strong></div>' +
+                    '<div class="velox-cart-quantity">' +
+                        '<button type="button" data-cart-action="decrease" aria-label="Disminuir cantidad">−</button>' +
+                        '<span>' + Number(item.quantity) + '</span>' +
+                        '<button type="button" data-cart-action="increase" aria-label="Aumentar cantidad">+</button>' +
+                    '</div>' +
+                    '<div class="velox-cart-line-total"><span>Subtotal</span><strong>' + currency(lineTotal) + '</strong></div>' +
+                '</div>' +
+            '</article>';
         }).join('');
 
         const subtotal = currency(getSubtotal());
         const subtotalNode = document.getElementById('storeCartSubtotal');
         const totalNode = document.getElementById('storeCartTotal');
+
         if (subtotalNode) subtotalNode.textContent = subtotal;
         if (totalNode) totalNode.textContent = subtotal;
     }
