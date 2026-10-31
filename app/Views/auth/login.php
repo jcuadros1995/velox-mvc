@@ -328,6 +328,13 @@
 
                     </form>
 
+                    <div class="register-login-prompt">
+                        ¿No tienes una cuenta?
+                        <a href="<?= htmlspecialchars(rtrim(APP_URL, '/') . '/registro', ENT_QUOTES, 'UTF-8') ?>">
+                            Regístrate aquí
+                        </a>
+                    </div>
+
 
                     <!-- Security -->
                     <div class="login-security">
