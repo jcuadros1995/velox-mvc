@@ -1,4 +1,4 @@
-<main class="store-checkout-shell">
+<main class="store-checkout-shell" data-checkout-authenticated="<?= !empty($storeIsAuthenticated) ? '1' : '0' ?>">
     <div class="container py-5">
         <div class="store-page-heading">
             <span class="store-eyebrow">ÚLTIMO PASO</span>
@@ -17,13 +17,31 @@
                 <section class="store-checkout-panel">
                     <div class="store-panel-section">
                         <h2><span>01</span> Datos del cliente</h2>
-                        <div class="store-customer-summary">
-                            <div><small>Nombre</small><strong><?= htmlspecialchars(trim((string)($storeCustomer['first_name'] ?? '') . ' ' . (string)($storeCustomer['last_name'] ?? '')), ENT_QUOTES, 'UTF-8') ?></strong></div>
-                            <div><small>Correo electrónico</small><strong><?= htmlspecialchars((string)($storeCustomer['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></strong></div>
-                            <?php if (!empty($storeCustomer['phone'])): ?>
-                                <div><small>Teléfono</small><strong><?= htmlspecialchars((string)$storeCustomer['phone'], ENT_QUOTES, 'UTF-8') ?></strong></div>
-                            <?php endif; ?>
-                        </div>
+                        <?php if (!empty($storeIsAuthenticated) && !empty($storeCustomer)): ?>
+                            <div class="store-customer-summary">
+                                <div><small>Nombre</small><strong><?= htmlspecialchars(trim((string)($storeCustomer['first_name'] ?? '') . ' ' . (string)($storeCustomer['last_name'] ?? '')), ENT_QUOTES, 'UTF-8') ?></strong></div>
+                                <div><small>Correo electrónico</small><strong><?= htmlspecialchars((string)($storeCustomer['email'] ?? ''), ENT_QUOTES, 'UTF-8') ?></strong></div>
+                                <?php if (!empty($storeCustomer['phone'])): ?>
+                                    <div><small>Teléfono</small><strong><?= htmlspecialchars((string)$storeCustomer['phone'], ENT_QUOTES, 'UTF-8') ?></strong></div>
+                                <?php endif; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="store-checkout-access">
+                                <span class="store-checkout-access-icon"><i class="fa-solid fa-user-lock"></i></span>
+                                <div class="store-checkout-access-copy">
+                                    <strong>Continúa con tu cuenta de cliente</strong>
+                                    <p>Ya puedes revisar tu pedido y elegir la sede de recogida. Para confirmar la orden y realizar el pago seguro, inicia sesión o crea tu cuenta. Tus productos permanecerán guardados en el carrito.</p>
+                                    <div class="store-checkout-access-actions">
+                                        <a class="btn btn-velox-primary" href="<?= htmlspecialchars(APP_URL . '/login?redirect=%2Fcheckout', ENT_QUOTES, 'UTF-8') ?>">
+                                            Iniciar sesión <i class="fa-solid fa-arrow-right ms-2"></i>
+                                        </a>
+                                        <a class="store-checkout-register-link" href="<?= htmlspecialchars(APP_URL . '/registro?redirect=%2Fcheckout', ENT_QUOTES, 'UTF-8') ?>">
+                                            Crear cuenta
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="store-panel-section">
@@ -43,6 +61,7 @@
                         <?php endif; ?>
                     </div>
 
+                    <?php if (!empty($storeIsAuthenticated)): ?>
                     <div class="store-panel-section">
                         <h2><span>03</span> Cupón de descuento</h2>
                         <p class="store-section-description">¿Tienes un código promocional? Escríbelo aquí antes de pagar.</p>
@@ -52,6 +71,7 @@
                         </div>
                         <div id="checkoutCouponMessage" class="store-coupon-message" aria-live="polite"></div>
                     </div>
+                    <?php endif; ?>
 
                     <div class="store-panel-section">
                         <h2><span>04</span> Indicaciones adicionales</h2>
