@@ -342,6 +342,39 @@ class BranchRepository
     }
 
     /**
+     * Busca una sede activa para validar pedidos públicos.
+     */
+    public function findActiveById(int $branchId): ?array
+    {
+        if ($branchId <= 0) {
+            return null;
+        }
+
+        $stmt = $this->db->prepare("
+            SELECT
+                id,
+                code,
+                name,
+                phone,
+                email,
+                address,
+                is_active
+            FROM branches
+            WHERE id = :id
+              AND is_active = 1
+            LIMIT 1
+        ");
+
+        $stmt->execute([
+            'id' => $branchId
+        ]);
+
+        $branch = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $branch ?: null;
+    }
+
+    /**
      * Buscar sede por código.
      */
     public function findByCode(
