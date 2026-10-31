@@ -948,7 +948,7 @@ $router->get(
     '/checkout',
     'CartController@checkout',
     [
-        ['Middleware', 'auth', []]
+        ['Middleware', 'webAuth', []]
     ]
 );
 
@@ -956,7 +956,7 @@ $router->get(
     '/checkout/resultado',
     'CartController@paymentResult',
     [
-        ['Middleware', 'auth', []]
+        ['Middleware', 'webAuth', []]
     ]
 );
 
@@ -971,8 +971,7 @@ $router->get(
     '/admin/coupons',
     'CouponController@index',
     [
-        ['Middleware', 'auth', []],
-        ['Middleware', 'role', ['superadmin', 'admin']]
+        ['Middleware', 'webRole', ['superadmin', 'admin']]
     ]
 );
 
