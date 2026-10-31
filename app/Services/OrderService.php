@@ -33,22 +33,107 @@ class OrderService
             );
         }
 
-        $branchId = filter_var(
-            $input['branch_id'] ?? null,
-            FILTER_VALIDATE_INT
-        );
+        $fulfillmentType = strtolower(trim((string) ($input['fulfillment_type'] ?? 'pickup')));
 
-        if (!$branchId || $branchId <= 0) {
+        if (!in_array($fulfillmentType, ['pickup', 'delivery'], true)) {
             throw new InvalidArgumentException(
-                'Debes seleccionar una sede válida.'
+                'Selecciona si deseas recoger tu pedido o recibirlo a domicilio.'
             );
         }
 
-        if (!$this->branchRepository->findActiveById((int) $branchId)) {
-            throw new DomainException(
-                'La sede seleccionada no está disponible para pedidos.',
-                409
+        $branchId = null;
+        $deliveryFee = 0.00;
+        $fulfillmentDetails = [
+            'fulfillment_type' => $fulfillmentType,
+            'delivery_address' => null,
+            'delivery_neighborhood' => null,
+            'delivery_city' => null,
+            'delivery_reference' => null,
+            'contact_phone' => null
+        ];
+
+        if ($fulfillmentType === 'pickup') {
+            $branchId = filter_var(
+                $input['branch_id'] ?? null,
+                FILTER_VALIDATE_INT
             );
+
+            if (!$branchId || $branchId <= 0) {
+                throw new InvalidArgumentException(
+                    'Debes seleccionar la sede donde recogerás tu pedido.'
+                );
+            }
+
+            if (!$this->branchRepository->findActiveById((int) $branchId)) {
+                throw new DomainException(
+                    'La sede seleccionada no está disponible para pedidos.',
+                    409
+                );
+            }
+        } else {
+            $deliveryInput = $input['delivery'] ?? [];
+
+            if (!is_array($deliveryInput)) {
+                throw new InvalidArgumentException(
+                    'Los datos de la dirección de entrega no son válidos.'
+                );
+            }
+
+            $deliveryAddress = trim(strip_tags((string) ($deliveryInput['address'] ?? '')));
+            $deliveryNeighborhood = trim(strip_tags((string) ($deliveryInput['neighborhood'] ?? '')));
+            $deliveryCity = trim(strip_tags((string) ($deliveryInput['city'] ?? '')));
+            $deliveryReference = trim(strip_tags((string) ($deliveryInput['reference'] ?? '')));
+            $deliveryPhone = preg_replace('/\\D+/', '', (string) ($deliveryInput['phone'] ?? '')) ?: '';
+
+            if (strlen($deliveryAddress) < 6 || strlen($deliveryAddress) > 255) {
+                throw new InvalidArgumentException(
+                    'Ingresa una dirección de entrega válida (entre 6 y 255 caracteres).'
+                );
+            }
+
+            if (strlen($deliveryNeighborhood) < 2 || strlen($deliveryNeighborhood) > 120) {
+                throw new InvalidArgumentException(
+                    'Ingresa un barrio válido para la entrega.'
+                );
+            }
+
+            if (strlen($deliveryCity) < 2 || strlen($deliveryCity) > 120) {
+                throw new InvalidArgumentException(
+                    'Ingresa la ciudad o municipio de entrega.'
+                );
+            }
+
+            if (strlen($deliveryPhone) < 7 || strlen($deliveryPhone) > 15) {
+                throw new InvalidArgumentException(
+                    'Ingresa un teléfono de contacto válido para el domicilio.'
+                );
+            }
+
+            if (strlen($deliveryReference) > 255) {
+                throw new InvalidArgumentException(
+                    'Las indicaciones de entrega no pueden superar los 255 caracteres.'
+                );
+            }
+
+            $configuredDeliveryFee = getenv('STORE_DELIVERY_FEE');
+            $configuredDeliveryFee = ($configuredDeliveryFee === false || trim((string) $configuredDeliveryFee) === '')
+                ? '0'
+                : trim((string) $configuredDeliveryFee);
+
+            if (!is_numeric($configuredDeliveryFee) || (float) $configuredDeliveryFee < 0) {
+                throw new DomainException(
+                    'La tarifa de domicilio no está configurada correctamente. Contacta al comercio.',
+                    503
+                );
+            }
+
+            $deliveryFee = round((float) $configuredDeliveryFee, 2);
+
+            $fulfillmentDetails['delivery_address'] = $deliveryAddress;
+            $fulfillmentDetails['delivery_neighborhood'] = $deliveryNeighborhood;
+            $fulfillmentDetails['delivery_city'] = $deliveryCity;
+            $fulfillmentDetails['delivery_reference'] = $deliveryReference !== '' ? $deliveryReference : null;
+            $fulfillmentDetails['contact_phone'] = $deliveryPhone;
         }
 
         $requestedItems = $input['items'] ?? null;
@@ -241,6 +326,26 @@ class OrderService
             ];
         }
 
+        if ($fulfillmentType === 'delivery') {
+            $dispatchBranch = $this->branchRepository->findActiveBranchWithInventory($orderItems);
+
+            if (!$dispatchBranch) {
+                throw new DomainException(
+                    'No encontramos una sede con inventario suficiente para preparar tu pedido a domicilio. Selecciona recogida en tienda o ajusta los productos.',
+                    409
+                );
+            }
+
+            $branchId = (int) $dispatchBranch['id'];
+        }
+
+        if (!$branchId || $branchId <= 0) {
+            throw new DomainException(
+                'No fue posible determinar la sede que preparará tu pedido.',
+                409
+            );
+        }
+
         $subtotal = round($subtotal, 2);
         $taxAmount = round($taxAmount, 2);
         $couponData = null;
@@ -255,7 +360,7 @@ class OrderService
         }
 
         $discountAmount = (float) ($couponData['discount_amount'] ?? 0);
-        $total = round($subtotal + $taxAmount - $discountAmount, 2);
+        $total = round($subtotal + $taxAmount + $deliveryFee - $discountAmount, 2);
 
         if ($total <= 0) {
             throw new DomainException(
@@ -285,7 +390,11 @@ class OrderService
                 'tax_amount' => $taxAmount,
                 'discount_amount' => $discountAmount,
                 'total' => $total,
-                'notes' => $notes !== '' ? $notes : null
+                'notes' => $notes !== '' ? $notes : null,
+                // Metadatos consumidos por OrderRepository y guardados
+                // en order_fulfillment_details, no en la tabla orders.
+                'delivery_fee' => $deliveryFee,
+                'fulfillment_details' => $fulfillmentDetails
             ],
             $orderItems,
             $couponData === null ? null : [
@@ -303,6 +412,9 @@ class OrderService
             'subtotal' => $subtotal,
             'tax_amount' => $taxAmount,
             'discount_amount' => $discountAmount,
+            'delivery_fee' => $deliveryFee,
+            'fulfillment_type' => $fulfillmentType,
+            'branch_id' => (int) $branchId,
             'coupon_code' => $couponData['code'] ?? null,
             'total' => $total
         ];
