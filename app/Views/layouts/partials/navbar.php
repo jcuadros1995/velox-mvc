@@ -19,7 +19,9 @@ $homeUrl = APP_URL;
 $reservationsUrl = APP_URL . '/reservas';
 $loginUrl = APP_URL . '/login';
 $searchReservationUrl = APP_URL . '/consultar-reserva';
+$storeUrl = APP_URL . '/tienda';
 
+$isStore = ($currentPath === rtrim(parse_url($storeUrl, PHP_URL_PATH), '/'));
 $isHome = ($currentPath === rtrim($homePath, '/'));
 $isReservations = ($currentPath === rtrim(parse_url($reservationsUrl, PHP_URL_PATH), '/'));
 $isLogin = ($currentPath === rtrim(parse_url($loginUrl, PHP_URL_PATH), '/'));
@@ -311,6 +313,17 @@ $isHomeMenuActive = $isHome;
                         Consultar reserva
                     </a>
 
+                </li>
+
+                <li class="nav-item">
+                    <a
+                        href="<?= htmlspecialchars($storeUrl, ENT_QUOTES, 'UTF-8') ?>"
+                        class="nav-link <?= $isStore ? 'active' : '' ?>"
+                        <?= $isStore ? 'aria-current="page"' : '' ?>
+                    >
+                        <i class="fa-solid fa-store me-1"></i>
+                        Tienda
+                    </a>
                 </li>
 
                 <li class="nav-item">
