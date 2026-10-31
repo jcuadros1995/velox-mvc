@@ -6,12 +6,14 @@ class OrderService
     private OrderRepository $orderRepository;
     private ItemRepository $itemRepository;
     private BranchRepository $branchRepository;
+    private CouponService $couponService;
 
     public function __construct()
     {
         $this->orderRepository = new OrderRepository();
         $this->itemRepository = new ItemRepository();
         $this->branchRepository = new BranchRepository();
+        $this->couponService = new CouponService();
     }
 
     /**
@@ -241,8 +243,19 @@ class OrderService
 
         $subtotal = round($subtotal, 2);
         $taxAmount = round($taxAmount, 2);
-        $discountAmount = 0.00;
-        $total = round($subtotal + $taxAmount, 2);
+        $couponData = null;
+        $couponCode = trim((string) ($input['coupon_code'] ?? ''));
+
+        if ($couponCode !== '') {
+            $couponData = $this->couponService->validateForOrder(
+                $couponCode,
+                $customerId,
+                $subtotal
+            );
+        }
+
+        $discountAmount = (float) ($couponData['discount_amount'] ?? 0);
+        $total = round($subtotal + $taxAmount - $discountAmount, 2);
 
         if ($total <= 0) {
             throw new DomainException(
@@ -274,7 +287,14 @@ class OrderService
                 'total' => $total,
                 'notes' => $notes !== '' ? $notes : null
             ],
-            $orderItems
+            $orderItems,
+            $couponData === null ? null : [
+                'id' => (int) $couponData['id'],
+                'code' => (string) $couponData['code'],
+                'customer_id' => $customerId,
+                'subtotal' => $subtotal,
+                'discount_amount' => $discountAmount
+            ]
         );
 
         return [
@@ -283,6 +303,7 @@ class OrderService
             'subtotal' => $subtotal,
             'tax_amount' => $taxAmount,
             'discount_amount' => $discountAmount,
+            'coupon_code' => $couponData['code'] ?? null,
             'total' => $total
         ];
     }
