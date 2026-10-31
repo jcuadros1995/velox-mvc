@@ -211,7 +211,7 @@ class PaymentRepository
             return 'refunded';
         }
 
-        if (in_array($current, ['declined', 'error'], true)) {
+        if (in_array($current, ['declined', 'error', 'voided'], true)) {
             return $current;
         }
 
