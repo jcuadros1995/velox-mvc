@@ -77,7 +77,7 @@ $categoryIsSelected = static function (array $category) use ($selectedCategory):
         <?php endif; ?>
 
         <div class="storefront-toolbar">
-            <label class="storefront-search" for="storeProductSearch">
+            <div class="storefront-search">
                 <i class="fa-solid fa-magnifying-glass"></i>
                 <input
                     type="search"
@@ -89,7 +89,7 @@ $categoryIsSelected = static function (array $category) use ($selectedCategory):
                 <button type="button" class="storefront-search-clear" data-store-search-clear aria-label="Limpiar búsqueda">
                     <i class="fa-solid fa-xmark"></i>
                 </button>
-            </label>
+            </div>
             <label class="storefront-sort">
                 <span>Ordenar por</span>
                 <select id="storeProductSort" aria-label="Ordenar productos">
