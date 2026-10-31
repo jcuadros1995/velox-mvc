@@ -80,6 +80,12 @@ class PaymentService
         // Cada intento de pago usa una referencia exclusiva de Wompi.
         $reference = (string) $order['order_number'] . '-' . strtoupper(bin2hex(random_bytes(4)));
 
+        $payment = $adapter->createPayment([
+            'reference' => $reference,
+            'amount' => $amount,
+            'currency' => 'COP'
+        ]);
+
         $this->paymentRepository->createPendingAttempt(
             (int) $order['id'],
             $customerId,
@@ -87,12 +93,6 @@ class PaymentService
             $amount,
             'COP'
         );
-
-        $payment = $adapter->createPayment([
-            'reference' => $reference,
-            'amount' => $amount,
-            'currency' => 'COP'
-        ]);
 
         $fullName = trim(
             (string) ($customerData['first_name'] ?? '') . ' ' .
