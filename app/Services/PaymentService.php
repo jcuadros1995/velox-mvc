@@ -3,61 +3,130 @@
 
 class PaymentService
 {
-    /**
-     * Procesa la creación de un pago.
-     *
-     * @param array $input
-     * @return array
-     * @throws Exception
-     */
-    public function checkout(array $input): array
+    private OrderRepository $orderRepository;
+
+    public function __construct()
     {
+        $this->orderRepository = new OrderRepository();
+    }
+
+    /**
+     * Prepara el checkout únicamente para una orden del cliente.
+     *
+     * El monto nunca se toma del navegador: se lee de la orden
+     * almacenada en la base de datos.
+     */
+    public function checkout(
+        array $input,
+        int $customerId
+    ): array {
+        $orderId = filter_var(
+            $input['order_id'] ?? null,
+            FILTER_VALIDATE_INT
+        );
+
+        if (!$orderId || $orderId <= 0 || $customerId <= 0) {
+            throw new InvalidArgumentException(
+                'El pedido seleccionado no es válido.'
+            );
+        }
+
+        $gateway = strtolower(trim((string) ($input['gateway'] ?? '')));
+
+        if ($gateway !== 'wompi') {
+            throw new InvalidArgumentException(
+                'La pasarela de pago seleccionada no está disponible.'
+            );
+        }
+
+        $order = $this->orderRepository->findForCustomer(
+            (int) $orderId,
+            $customerId
+        );
+
+        if (!$order) {
+            throw new DomainException(
+                'Pedido no encontrado.',
+                404
+            );
+        }
+
+        if (($order['status'] ?? '') !== 'pending') {
+            throw new DomainException(
+                'Este pedido ya no está pendiente de pago.',
+                409
+            );
+        }
+
+        $amount = round((float) ($order['total'] ?? 0), 2);
+
+        if ($amount <= 0) {
+            throw new DomainException(
+                'El monto del pedido no es válido.',
+                409
+            );
+        }
+
         $gatewayConfig = $this->getGatewayConfig();
 
         $adapter = PaymentFactory::create(
-            $input['gateway'],
+            'wompi',
             $gatewayConfig
         );
 
         return $adapter->createPayment([
-            'reference' => 'ORDER-' . $input['order_id'] . '-' . time(),
-            'amount'    => $input['amount'],
-            'currency'  => 'COP'
+            'reference' => (string) $order['order_number'],
+            'amount' => $amount,
+            'currency' => 'COP'
         ]);
     }
 
     /**
-     * Procesa un webhook recibido desde el gateway.
+     * Procesa y valida la autenticidad de un webhook de Wompi.
      *
-     * @param array $payload
-     * @return array
-     * @throws Exception
+     * La persistencia del pago y la transición del estado de la
+     * orden requieren completar el repositorio de pagos.
      */
     public function processWebhook(array $payload): array
     {
         $adapter = PaymentFactory::create(
             'wompi',
-            [
-                'events_secret' => 'prod_events_XXXXXX'
-            ]
+            $this->getGatewayConfig()
         );
 
         return $adapter->handleWebhook($payload);
     }
 
     /**
-     * Configuración temporal de los gateways.
-     *
-     * Posteriormente será reemplazada por configuración
-     * proveniente de system_settings/payment_gateways.
+     * Lee los secretos desde variables de entorno.
+     * No se deben almacenar llaves reales dentro del repositorio.
      */
     private function getGatewayConfig(): array
     {
-        return [
-            'public_key'    => 'pub_test_XXXXXX',
-            'private_key'   => 'prv_test_XXXXXX',
-            'events_secret' => 'prod_events_XXXXXX',
-            'is_sandbox'    => true
+        $config = [
+            'public_key' => trim((string) getenv('WOMPI_PUBLIC_KEY')),
+            'private_key' => trim((string) getenv('WOMPI_PRIVATE_KEY')),
+            'integrity_secret' => trim((string) getenv('WOMPI_INTEGRITY_SECRET')),
+            'events_secret' => trim((string) getenv('WOMPI_EVENTS_SECRET')),
+            'is_sandbox' => strtolower(
+                trim((string) (getenv('WOMPI_ENVIRONMENT') ?: 'sandbox'))
+            ) !== 'production'
         ];
+
+        foreach ([
+            'public_key',
+            'private_key',
+            'integrity_secret',
+            'events_secret'
+        ] as $key) {
+            if ($config[$key] === '') {
+                throw new DomainException(
+                    'La pasarela Wompi no está configurada en el servidor.',
+                    503
+                );
+            }
+        }
+
+        return $config;
     }
 }
