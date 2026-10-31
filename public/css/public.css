@@ -9060,3 +9060,115 @@ body:has(.reservation-page) {
     }
 
 }
+
+/* ============================================================
+   VELOX — PUBLIC CUSTOMER REGISTRATION
+   Estilos acotados al formulario de registro.
+============================================================ */
+
+.register-form-panel {
+    padding-top: 42px;
+    padding-bottom: 42px;
+}
+
+.register-form-content {
+    max-width: 440px;
+}
+
+.register-header {
+    margin-bottom: 25px;
+}
+
+.register-form-content .login-field {
+    margin-bottom: 16px;
+}
+
+.register-form-content .input-wrapper {
+    height: 49px;
+}
+
+.register-optional {
+    color: #a1a1aa;
+    font-size: 10px;
+    font-weight: 500;
+}
+
+.register-field-hint {
+    display: block;
+    margin-top: 6px;
+    color: #a1a1aa;
+    font-size: 10px;
+    line-height: 1.4;
+}
+
+.register-login-prompt {
+    margin: 22px 0 0;
+    color: #71717a;
+    font-size: 12px;
+    line-height: 1.6;
+    text-align: center;
+}
+
+.register-login-prompt a {
+    color: var(--velox-primary);
+    font-weight: 750;
+    text-decoration: none;
+    transition: color .2s ease;
+}
+
+.register-login-prompt a:hover {
+    color: var(--velox-primary-dark);
+    text-decoration: underline;
+}
+
+.register-form-content .login-security {
+    margin-top: 25px;
+}
+
+.register-form-content .login-footer {
+    margin-top: 24px;
+}
+
+#btnRegisterSubmit:disabled {
+    cursor: wait;
+    opacity: .8;
+}
+
+@media (max-width: 991.98px) {
+    .register-form-panel {
+        padding: 38px 28px;
+    }
+
+    .register-form-content {
+        max-width: 100%;
+    }
+}
+
+@media (max-width: 767.98px) {
+    .register-form-panel {
+        min-height: calc(100vh - 40px);
+        padding: 34px 24px 28px;
+    }
+
+    .register-form-content .login-header {
+        margin-bottom: 25px;
+    }
+
+    .register-form-content .login-field {
+        margin-bottom: 17px;
+    }
+}
+
+@media (max-width: 380px) {
+    .register-form-panel {
+        padding: 28px 20px 22px;
+    }
+
+    .register-form-content .login-field {
+        margin-bottom: 15px;
+    }
+
+    .register-login-prompt {
+        font-size: 11px;
+    }
+}
