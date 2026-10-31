@@ -127,7 +127,7 @@ class OrderService
                 );
             }
 
-            $deliveryFee = round((float) $configuredDeliveryFee, 2);
+            $deliveryFee = round((float) $configuredDeliveryFee, 0);
 
             $fulfillmentDetails['delivery_address'] = $deliveryAddress;
             $fulfillmentDetails['delivery_neighborhood'] = $deliveryNeighborhood;
