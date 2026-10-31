@@ -63,6 +63,7 @@ $siteFaviconUrl =
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/fonts.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/public.css" rel="stylesheet">
+    <link href="<?= APP_URL ?>/public/css/cart-checkout.css" rel="stylesheet">
 
     <style>
         :root {
@@ -155,6 +156,7 @@ foreach (array_unique($modulePublicCss) as $cssFile):
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= APP_URL ?>/public/js/toast.js"></script>
+<script src="<?= APP_URL ?>/public/js/cart.js"></script>
 
 <?php if (isset($script) && preg_match('/^[a-z0-9_-]+$/i', (string)$script)): ?>
 <script src="<?= APP_URL ?>/public/js/<?= htmlspecialchars($script, ENT_QUOTES, 'UTF-8') ?>.js"></script>
