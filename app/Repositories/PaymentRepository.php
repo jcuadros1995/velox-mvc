@@ -106,7 +106,7 @@ class PaymentRepository
 
         if (
             $reference === '' ||
-            !in_array($status, ['pending', 'approved', 'declined', 'refunded', 'error'], true) ||
+            !in_array($status, ['pending', 'approved', 'declined', 'refunded', 'voided', 'error'], true) ||
             $amount <= 0 ||
             $currency !== 'COP'
         ) {
@@ -175,7 +175,7 @@ class PaymentRepository
                 if ($nextStatus === 'approved') {
                     $this->markOrderPaid((int) $payment['order_id']);
                     $this->recordLegacyApprovedPayment($payment);
-                } elseif (in_array($nextStatus, ['declined', 'error'], true)) {
+                } elseif (in_array($nextStatus, ['declined', 'error', 'voided'], true)) {
                     $this->cancelOrderAndReleaseResources((int) $payment['order_id']);
                 } elseif ($nextStatus === 'refunded') {
                     if ($currentStatus === 'pending') {
@@ -204,7 +204,7 @@ class PaymentRepository
     private function resolveStatusTransition(string $current, string $incoming): string
     {
         if ($current === 'approved') {
-            return $incoming === 'refunded' ? 'refunded' : 'approved';
+            return in_array($incoming, ['refunded', 'voided'], true) ? 'refunded' : 'approved';
         }
 
         if ($current === 'refunded') {
