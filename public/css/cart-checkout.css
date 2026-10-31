@@ -6,7 +6,7 @@
    Se mantiene separado de los estilos del checkout.
 ========================================================= */
 .velox-cart-page {
-    padding-top: 1.2rem;
+    padding-top: 2rem;
     background:
         radial-gradient(circle at 8% 8%, rgba(124,58,237,.045), transparent 22rem),
         #f7f7fb;
@@ -413,7 +413,8 @@
 }
 @media (max-width: 767px) {
     .velox-cart-page { padding-top: .25rem; }
-    .velox-cart-page .container { padding-top: 1.5rem !important; }
+    .velox-cart-page .container { padding-top: 5rem !important; }
+    
     .velox-cart-header { margin-bottom: 1.25rem; }
     .velox-cart-progress { width: 100%; justify-content: space-between; gap: .35rem; padding: .55rem; font-size: .58rem; }
     .velox-cart-progress span { gap: .2rem; }
