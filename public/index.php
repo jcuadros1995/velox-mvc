@@ -69,6 +69,14 @@ $router->get(
 );
 
 $router->get(
+    '/registro',
+    'AuthController@showRegister',
+    [
+        ['Middleware', 'webGuest', []]
+    ]
+);
+
+$router->get(
     '/recuperar-contrasena',
     'AuthController@showForgotPassword'
 );
