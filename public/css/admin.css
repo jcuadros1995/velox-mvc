@@ -3640,3 +3640,130 @@ input:checked + .slider:before { transform: translateX(20px); }
     }
 
 }
+
+
+/* --------------------------------------------------------------------------
+   TOP PRODUCTS
+-------------------------------------------------------------------------- */
+.dashboard-top-products-panel {
+    margin-bottom: 15px;
+}
+
+.dashboard-top-products-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 11px;
+    margin-top: 14px;
+}
+
+.dashboard-top-product {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #fff;
+}
+
+.dashboard-top-product-rank {
+    display: grid;
+    place-items: center;
+    width: 25px;
+    height: 25px;
+    flex: 0 0 25px;
+    border-radius: 8px;
+    background: #eff6ff;
+    color: #2563eb;
+    font-size: 10px;
+    font-weight: 800;
+}
+
+.dashboard-top-product-image,
+.dashboard-top-product-placeholder {
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    flex: 0 0 42px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #f1f5f9;
+    color: #64748b;
+}
+
+.dashboard-top-product-image {
+    display: block;
+    object-fit: cover;
+}
+
+.dashboard-top-product-placeholder {
+    font-size: 15px;
+}
+
+.dashboard-top-product-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.dashboard-top-product-info strong,
+.dashboard-top-product-info span {
+    display: block;
+}
+
+.dashboard-top-product-info strong {
+    overflow: hidden;
+    color: #334155;
+    font-size: 11px;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-top-product-info span {
+    margin-top: 3px;
+    overflow: hidden;
+    color: #94a3b8;
+    font-size: 9px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.dashboard-top-product-revenue {
+    flex: 0 0 auto;
+    color: #0f172a;
+    font-size: 10px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+.dashboard-top-products-empty {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    min-height: 82px;
+    padding: 16px 10px;
+    color: #64748b;
+    font-size: 11px;
+}
+
+.dashboard-top-products-empty i {
+    color: #64748b;
+    font-size: 15px;
+}
+
+@media (max-width: 600px) {
+    .dashboard-top-products-list {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-top-product {
+        gap: 8px;
+        padding: 10px;
+    }
+
+    .dashboard-top-product-revenue {
+        font-size: 9px;
+    }
+}

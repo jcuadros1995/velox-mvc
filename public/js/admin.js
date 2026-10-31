@@ -114,6 +114,61 @@ function renderDashboardLowStock(metrics) {
     }).join('');
 }
 
+
+/**
+ * Muestra el ranking de productos calculado por la API para el período y sede elegidos.
+ */
+function renderDashboardTopProducts(metrics) {
+    const container = document.getElementById('dashboardTopProductsList');
+    if (!container) return;
+
+    const products = Array.isArray(metrics?.top_products) ? metrics.top_products : [];
+
+    if (products.length === 0) {
+        container.innerHTML = `
+            <div class="dashboard-top-products-empty" role="status">
+                <i class="fa-solid fa-basket-shopping"></i>
+                <span>No hay ventas de productos en el período seleccionado.</span>
+            </div>
+        `;
+        return;
+    }
+
+    const escapeHtml = value => String(value ?? '').replace(/[&<>"']/g, character => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    })[character]);
+
+    container.innerHTML = products.map((item, index) => {
+        const name = item.name || 'Producto sin nombre';
+        const imagePath = String(item.favorite_image || '').replace(/^\\/+/, '');
+        const imageUrl = imagePath ? `${window.APP_URL}/public/${imagePath}` : '';
+        const unitsSold = Number(item.units_sold || 0);
+        const revenue = Number(item.revenue || 0);
+
+        const media = imageUrl
+            ? `<img class="dashboard-top-product-image" src="${escapeHtml(imageUrl)}" alt="${escapeHtml(name)}" loading="lazy">`
+            : `<span class="dashboard-top-product-placeholder"><i class="fa-solid fa-box-open"></i></span>`;
+
+        return `
+            <article class="dashboard-top-product">
+                <span class="dashboard-top-product-rank">${index + 1}</span>
+                ${media}
+                <div class="dashboard-top-product-info">
+                    <strong title="${escapeHtml(name)}">${escapeHtml(name)}</strong>
+                    <span>${escapeHtml(item.category_name || 'Sin categoría')} · ${unitsSold.toLocaleString('es-CO')} vendidos</span>
+                </div>
+                <b class="dashboard-top-product-revenue">
+                    $ ${Math.round(revenue).toLocaleString('es-CO')}
+                </b>
+            </article>
+        `;
+    }).join('');
+}
+
 async function loadDashboardMetrics(from, to, branchId = '') {
 
     try {
@@ -181,6 +236,7 @@ async function refreshDashboardMetrics(from, to, branchId = '') {
 
     updateDashboardKpis(metrics);
     renderDashboardLowStock(metrics);
+    renderDashboardTopProducts(metrics);
 
     initRevenueChart(metrics);
     initSalesChart(metrics);
@@ -219,6 +275,7 @@ document.addEventListener('DOMContentLoaded', async function () {
 
             updateDashboardKpis(metrics);
             renderDashboardLowStock(metrics);
+            renderDashboardTopProducts(metrics);
             initRevenueChart(metrics);
             initSalesChart(metrics);
             initCategoryChart(metrics);

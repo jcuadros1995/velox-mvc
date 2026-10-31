@@ -1081,6 +1081,28 @@ $scopeName = $isSuperAdmin ? 'Todas las sedes' : ($user['branch_name'] ?? 'Sede 
     </section>
 
 
+<!-- PRODUCTOS MÁS VENDIDOS -->
+<section class="dashboard-panel dashboard-top-products-panel">
+    <div class="panel-header">
+        <div>
+            <span class="panel-eyebrow">PRODUCTOS</span>
+            <h3>Más vendidos</h3>
+            <p>Productos con mayor volumen de ventas en el período seleccionado.</p>
+        </div>
+        <a href="<?= APP_URL ?>/admin/items" class="panel-link">
+            Ver catálogo
+            <i class="fa-solid fa-arrow-right"></i>
+        </a>
+    </div>
+
+    <div class="dashboard-top-products-list" id="dashboardTopProductsList">
+        <div class="dashboard-top-products-empty" role="status">
+            <i class="fa-solid fa-circle-notch fa-spin"></i>
+            <span>Cargando productos...</span>
+        </div>
+    </div>
+</section>
+
     <!-- ============================================================
          ACTIVIDAD
     ============================================================= -->
