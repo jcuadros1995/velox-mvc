@@ -502,3 +502,162 @@
     .store-checkout-access-icon { width: 36px; height: 36px; flex-basis: 36px; }
     .store-checkout-access-actions { align-items: flex-start; flex-direction: column; gap: .65rem; }
 }
+
+
+/* =========================================================
+   CHECKOUT - MODALIDAD DE ENTREGA
+========================================================= */
+.store-fulfillment-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .8rem;
+    margin: .2rem 0 1rem;
+}
+.store-fulfillment-option {
+    position: relative;
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: .75rem;
+    padding: 1rem;
+    border: 1px solid #e5e2ed;
+    border-radius: 13px;
+    background: #fff;
+    cursor: pointer;
+    transition: border-color .18s ease, background .18s ease, box-shadow .18s ease;
+}
+.store-fulfillment-option:hover {
+    border-color: #c9b9eb;
+    background: #fcfbff;
+}
+.store-fulfillment-option.is-selected {
+    border-color: #9275cb;
+    background: #f8f5ff;
+    box-shadow: 0 0 0 3px rgba(109, 40, 217, .07);
+}
+.store-fulfillment-option > input {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+    accent-color: var(--velox-primary, #6d28d9);
+}
+.store-fulfillment-option-icon {
+    display: grid;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    place-items: center;
+    border-radius: 12px;
+    background: #f1eef7;
+    color: #7156a9;
+    font-size: .95rem;
+}
+.store-fulfillment-option.is-selected .store-fulfillment-option-icon {
+    background: #ece4fb;
+    color: #603caf;
+}
+.store-fulfillment-option-copy {
+    display: flex;
+    min-width: 0;
+    flex-direction: column;
+    gap: .25rem;
+    padding-right: .8rem;
+}
+.store-fulfillment-option-copy strong {
+    color: #302b40;
+    font-size: .8rem;
+    font-weight: 850;
+}
+.store-fulfillment-option-copy small {
+    color: #8d879a;
+    font-size: .68rem;
+    line-height: 1.45;
+}
+.store-fulfillment-option-check {
+    display: none;
+    position: absolute;
+    right: .85rem;
+    bottom: .75rem;
+    color: #7954bd;
+    font-size: .82rem;
+}
+.store-fulfillment-option.is-selected .store-fulfillment-option-check { display: block; }
+.store-fulfillment-panel {
+    margin-top: .8rem;
+    padding: 1rem;
+    border: 1px solid #eeeaf4;
+    border-radius: 13px;
+    background: #fcfbfe;
+}
+.store-fulfillment-panel > .form-label {
+    margin-bottom: .55rem;
+    color: #4e485e;
+    font-size: .76rem;
+    font-weight: 750;
+}
+.store-fulfillment-panel .store-checkout-select {
+    background-color: #fff;
+}
+.store-delivery-fields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .85rem;
+}
+.store-delivery-field { min-width: 0; }
+.store-delivery-field-wide { grid-column: 1 / -1; }
+.store-delivery-field .form-label {
+    margin-bottom: .35rem;
+    color: #4e485e;
+    font-size: .72rem;
+    font-weight: 750;
+}
+.store-delivery-field .form-control {
+    min-width: 0;
+    min-height: 44px;
+    border: 1px solid #e2deeb;
+    border-radius: 9px;
+    background: #fff;
+    color: #302b40;
+    font-size: .78rem;
+}
+.store-delivery-field .form-control:focus {
+    border-color: #9b83d1;
+    box-shadow: 0 0 0 3px rgba(109,40,217,.08);
+}
+.store-delivery-fee-note {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1rem;
+    padding: .8rem .9rem;
+    border: 1px solid #e9e4f2;
+    border-radius: 10px;
+    background: #fff;
+}
+.store-delivery-fee-note > span {
+    display: inline-flex;
+    align-items: center;
+    gap: .5rem;
+    color: #777084;
+    font-size: .73rem;
+    font-weight: 750;
+}
+.store-delivery-fee-note > span i { color: #7556b7; }
+.store-delivery-fee-note > strong { color: #30283f; font-size: .85rem; font-weight: 900; }
+.store-delivery-help {
+    margin: .65rem 0 0;
+    color: #9a95a3;
+    font-size: .66rem;
+    line-height: 1.55;
+}
+@media (max-width: 575px) {
+    .store-fulfillment-options { grid-template-columns: 1fr; }
+    .store-fulfillment-option { padding: .85rem; }
+    .store-delivery-fields { grid-template-columns: 1fr; gap: .7rem; }
+    .store-delivery-field-wide { grid-column: auto; }
+    .store-fulfillment-panel { padding: .8rem; }
+}
