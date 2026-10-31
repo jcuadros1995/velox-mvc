@@ -3,7 +3,9 @@
 
     const cart = window.VeloxCart;
     const payButton = document.getElementById('checkoutPayButton');
-    if (!payButton || !cart) return;
+    const checkoutRoot = document.querySelector('[data-checkout-authenticated]');
+    const isAuthenticatedCustomer = checkoutRoot?.dataset.checkoutAuthenticated === '1';
+    if (!payButton || !cart || !checkoutRoot) return;
 
     const appUrl = window.APP_URL || '';
     const currency = (amount) => new Intl.NumberFormat('es-CO', {
@@ -47,7 +49,7 @@
         document.getElementById('checkoutDiscount').textContent = '−' + currency(discount);
         document.getElementById('checkoutDiscountRow').classList.toggle('d-none', !appliedCoupon);
         document.getElementById('checkoutTotal').textContent = currency(Math.max(0, subtotal - discount));
-        payButton.disabled = items.length === 0 || !branchSelect.value || busy;
+        payButton.disabled = !isAuthenticatedCustomer || items.length === 0 || !branchSelect.value || busy;
         if (items.length === 0) {
             notify('Tu carrito está vacío. Agrega productos antes de continuar.');
             window.location.href = appUrl + '/carrito';
@@ -68,47 +70,49 @@
         return data;
     }
 
-    couponButton.addEventListener('click', async () => {
-        const code = couponInput.value.trim();
-        if (!code) {
-            appliedCoupon = null;
-            couponMessage.textContent = 'Escribe el código del cupón.';
-            couponMessage.className = 'store-coupon-message is-error';
-            render();
-            return;
-        }
+    if (couponButton && couponInput && couponMessage) {
+        couponButton.addEventListener('click', async () => {
+            const code = couponInput.value.trim();
+            if (!code) {
+                appliedCoupon = null;
+                couponMessage.textContent = 'Escribe el código del cupón.';
+                couponMessage.className = 'store-coupon-message is-error';
+                render();
+                return;
+            }
 
-        couponButton.disabled = true;
-        couponButton.textContent = 'Validando...';
-        try {
-            const result = await post('/api/coupons/validate', {
-                code,
-                subtotal:getSubtotal()
-            });
-            appliedCoupon = result.data;
-            couponInput.value = appliedCoupon.code;
-            couponMessage.textContent = 'Cupón aplicado: ' + appliedCoupon.code + '. El descuento final será validado al registrar el pedido.';
-            couponMessage.className = 'store-coupon-message is-success';
-            render();
-        } catch (error) {
-            appliedCoupon = null;
-            couponMessage.textContent = error.message;
-            couponMessage.className = 'store-coupon-message is-error';
-            render();
-        } finally {
-            couponButton.disabled = false;
-            couponButton.textContent = 'Aplicar';
-        }
-    });
+            couponButton.disabled = true;
+            couponButton.textContent = 'Validando...';
+            try {
+                const result = await post('/api/coupons/validate', {
+                    code,
+                    subtotal:getSubtotal()
+                });
+                appliedCoupon = result.data;
+                couponInput.value = appliedCoupon.code;
+                couponMessage.textContent = 'Cupón aplicado: ' + appliedCoupon.code + '. El descuento final será validado al registrar el pedido.';
+                couponMessage.className = 'store-coupon-message is-success';
+                render();
+            } catch (error) {
+                appliedCoupon = null;
+                couponMessage.textContent = error.message;
+                couponMessage.className = 'store-coupon-message is-error';
+                render();
+            } finally {
+                couponButton.disabled = false;
+                couponButton.textContent = 'Aplicar';
+            }
+        });
 
-    couponInput.addEventListener('input', () => {
-        if (appliedCoupon && couponInput.value.trim().toUpperCase() !== String(appliedCoupon.code).toUpperCase()) {
-            appliedCoupon = null;
-            couponMessage.textContent = 'El cupón fue retirado. Puedes aplicar otro código.';
-            couponMessage.className = 'store-coupon-message';
-            render();
-        }
-    });
+        couponInput.addEventListener('input', () => {
+            if (appliedCoupon && couponInput.value.trim().toUpperCase() !== String(appliedCoupon.code).toUpperCase()) {
+                appliedCoupon = null;
+                couponMessage.textContent = 'El cupón fue retirado. Puedes aplicar otro código.';
+                couponMessage.className = 'store-coupon-message';
+                render();
+            }
+        });
+    }
 
     branchSelect.addEventListener('change', render);
     window.addEventListener('velox:cart-changed', render);
