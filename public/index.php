@@ -951,10 +951,7 @@ $router->get(
 
 $router->get(
     '/checkout',
-    'CartController@checkout',
-    [
-        ['Middleware', 'webAuth', []]
-    ]
+    'CartController@checkout'
 );
 
 $router->get(
