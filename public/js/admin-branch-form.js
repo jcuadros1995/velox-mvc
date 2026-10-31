@@ -1310,20 +1310,6 @@ async function saveTable(
 
 
     if (
-        !payload.branch_id ||
-        payload.branch_id <= 0
-    ) {
-
-        showToast(
-            'No fue posible determinar la sede.',
-            'error'
-        );
-
-        return;
-    }
-
-
-    if (
         !payload.capacity ||
         payload.capacity <= 0
     ) {
@@ -1353,6 +1339,30 @@ async function saveTable(
         return;
     }
 
+
+    if (!payload.branch_id || payload.branch_id <= 0) {
+        if (window.BRANCH_FORM?.mode === 'create') {
+            row.dataset.tablePending = '1';
+            row.classList.add('is-pending');
+
+            const label = row.querySelector('.branch-table-item-number span');
+            if (label) label.textContent = 'Pendiente';
+
+            const pendingButton = row.querySelector('.branch-table-save');
+            if (pendingButton) {
+                pendingButton.innerHTML = '<i class="fa-solid fa-check"></i>';
+                pendingButton.title = 'Mesa lista para guardar con la sede';
+                pendingButton.setAttribute('aria-label', 'Mesa lista para guardar con la sede');
+            }
+
+            showSuccess('Mesa #' + payload.table_number + ' preparada. Se guardará al crear la sede.');
+            updateTablesSummary();
+            return;
+        }
+
+        showToast('No fue posible determinar la sede.', 'error');
+        return;
+    }
 
     const button =
         row.querySelector(
