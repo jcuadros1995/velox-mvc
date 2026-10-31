@@ -252,7 +252,7 @@ function initLoginForm() {
                     ).toLowerCase();
 
                     const requestedRedirect = new URLSearchParams(window.location.search).get('redirect');
-                    const safeRedirect = requestedRedirect === '/checkout'
+                    const safeRedirect = roleName === 'customer' && requestedRedirect === '/checkout'
                         ? `${window.APP_URL}/checkout`
                         : null;
 
