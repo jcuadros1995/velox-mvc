@@ -218,8 +218,14 @@ class CouponService
             return null;
         }
 
-        $date = DateTimeImmutable::createFromFormat('Y-m-d\TH:i', $value, new DateTimeZone('America/Bogota'));
-        if (!$date) {
+        $date = DateTimeImmutable::createFromFormat('!Y-m-d\TH:i', $value, new DateTimeZone('America/Bogota'));
+        $errors = DateTimeImmutable::getLastErrors();
+
+        if (
+            !$date ||
+            ($errors !== false && ($errors['warning_count'] > 0 || $errors['error_count'] > 0)) ||
+            $date->format('Y-m-d\TH:i') !== $value
+        ) {
             throw new InvalidArgumentException('Una de las fechas del cupón no tiene un formato válido.');
         }
 
