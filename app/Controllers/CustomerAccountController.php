@@ -142,7 +142,7 @@ class CustomerAccountController extends Controller
                     phone = :phone,
                     document_type = :document_type,
                     document_number = :document_number
-                WHERE id = :id AND role_id = 4
+                WHERE id = :id AND role_id = (SELECT id FROM roles WHERE LOWER(name) = 'customer' LIMIT 1)
             ");
             $stmt->execute([
                 'first_name' => $first,
