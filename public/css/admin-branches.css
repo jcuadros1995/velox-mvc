@@ -1892,6 +1892,7 @@
 }
 .branches-delete-modal {
     overflow: hidden;
+    padding: 0;
     border: 0;
     border-radius: 18px;
 }
