@@ -308,7 +308,7 @@ $router->post(
     'PageController@save',
     [
         ['Middleware', 'auth', []],
-        ['Middleware', 'role', ['superadmin', 'admin']]
+        ['Middleware', 'role', ['superadmin']]
     ]
 );
 
@@ -317,7 +317,7 @@ $router->post(
     'PageController@toggle',
     [
         ['Middleware', 'auth', []],
-        ['Middleware', 'role', ['superadmin', 'admin']]
+        ['Middleware', 'role', ['superadmin']]
     ]
 );
 
