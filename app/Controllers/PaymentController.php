@@ -43,7 +43,8 @@ class PaymentController extends Controller
         try {
             $paymentResponse = $this->paymentService->checkout(
                 $input,
-                (int) $user['id']
+                (int) $user['id'],
+                $user
             );
 
             $this->json([
@@ -144,6 +145,40 @@ class PaymentController extends Controller
                 'success' => false,
                 'message' => 'No fue posible procesar el evento recibido.'
             ], 500);
+        }
+    }
+
+
+    /**
+     * GET /api/payments/status?reference=...
+     * Devuelve el estado persistido del intento del cliente.
+     */
+    public function status(): void
+    {
+        $user = Auth::user();
+
+        if (!$user || strtolower((string) ($user['role_name'] ?? '')) !== 'customer') {
+            $this->json(['success' => false, 'message' => 'No tienes autorización para consultar este pago.'], 403);
+            return;
+        }
+
+        $reference = trim((string) ($_GET['reference'] ?? ''));
+        if ($reference === '' || strlen($reference) > 140) {
+            $this->json(['success' => false, 'message' => 'Referencia de pago no válida.'], 422);
+            return;
+        }
+
+        try {
+            $payment = (new PaymentRepository())->findForCustomer($reference, (int) $user['id']);
+            if (!$payment) {
+                $this->json(['success' => false, 'message' => 'No se encontró el pago solicitado.'], 404);
+                return;
+            }
+
+            $this->json(['success' => true, 'data' => $payment]);
+        } catch (Throwable $e) {
+            error_log('[PAYMENT_STATUS_ERROR] ' . $e->getMessage());
+            $this->json(['success' => false, 'message' => 'No fue posible consultar el estado del pago.'], 500);
         }
     }
 
