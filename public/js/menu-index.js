@@ -25,10 +25,6 @@
     search.addEventListener('input', filterCategories);
 
     document.addEventListener('keydown', (event) => {
-        const target = event.target;
-        const isTyping = target instanceof HTMLElement &&
-            (target.isContentEditable || ['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName));
-
         if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
             event.preventDefault();
             search.focus();
