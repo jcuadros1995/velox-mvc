@@ -124,8 +124,13 @@ function initRegisterForm() {
             const data = await response.json();
 
             if (response.ok && data.success === true) {
+                const requestedRedirect = new URLSearchParams(window.location.search).get('redirect');
+                const redirectQuery = requestedRedirect === '/checkout'
+                    ? '&redirect=%2Fcheckout'
+                    : '';
+
                 window.location.href =
-                    `${String(window.APP_URL || '').replace(/\/$/, '')}/login?registered=1`;
+                    `${String(window.APP_URL || '').replace(/\/$/, '')}/login?registered=1${redirectQuery}`;
                 return;
             }
 
