@@ -935,6 +935,94 @@ $router->post(
 
 /*
 |--------------------------------------------------------------------------
+| CARRITO Y CHECKOUT PÚBLICO
+|--------------------------------------------------------------------------
+*/
+
+$router->get(
+    '/carrito',
+    'CartController@index'
+);
+
+$router->get(
+    '/checkout',
+    'CartController@checkout',
+    [
+        ['Middleware', 'auth', []]
+    ]
+);
+
+$router->get(
+    '/checkout/resultado',
+    'CartController@paymentResult',
+    [
+        ['Middleware', 'auth', []]
+    ]
+);
+
+
+/*
+|--------------------------------------------------------------------------
+| ADMIN - CUPONES
+|--------------------------------------------------------------------------
+*/
+
+$router->get(
+    '/admin/coupons',
+    'CouponController@index',
+    [
+        ['Middleware', 'auth', []],
+        ['Middleware', 'role', ['superadmin', 'admin']]
+    ]
+);
+
+$router->get(
+    '/api/admin/coupons',
+    'CouponController@data',
+    [
+        ['Middleware', 'auth', []],
+        ['Middleware', 'role', ['superadmin', 'admin']]
+    ]
+);
+
+$router->post(
+    '/api/admin/coupons/store',
+    'CouponController@store',
+    [
+        ['Middleware', 'auth', []],
+        ['Middleware', 'role', ['superadmin', 'admin']]
+    ]
+);
+
+$router->post(
+    '/api/admin/coupons/update',
+    'CouponController@update',
+    [
+        ['Middleware', 'auth', []],
+        ['Middleware', 'role', ['superadmin', 'admin']]
+    ]
+);
+
+$router->post(
+    '/api/admin/coupons/toggle',
+    'CouponController@toggle',
+    [
+        ['Middleware', 'auth', []],
+        ['Middleware', 'role', ['superadmin', 'admin']]
+    ]
+);
+
+$router->post(
+    '/api/coupons/validate',
+    'CouponController@validatePublic',
+    [
+        ['Middleware', 'auth', []]
+    ]
+);
+
+
+/*
+|--------------------------------------------------------------------------
 | ORDERS
 |--------------------------------------------------------------------------
 */
@@ -973,6 +1061,14 @@ $router->post(
 $router->post(
     '/api/payments/webhook',
     'PaymentController@webhook'
+);
+
+$router->get(
+    '/api/payments/status',
+    'PaymentController@status',
+    [
+        ['Middleware', 'auth', []]
+    ]
 );
 
 
