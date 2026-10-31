@@ -60,7 +60,7 @@ $imagesForJs =
         array_map(
                 static function (
                         array $image
-                ): array {
+                ) use ($pageId): array {
 
                     $path =
                             ltrim(
@@ -91,6 +91,16 @@ $imagesForJs =
 
                             'image_path' =>
                                     $path,
+
+
+                            'mobile_image_path' =>
+                                    ltrim(
+                                            (string) (
+                                                    $image['mobile_image_path']
+                                                    ?? ''
+                                            ),
+                                            '/\\'
+                                    ),
 
 
                             'image_alt' =>
