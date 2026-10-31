@@ -20,32 +20,75 @@ class PaymentRepository
             throw new InvalidArgumentException('No fue posible preparar el intento de pago.');
         }
 
-        $stmt = $this->db->prepare("
-            INSERT INTO payment_transactions (
-                order_id,
-                customer_id,
-                gateway,
-                reference,
-                amount,
-                currency,
-                status
-            ) VALUES (
-                :order_id,
-                :customer_id,
-                'wompi',
-                :reference,
-                :amount,
-                :currency,
-                'pending'
-            )
-        ");
-        $stmt->execute([
-            'order_id' => $orderId,
-            'customer_id' => $customerId,
-            'reference' => $reference,
-            'amount' => round($amount, 2),
-            'currency' => $currency
-        ]);
+        try {
+            $this->db->beginTransaction();
+
+            $orderStmt = $this->db->prepare("
+                SELECT status
+                FROM orders
+                WHERE id = :order_id
+                  AND customer_id = :customer_id
+                LIMIT 1
+                FOR UPDATE
+            ");
+            $orderStmt->execute([
+                'order_id' => $orderId,
+                'customer_id' => $customerId
+            ]);
+            $orderStatus = $orderStmt->fetchColumn();
+
+            if ($orderStatus !== 'pending') {
+                throw new DomainException('El pedido ya no está pendiente de pago.', 409);
+            }
+
+            $pendingStmt = $this->db->prepare("
+                SELECT id
+                FROM payment_transactions
+                WHERE order_id = :order_id
+                  AND status = 'pending'
+                LIMIT 1
+                FOR UPDATE
+            ");
+            $pendingStmt->execute(['order_id' => $orderId]);
+
+            if ($pendingStmt->fetchColumn()) {
+                throw new DomainException('Este pedido ya tiene un intento de pago pendiente. Espera su confirmación antes de iniciar otro.', 409);
+            }
+
+            $stmt = $this->db->prepare("
+                INSERT INTO payment_transactions (
+                    order_id,
+                    customer_id,
+                    gateway,
+                    reference,
+                    amount,
+                    currency,
+                    status
+                ) VALUES (
+                    :order_id,
+                    :customer_id,
+                    'wompi',
+                    :reference,
+                    :amount,
+                    :currency,
+                    'pending'
+                )
+            ");
+            $stmt->execute([
+                'order_id' => $orderId,
+                'customer_id' => $customerId,
+                'reference' => $reference,
+                'amount' => round($amount, 2),
+                'currency' => $currency
+            ]);
+
+            $this->db->commit();
+        } catch (Throwable $e) {
+            if ($this->db->inTransaction()) {
+                $this->db->rollBack();
+            }
+            throw $e;
+        }
     }
 
     /**
@@ -135,7 +178,11 @@ class PaymentRepository
                 } elseif (in_array($nextStatus, ['declined', 'error'], true)) {
                     $this->cancelOrderAndReleaseResources((int) $payment['order_id']);
                 } elseif ($nextStatus === 'refunded') {
-                    $this->markOrderRefunded((int) $payment['order_id']);
+                    if ($currentStatus === 'pending') {
+                        $this->cancelOrderAndReleaseResources((int) $payment['order_id']);
+                    } else {
+                        $this->markOrderRefunded((int) $payment['order_id']);
+                    }
                 }
             }
 
@@ -173,6 +220,20 @@ class PaymentRepository
 
     private function markOrderPaid(int $orderId): void
     {
+        $check = $this->db->prepare("SELECT status FROM orders WHERE id = :id LIMIT 1 FOR UPDATE");
+        $check->execute(['id' => $orderId]);
+        $status = $check->fetchColumn();
+
+        if ($status === false) {
+            throw new DomainException('No se encontró la orden asociada al pago.', 404);
+        }
+
+        if ($status !== 'pending') {
+            // El pago se conserva en el ledger; una orden cancelada
+            // requiere revisión operativa y no se reactiva automáticamente.
+            return;
+        }
+
         $stmt = $this->db->prepare("
             UPDATE orders
             SET status = 'confirmed'
@@ -180,16 +241,6 @@ class PaymentRepository
               AND status = 'pending'
         ");
         $stmt->execute(['id' => $orderId]);
-
-        if ($stmt->rowCount() !== 1) {
-            $check = $this->db->prepare("SELECT status FROM orders WHERE id = :id LIMIT 1");
-            $check->execute(['id' => $orderId]);
-            $status = $check->fetchColumn();
-
-            if ($status !== 'confirmed') {
-                throw new DomainException('La orden ya no está en un estado válido para confirmar el pago.', 409);
-            }
-        }
     }
 
     private function markOrderRefunded(int $orderId): void
