@@ -1,0 +1,499 @@
+/* =========================================================
+   VELOX ADMIN
+   NOTIFICATIONS
+========================================================= */
+
+.notification-dropdown {
+    position: relative;
+}
+
+
+/* =========================================================
+   TRIGGER
+========================================================= */
+
+.notification-trigger {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid rgba(15, 23, 42, 0.06);
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+}
+
+.notification-trigger:hover {
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 8px 20px rgba(15, 23, 42, 0.10) !important;
+}
+
+.notification-trigger i {
+    font-size: 1rem;
+}
+
+
+/* =========================================================
+   BADGE
+========================================================= */
+
+.notification-badge {
+    position: absolute;
+
+    top: -4px;
+    right: -4px;
+
+    min-width: 19px;
+    height: 19px;
+
+    padding: 0 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 999px;
+
+    background: #0ea5a8;
+    color: #ffffff;
+
+    border: 2px solid #ffffff;
+
+    font-size: 0.63rem;
+    font-weight: 800;
+
+    line-height: 1;
+
+    box-shadow:
+            0 3px 10px rgba(14, 165, 168, 0.35);
+}
+
+.notification-badge.pulse {
+    animation: notificationPulse 2s infinite;
+}
+
+@keyframes notificationPulse {
+
+    0% {
+        box-shadow:
+                0 0 0 0 rgba(14, 165, 168, 0.45);
+    }
+
+    70% {
+        box-shadow:
+                0 0 0 7px rgba(14, 165, 168, 0);
+    }
+
+    100% {
+        box-shadow:
+                0 0 0 0 rgba(14, 165, 168, 0);
+    }
+}
+
+
+/* =========================================================
+   MENU
+========================================================= */
+
+.notification-menu {
+    width: 390px;
+
+    padding: 0 !important;
+
+    margin-top: 12px !important;
+
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+
+    border-radius: 18px !important;
+
+    background: #ffffff;
+
+    overflow: hidden;
+
+    box-shadow:
+            0 20px 55px rgba(15, 23, 42, 0.16) !important;
+}
+
+
+/* =========================================================
+   HEADER
+========================================================= */
+
+.notification-menu-header {
+
+    min-height: 76px;
+
+    padding: 17px 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+
+    border-bottom: 1px solid #eef2f7;
+
+    background:
+            linear-gradient(
+                    180deg,
+                    #ffffff 0%,
+                    #f8fafc 100%
+            );
+}
+
+.notification-menu-title {
+    color: #0f172a;
+
+    font-size: 0.95rem;
+    font-weight: 800;
+
+    letter-spacing: -0.02em;
+}
+
+.notification-menu-subtitle {
+    margin-top: 3px;
+
+    color: #94a3b8;
+
+    font-size: 0.72rem;
+    font-weight: 500;
+}
+
+.notification-mark-all {
+    border: 0;
+    background: transparent;
+
+    color: #0ea5a8;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+            color 0.2s ease,
+            opacity 0.2s ease;
+}
+
+.notification-mark-all:hover {
+    color: #0f766e;
+}
+
+.notification-mark-all:disabled {
+    opacity: 0.45;
+    cursor: default;
+}
+
+
+/* =========================================================
+   LIST
+========================================================= */
+
+.notifications-list {
+    max-height: 390px;
+
+    overflow-y: auto;
+}
+
+.notifications-list::-webkit-scrollbar {
+    width: 5px;
+}
+
+.notifications-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.notifications-list::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 999px;
+}
+
+
+/* =========================================================
+   ITEM
+========================================================= */
+
+.notification-item {
+    position: relative;
+
+    display: flex;
+
+    gap: 12px;
+
+    padding: 15px 17px;
+
+    border-bottom: 1px solid #f1f5f9;
+
+    background: #ffffff;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease;
+}
+
+.notification-item:hover {
+    background: #f8fafc;
+}
+
+.notification-item:last-child {
+    border-bottom: 0;
+}
+
+.notification-item.unread {
+    background:
+            linear-gradient(
+                    90deg,
+                    rgba(14, 165, 168, 0.055),
+                    rgba(14, 165, 168, 0.015)
+            );
+}
+
+.notification-item.unread::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    bottom: 0;
+    left: 0;
+
+    width: 3px;
+
+    background: #0ea5a8;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.notification-item-icon {
+
+    flex: 0 0 38px;
+
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background: rgba(14, 165, 168, 0.10);
+
+    color: #0ea5a8;
+
+    font-size: 0.95rem;
+}
+
+
+/* =========================================================
+   CONTENT
+========================================================= */
+
+.notification-item-content {
+    min-width: 0;
+    flex: 1;
+}
+
+.notification-item-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.notification-item-title {
+    color: #1e293b;
+
+    font-size: 0.79rem;
+    font-weight: 750;
+
+    line-height: 1.3;
+}
+
+.notification-item-time {
+    flex: 0 0 auto;
+
+    color: #94a3b8;
+
+    font-size: 0.64rem;
+    font-weight: 600;
+
+    white-space: nowrap;
+}
+
+.notification-item-message {
+    margin-top: 4px;
+
+    color: #64748b;
+
+    font-size: 0.72rem;
+    line-height: 1.5;
+
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+
+    overflow: hidden;
+}
+
+.notification-item-reference {
+    margin-top: 7px;
+
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+
+    color: #0ea5a8;
+
+    font-size: 0.67rem;
+    font-weight: 750;
+}
+
+
+/* =========================================================
+   EMPTY
+========================================================= */
+
+.notification-empty {
+    min-height: 220px;
+
+    padding: 35px 25px;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+.notification-empty-icon {
+
+    width: 52px;
+    height: 52px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 12px;
+
+    border-radius: 16px;
+
+    background: #f1f5f9;
+
+    color: #94a3b8;
+
+    font-size: 1.2rem;
+}
+
+.notification-empty-title {
+    color: #334155;
+
+    font-size: 0.82rem;
+    font-weight: 750;
+}
+
+.notification-empty-text {
+    max-width: 250px;
+
+    margin-top: 5px;
+
+    color: #94a3b8;
+
+    font-size: 0.7rem;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   LOADING
+========================================================= */
+
+.notification-loading {
+
+    min-height: 150px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    color: #94a3b8;
+
+    font-size: 0.72rem;
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.notification-menu-footer {
+
+    padding: 11px 17px;
+
+    border-top: 1px solid #eef2f7;
+
+    background: #f8fafc;
+}
+
+.notification-view-all {
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+
+    color: #475569;
+
+    font-size: 0.72rem;
+    font-weight: 750;
+
+    text-decoration: none;
+
+    transition:
+            color 0.2s ease;
+}
+
+.notification-view-all:hover {
+    color: #0ea5a8;
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 575.98px) {
+
+    .notification-menu {
+        position: fixed !important;
+
+        top: 65px !important;
+        left: 12px !important;
+        right: 12px !important;
+
+        width: auto;
+
+        margin: 0 !important;
+    }
+
+    .notifications-list {
+        max-height: 55vh;
+    }
+
+}

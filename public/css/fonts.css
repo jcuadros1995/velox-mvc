@@ -1,0 +1,122 @@
+/* =========================================================
+   VELOX
+   FUENTES LOCALES
+   ========================================================= */
+
+@font-face {
+    font-family: "Chillax";
+
+    src: url("../assets/fonts/Chillax/Chillax-Variable.woff2")
+    format("woff2");
+
+    font-style: normal;
+    font-weight: 300 700;
+    font-display: swap;
+}
+
+
+/* =========================================================
+   FUENTE PRINCIPAL DEL SISTEMA
+   ========================================================= */
+
+:root {
+    --velox-font:
+            "Chillax",
+            "Helvetica Neue",
+            Arial,
+            sans-serif;
+
+    --font-sans:
+            "Chillax",
+            "Helvetica Neue",
+            Arial,
+            sans-serif;
+}
+
+
+/* =========================================================
+   APLICACIÓN GLOBAL
+   ========================================================= */
+
+html,
+body {
+    font-family: var(--velox-font) !important;
+}
+
+
+/* =========================================================
+   ELEMENTOS DE TEXTO
+   ========================================================= */
+
+body,
+body button,
+body input,
+body select,
+body textarea,
+body option,
+body table,
+body th,
+body td,
+body label,
+body a,
+body p,
+body span,
+body small,
+body strong,
+body b,
+body h1,
+body h2,
+body h3,
+body h4,
+body h5,
+body h6 {
+    font-family: var(--velox-font) !important;
+}
+
+
+/* =========================================================
+   BOOTSTRAP
+   ========================================================= */
+
+:root {
+    --bs-body-font-family: var(--velox-font);
+    --bs-font-sans-serif: var(--velox-font);
+}
+
+
+/* =========================================================
+   FONT AWESOME
+   NO SOBRESCRIBIR ICONOS
+   ========================================================= */
+
+.fa,
+.fas,
+.far,
+.fal,
+[class^="fa-"],
+[class*=" fa-"] {
+    font-family: "Font Awesome 6 Free" !important;
+}
+
+.fab,
+[class^="fab"],
+[class*=" fab"] {
+    font-family: "Font Awesome 6 Brands" !important;
+}
+
+
+/* =========================================================
+   MONOSPACE
+   ========================================================= */
+
+.font-monospace,
+code,
+pre,
+kbd,
+samp {
+    font-family:
+            "SFMono-Regular",
+            Consolas,
+            "Liberation Mono",
+            monospace !important;
+}

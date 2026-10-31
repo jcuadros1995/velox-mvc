@@ -1,0 +1,1851 @@
+/* ============================================================
+   BURGER TOWN
+   PUBLIC - EVENTOS
+   ============================================================ */
+
+.bt-events-page {
+
+    --events-red: var(--velox-primary, #6d28d9);
+    --events-red-dark: var(--velox-primary-dark, #4c1d95);
+    --events-red-light: color-mix(in srgb, var(--velox-primary, #6d28d9) 7%, white);
+
+    --events-black: #090909;
+    --events-dark: #171717;
+
+    --events-gray-900: #27272a;
+    --events-gray-700: #52525b;
+    --events-gray-600: #71717a;
+    --events-gray-500: #a1a1aa;
+    --events-gray-400: #a1a1aa;
+    --events-gray-300: #d4d4d8;
+    --events-gray-200: #e4e4e7;
+    --events-gray-100: #f4f4f5;
+    --events-gray-50: #fafafa;
+
+    --events-white: #ffffff;
+
+    --events-yellow: #ffd400;
+
+    --events-radius: 20px;
+
+    --events-shadow:
+            0 15px 45px rgba(0, 0, 0, .07);
+}
+
+
+.bt-events-page *,
+.bt-events-page *::before,
+.bt-events-page *::after {
+
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.bt-events-hero {
+
+    position: relative;
+
+    min-height: 330px;
+
+    display: flex;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    background:
+            linear-gradient(
+                    115deg,
+                    #080808 0%,
+                    #140506 48%,
+                    #65090f 100%
+            );
+
+    color: #ffffff;
+
+    margin-top: 100px;
+}
+
+
+.bt-events-hero-bg {
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+
+            radial-gradient(
+                    circle at 85% 25%,
+                    rgba(227, 6, 19, .38),
+                    transparent 30%
+            ),
+
+            radial-gradient(
+                    circle at 60% 110%,
+                    rgba(227, 6, 19, .12),
+                    transparent 30%
+            );
+}
+
+
+.bt-events-hero-circle {
+
+    position: absolute;
+
+    border: 1px solid rgba(255, 255, 255, .08);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+.bt-events-hero-circle-1 {
+
+    width: 390px;
+
+    height: 390px;
+
+    top: -220px;
+
+    right: -60px;
+}
+
+
+.bt-events-hero-circle-2 {
+
+    width: 260px;
+
+    height: 260px;
+
+    right: 180px;
+
+    bottom: -210px;
+
+    background:
+            rgba(227, 6, 19, .06);
+}
+
+
+/* ============================================================
+   HERO INNER
+   ============================================================ */
+
+.bt-events-hero-inner {
+
+    position: relative;
+
+    z-index: 2;
+
+    padding: 42px 0 48px;
+}
+
+
+/* ============================================================
+   BREADCRUMB
+   ============================================================ */
+
+.bt-events-breadcrumb {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 9px;
+
+    margin-bottom: 32px;
+
+    color: rgba(255, 255, 255, .4);
+
+    font-size: 10px;
+}
+
+
+.bt-events-breadcrumb a {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    color: rgba(255, 255, 255, .62);
+
+    text-decoration: none;
+
+    transition: .2s ease;
+}
+
+
+.bt-events-breadcrumb a:hover {
+
+    color: #ffffff;
+}
+
+
+.bt-events-breadcrumb > i {
+
+    color: rgba(255, 255, 255, .22);
+
+    font-size: 8px;
+}
+
+
+.bt-events-breadcrumb span {
+
+    color: rgba(255, 255, 255, .9);
+}
+
+
+/* ============================================================
+   HERO CONTENT
+   ============================================================ */
+
+.bt-events-hero-content {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 25px;
+
+    max-width: 950px;
+}
+
+
+.bt-events-hero-icon {
+
+    width: 82px;
+
+    height: 82px;
+
+    min-width: 82px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border:
+            1px solid rgba(255, 255, 255, .2);
+
+    border-radius: 22px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(227, 6, 19, .5),
+                    rgba(92, 0, 6, .45)
+            );
+
+    box-shadow:
+            0 15px 40px rgba(0, 0, 0, .25);
+
+    color: #ffffff;
+
+    font-size: 29px;
+}
+
+
+.bt-events-hero-content > div:last-child {
+
+    min-width: 0;
+}
+
+
+.bt-events-page .bt-eyebrow {
+
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: var(--events-yellow);
+
+    font-size: 10px;
+
+    font-weight: 900;
+
+    letter-spacing: .15em;
+}
+
+
+.bt-events-hero h1 {
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size:
+            clamp(
+                    36px,
+                    5vw,
+                    58px
+            );
+
+    font-weight: 900;
+
+    letter-spacing: -.04em;
+
+    line-height: 1;
+}
+
+
+.bt-events-hero p {
+
+    max-width: 700px;
+
+    margin:
+            16px 0 0;
+
+    color: rgba(255, 255, 255, .67);
+
+    font-size: 14px;
+
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   MAIN
+   ============================================================ */
+
+.bt-events-main {
+
+    position: relative;
+
+    padding:
+            50px 0 85px;
+
+    background:
+            linear-gradient(
+                    180deg,
+                    #f7f7f7 0%,
+                    #ffffff 65%
+            );
+}
+
+
+/* ============================================================
+   STEPS
+   ============================================================ */
+
+.bt-events-steps {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(3, minmax(0, 1fr));
+
+    gap: 17px;
+
+    margin-bottom: 28px;
+}
+
+
+.bt-events-step {
+
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 15px;
+
+    min-width: 0;
+
+    padding: 21px;
+
+    border:
+            1px solid #e7e7e9;
+
+    border-radius:
+            var(--events-radius);
+
+    background:
+            #ffffff;
+
+    box-shadow:
+            0 8px 25px rgba(0, 0, 0, .045);
+
+    transition:
+            transform .2s ease,
+            box-shadow .2s ease;
+}
+
+
+.bt-events-step:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 12px 30px rgba(0, 0, 0, .07);
+}
+
+
+.bt-events-step-number {
+
+    width: 42px;
+
+    height: 42px;
+
+    min-width: 42px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 12px;
+
+    background:
+            var(--events-red-light);
+
+    color:
+            var(--events-red);
+
+    font-size: 10px;
+
+    font-weight: 900;
+}
+
+
+.bt-events-step-eyebrow {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+            var(--events-red);
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    letter-spacing: .12em;
+}
+
+
+.bt-events-step h3 {
+
+    margin: 0 0 5px;
+
+    color:
+            var(--events-black);
+
+    font-size: 1rem;
+
+    font-weight: 900;
+
+    letter-spacing: -.015em;
+}
+
+
+.bt-events-step p {
+
+    margin: 0;
+
+    color:
+            var(--events-gray-500);
+
+    font-size: .75rem;
+
+    line-height: 1.55;
+}
+
+
+/* ============================================================
+   LAYOUT
+   ============================================================ */
+
+.bt-events-layout {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(0, 1fr)
+        365px;
+
+    gap: 28px;
+
+    align-items: start;
+}
+
+
+/* ============================================================
+   CARD
+   ============================================================ */
+
+.bt-events-card {
+
+    overflow: hidden;
+
+    border:
+            1px solid #e7e7e9;
+
+    border-radius:
+            var(--events-radius);
+
+    background:
+            #ffffff;
+
+    box-shadow:
+            var(--events-shadow);
+}
+
+
+/* ============================================================
+   FORM HEADER
+   ============================================================ */
+
+.bt-events-card-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 16px;
+
+    padding:
+            24px 27px;
+
+    border-bottom:
+            1px solid #eeeeef;
+}
+
+
+.bt-events-card-number {
+
+    width: 46px;
+
+    height: 46px;
+
+    min-width: 46px;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+            var(--events-red-light);
+
+    color:
+            var(--events-red);
+
+    font-size: 11px;
+
+    font-weight: 900;
+}
+
+
+.bt-events-card-header > div:last-child {
+
+    min-width: 0;
+}
+
+
+.bt-events-card-eyebrow {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    color:
+            var(--events-red);
+
+    font-size: .7rem;
+
+    font-weight: 900;
+
+    letter-spacing: .13em;
+}
+
+
+.bt-events-card-header h2 {
+
+    margin: 0;
+
+    color:
+            var(--events-black);
+
+    font-size: 1.5rem;
+
+    font-weight: 900;
+
+    letter-spacing: -.02em;
+}
+
+
+.bt-events-card-header p {
+
+    margin:
+            4px 0 0;
+
+    color:
+            var(--events-gray-500);
+
+    font-size: .9rem;
+
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.bt-events-form {
+
+    padding:
+            28px;
+}
+
+
+.bt-events-form-section {
+
+    padding-bottom: 25px;
+
+    margin-bottom: 25px;
+
+    border-bottom:
+            1px solid #eeeeef;
+}
+
+
+.bt-events-form-section:last-child {
+
+    padding-bottom: 0;
+
+    margin-bottom: 0;
+
+    border-bottom: 0;
+}
+
+
+.bt-events-form-section-title {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    margin-bottom: 17px;
+
+    color:
+            var(--events-gray-700);
+
+    font-size: 1rem;
+
+    font-weight: 800;
+}
+
+
+.bt-events-form-section-title i {
+
+    color:
+            var(--events-red);
+
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   GRID
+   ============================================================ */
+
+.bt-events-form-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 17px;
+}
+
+
+/* ============================================================
+   FIELD
+   ============================================================ */
+
+.bt-events-form .bt-form-field {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+}
+
+
+.bt-events-form .bt-form-field label {
+
+    color:
+            #3f3f46;
+
+    font-size: .8rem;
+
+    font-weight: 800;
+
+    margin-bottom: 6px;
+}
+
+
+.bt-events-form .bt-form-field label span {
+
+    color:
+            var(--events-red);
+}
+
+
+/* ============================================================
+   INPUT WRAPPER
+   ============================================================ */
+
+.bt-events-form .bt-input-wrapper {
+
+    position: relative;
+}
+
+
+.bt-events-form .bt-input-wrapper > i {
+
+    position: absolute;
+
+    left: 13px;
+
+    top: 50%;
+
+    transform:
+            translateY(-50%);
+
+    z-index: 2;
+
+    color:
+            #a1a1aa;
+
+    font-size: 11px;
+
+    pointer-events: none;
+
+    transition: .2s ease;
+}
+
+
+/* ============================================================
+   INPUTS + SELECTS
+   ============================================================ */
+
+.bt-events-form .bt-input-wrapper input,
+.bt-events-form .bt-input-wrapper select {
+
+    width: 100%;
+
+    height: 46px;
+
+    padding:
+            10px 13px
+            10px 38px;
+
+    border:
+            1px solid #d4d4d8;
+
+    border-radius:
+            10px;
+
+    outline: none;
+
+    background:
+            #ffffff;
+
+    color:
+            #27272a;
+
+    font-family:
+            inherit;
+
+    font-size:
+            11px;
+
+    transition:
+            all .2s ease;
+}
+
+
+.bt-events-form .bt-input-wrapper select {
+
+    appearance: none;
+
+    cursor: pointer;
+
+    padding-right: 38px;
+}
+
+
+.bt-events-form .bt-input-wrapper::after {
+
+    content: "\f078";
+
+    position: absolute;
+
+    right: 13px;
+
+    top: 50%;
+
+    transform:
+            translateY(-50%);
+
+    color:
+            #a1a1aa;
+
+    font-family:
+            "Font Awesome 6 Free";
+
+    font-size: 8px;
+
+    font-weight: 900;
+
+    pointer-events: none;
+}
+
+
+.bt-events-form .bt-input-wrapper input::placeholder {
+
+    color:
+            #b4b4bb;
+}
+
+
+.bt-events-form .bt-input-wrapper input:hover,
+.bt-events-form .bt-input-wrapper select:hover {
+
+    border-color:
+            #b8bac0;
+}
+
+
+.bt-events-form .bt-input-wrapper input:focus,
+.bt-events-form .bt-input-wrapper select:focus {
+
+    border-color:
+            var(--events-red);
+
+    box-shadow:
+            0 0 0 3px
+            rgba(227, 6, 19, .08);
+}
+
+
+.bt-events-form .bt-input-wrapper:focus-within > i {
+
+    color:
+            var(--events-red);
+}
+
+
+/* ============================================================
+   DATE / TIME
+   ============================================================ */
+
+.bt-events-form input[type="date"],
+.bt-events-form input[type="time"] {
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   TEXTAREA
+   ============================================================ */
+
+.bt-events-form .bt-textarea-wrapper {
+
+    overflow: hidden;
+
+    border:
+            1px solid #d4d4d8;
+
+    border-radius:
+            10px;
+
+    background:
+            #ffffff;
+
+    transition:
+            all .2s ease;
+}
+
+
+.bt-events-form .bt-textarea-wrapper:focus-within {
+
+    border-color:
+            var(--events-red);
+
+    box-shadow:
+            0 0 0 3px
+            rgba(227, 6, 19, .08);
+}
+
+
+.bt-events-form .bt-textarea-wrapper textarea {
+
+    display: block;
+
+    width: 100%;
+
+    min-height: 165px;
+
+    padding:
+            13px;
+
+    border: 0;
+
+    outline: none;
+
+    resize: vertical;
+
+    background:
+            transparent;
+
+    color:
+            #27272a;
+
+    font-family:
+            inherit;
+
+    font-size:
+            11px;
+
+    line-height:
+            1.6;
+}
+
+
+.bt-events-form .bt-textarea-wrapper textarea::placeholder {
+
+    color:
+            #b4b4bb;
+}
+
+
+.bt-events-form .bt-textarea-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 10px;
+
+    padding:
+            8px 12px;
+
+    border-top:
+            1px solid #eeeeef;
+
+    background:
+            #fafafa;
+
+    color:
+            #a1a1aa;
+
+    font-size:
+            .75rem;
+}
+
+
+.bt-events-form .bt-textarea-footer strong {
+
+    color:
+            #71717a;
+
+    font-size:
+            8px;
+}
+
+
+/* ============================================================
+   FORM FOOTER
+   ============================================================ */
+
+.bt-events-form-footer {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+}
+
+
+.bt-events-form-note {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    max-width: 330px;
+
+    color:
+            #a1a1aa;
+
+    font-size:
+            .7rem;
+
+    line-height:
+            1.5;
+}
+
+
+.bt-events-form-note i {
+
+    margin-top: 1px;
+
+    color:
+            #10b981;
+
+    font-size:
+            .8rem;
+}
+
+
+/* ============================================================
+   BOTÓN PRINCIPAL
+   ============================================================ */
+
+.bt-events-submit {
+
+    min-width:
+            175px;
+
+    min-height:
+            45px;
+
+    display:
+            inline-flex;
+
+    align-items:
+            center;
+
+    justify-content:
+            center;
+
+    gap:
+            9px;
+
+    padding:
+            11px 17px;
+
+    border:
+            1px solid
+            var(--events-red);
+
+    border-radius:
+            10px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    var(--events-red),
+                    var(--events-red-dark)
+            );
+
+    color:
+            #ffffff;
+
+    font-family:
+            inherit;
+
+    font-size:
+            10px;
+
+    font-weight:
+            800;
+
+    cursor:
+            pointer;
+
+    box-shadow:
+            0 7px 18px
+            rgba(227, 6, 19, .17);
+
+    transition:
+            all .2s ease;
+}
+
+
+.bt-events-submit:hover {
+
+    transform:
+            translateY(-2px);
+
+    box-shadow:
+            0 10px 25px
+            rgba(227, 6, 19, .25);
+}
+
+
+.bt-events-submit:active {
+
+    transform:
+            translateY(0);
+}
+
+
+.bt-events-submit:disabled {
+
+    opacity:
+            .65;
+
+    cursor:
+            wait;
+
+    transform:
+            none;
+}
+
+
+/* ============================================================
+   SIDEBAR
+   ============================================================ */
+
+.bt-events-sidebar {
+
+    display:
+            flex;
+
+    flex-direction:
+            column;
+
+    gap:
+            17px;
+
+    position:
+            sticky;
+
+    top:
+            25px;
+}
+
+
+/* ============================================================
+   FAQ HEADER
+   ============================================================ */
+
+.bt-events-faq-card {
+
+    padding:
+            25px;
+}
+
+
+.bt-events-info-header {
+
+    padding-bottom:
+            22px;
+
+    margin-bottom:
+            20px;
+
+    border-bottom:
+            1px solid #eeeeef;
+}
+
+
+.bt-events-info-header .bt-eyebrow {
+
+    color:
+            var(--events-red);
+}
+
+
+.bt-events-info-header h2 {
+
+    margin:
+            0 0 8px;
+
+    color:
+            var(--events-black);
+
+    font-size:
+            24px;
+
+    font-weight:
+            900;
+
+    letter-spacing:
+            -.025em;
+}
+
+
+.bt-events-info-header p {
+
+    margin:
+            0;
+
+    color:
+            #71717a;
+
+    font-size:
+            11px;
+
+    line-height:
+            1.65;
+}
+
+
+/* ============================================================
+   FAQ
+   ============================================================ */
+
+.bt-events-faq {
+
+    display:
+            flex;
+
+    flex-direction:
+            column;
+}
+
+
+.bt-events-faq details {
+
+    border-bottom:
+            1px solid #eeeeef;
+}
+
+
+.bt-events-faq details:last-child {
+
+    border-bottom:
+            0;
+}
+
+
+.bt-events-faq summary {
+
+    display:
+            flex;
+
+    align-items:
+            center;
+
+    justify-content:
+            space-between;
+
+    gap:
+            12px;
+
+    padding:
+            15px 0;
+
+    list-style:
+            none;
+
+    cursor:
+            pointer;
+
+    color:
+            #27272a;
+
+    font-size:
+            .8rem;
+
+    font-weight:
+            800;
+}
+
+
+.bt-events-faq summary::-webkit-details-marker {
+
+    display:
+            none;
+}
+
+
+.bt-events-faq summary i {
+
+    color:
+            #a1a1aa;
+
+    font-size:
+            8px;
+
+    transition:
+            transform .2s ease;
+}
+
+
+.bt-events-faq details[open] summary i {
+
+    transform:
+            rotate(180deg);
+
+    color:
+            var(--events-red);
+}
+
+
+.bt-events-faq details p {
+
+    margin:
+            -3px 0 15px;
+
+    padding-right:
+            15px;
+
+    color:
+            #71717a;
+
+    font-size:
+            .75rem;
+
+    line-height:
+            1.65;
+}
+
+
+/* ============================================================
+   CTA
+   ============================================================ */
+
+.bt-events-cta-card {
+
+    display:
+            flex;
+
+    flex-direction:
+            column;
+
+    gap:
+            12px;
+
+    padding:
+            22px;
+
+    border:
+            1px solid #e7e7e9;
+
+    border-radius:
+            var(--events-radius);
+
+    background:
+            #ffffff;
+
+    box-shadow:
+            0 8px 25px
+            rgba(0, 0, 0, .05);
+
+    width: 100%;
+}
+
+
+.bt-events-cta-icon {
+
+    width:
+            42px;
+
+    height:
+            42px;
+
+    display:
+            flex;
+
+    align-items:
+            center;
+
+    justify-content:
+            center;
+
+    border-radius:
+            11px;
+
+    background:
+            var(--events-red-light);
+
+    color:
+            var(--events-red);
+
+    font-size:
+            13px;
+}
+
+
+.bt-events-cta-card > div:nth-child(2) {
+
+    display:
+            flex;
+
+    flex-direction:
+            column;
+
+    gap:
+            4px;
+}
+
+
+.bt-events-cta-card strong {
+
+    color:
+            #27272a;
+
+    font-size:
+            .85rem;
+
+    font-weight:
+            800;
+}
+
+
+.bt-events-cta-card span {
+
+    color:
+            #a1a1aa;
+
+    font-size:
+            .72rem;
+
+    line-height:
+            1.5;
+}
+
+
+.bt-events-cta-link {
+
+    display:
+            flex;
+
+    align-items:
+            center;
+
+    justify-content:
+            space-between;
+
+    gap:
+            10px;
+
+    min-height:
+            43px;
+
+    padding:
+            10px 13px;
+
+    margin-top:
+            4px;
+
+    border:
+            1px solid
+            var(--events-red);
+
+    border-radius:
+            9px;
+
+    background:
+            transparent;
+
+    color:
+            var(--events-red);
+
+    font-size:
+            .75rem;
+
+    font-weight:
+            800;
+
+    text-decoration:
+            none;
+
+    transition:
+            all .2s ease;
+}
+
+
+.bt-events-cta-link:hover {
+
+    background:
+            var(--events-red);
+
+    color:
+            #ffffff;
+
+    transform:
+            translateY(-1px);
+}
+
+
+/* ============================================================
+   SIDEBAR BOTTOM
+   ============================================================ */
+
+.bt-events-sidebar-bottom {
+
+    display:
+            flex;
+
+    align-items:
+            center;
+
+    gap:
+            12px;
+
+    padding:
+            15px;
+
+    border-radius:
+            13px;
+
+    background:
+            #111111;
+
+    color:
+            #ffffff;
+}
+
+
+.bt-events-sidebar-bottom-icon {
+
+    width:
+            38px;
+
+    height:
+            38px;
+
+    min-width:
+            38px;
+
+    display:
+            flex;
+
+    align-items:
+            center;
+
+    justify-content:
+            center;
+
+    border-radius:
+            10px;
+
+    background:
+            rgba(227, 6, 19, .18);
+
+    color:
+            var(--events-red);
+
+    font-size:
+            13px;
+}
+
+
+.bt-events-sidebar-bottom > div:last-child {
+
+    display:
+            flex;
+
+    flex-direction:
+            column;
+
+    gap:
+            3px;
+}
+
+
+.bt-events-sidebar-bottom strong {
+
+    color:
+            #ffffff;
+
+    font-size:
+            .85rem;
+
+    font-weight:
+            800;
+}
+
+
+.bt-events-sidebar-bottom span {
+
+    color:
+            rgba(255, 255, 255, .48);
+
+    font-size:
+            .75rem;
+}
+
+
+/* ============================================================
+   VALIDACIÓN
+   ============================================================ */
+
+.bt-events-form
+input.is-invalid,
+.bt-events-form
+select.is-invalid,
+.bt-events-form
+textarea.is-invalid {
+
+    border-color:
+            #dc2626 !important;
+
+    box-shadow:
+            0 0 0 3px
+            rgba(220, 38, 38, .07) !important;
+}
+
+
+.bt-events-form
+input.is-valid,
+.bt-events-form
+select.is-valid,
+.bt-events-form
+textarea.is-valid {
+
+    border-color:
+            #16a34a;
+}
+
+
+/* ============================================================
+   PAGE SHELL
+   ============================================================ */
+
+.bt-events-page .bt-page-shell {
+
+    width:
+            min(1240px, calc(100% - 40px));
+
+    margin:
+            0 auto;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1050px) {
+
+    .bt-events-layout {
+
+        grid-template-columns:
+            minmax(0, 1fr)
+            320px;
+    }
+
+}
+
+
+@media (max-width: 900px) {
+
+    .bt-events-layout {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .bt-events-sidebar {
+
+        position:
+                static;
+
+        display:
+                grid;
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+
+        align-items:
+                start;
+    }
+
+
+    .bt-events-sidebar-bottom {
+
+        grid-column:
+                1 / -1;
+    }
+
+}
+
+
+@media (max-width: 700px) {
+
+    .bt-events-hero {
+        margin-top: 50px;
+        min-height:
+                330px;
+    }
+
+
+    .bt-events-hero-content {
+
+        align-items:
+                flex-start;
+
+        flex-direction:
+                column;
+
+        gap:
+                18px;
+    }
+
+
+    .bt-events-hero-icon {
+
+        width:
+                65px;
+
+        height:
+                65px;
+
+        min-width:
+                65px;
+
+        border-radius:
+                17px;
+
+        font-size:
+                23px;
+    }
+
+
+    .bt-events-hero h1 {
+
+        font-size:
+                38px;
+    }
+
+
+    .bt-events-form-grid {
+
+        grid-template-columns:
+            1fr;
+    }
+
+
+    .bt-events-form-footer {
+
+        align-items:
+                stretch;
+
+        flex-direction:
+                column;
+    }
+
+
+    .bt-events-form-note {
+
+        max-width:
+                none;
+    }
+
+
+    .bt-events-submit {
+
+        width:
+                100%;
+    }
+
+
+    .bt-events-steps {
+
+        grid-template-columns:
+            1fr;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .bt-events-page .bt-page-shell {
+
+        width:
+                calc(100% - 28px);
+
+        margin-top: 50px;
+    }
+
+
+    .bt-events-hero-inner {
+
+        padding:
+                32px 0 42px;
+    }
+
+
+    .bt-events-breadcrumb {
+
+        margin-bottom:
+                25px;
+    }
+
+
+    .bt-events-hero h1 {
+
+        font-size:
+                33px;
+    }
+
+
+    .bt-events-hero p {
+
+        font-size:
+                12px;
+    }
+
+
+    .bt-events-main {
+
+        padding:
+                30px 0 55px;
+    }
+
+
+    .bt-events-sidebar {
+
+        display:
+                flex;
+
+        flex-direction:
+                column;
+    }
+
+
+    .bt-events-card-header {
+
+        padding:
+                20px;
+    }
+
+
+    .bt-events-form {
+
+        padding:
+                20px;
+    }
+
+
+    .bt-events-step {
+
+        padding:
+                18px;
+    }
+
+}

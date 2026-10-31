@@ -1,0 +1,1024 @@
+/* ============================================================
+   BURGER TOWN
+   ADMIN - PÁGINAS
+   ============================================================ */
+
+
+/* ============================================================
+   VARIABLES LOCALES
+   ============================================================ */
+
+.bt-admin-pages {
+
+    --pages-red: var(--velox-primary, #6d28d9);
+    --pages-red-dark: var(--velox-primary-dark, #4c1d95);
+    --pages-red-light: color-mix(in srgb, var(--velox-primary, #6d28d9) 7%, white);
+
+    --pages-black: #111827;
+    --pages-dark: #1f2937;
+
+    --pages-gray-900: #374151;
+    --pages-gray-700: #4b5563;
+    --pages-gray-600: #6b7280;
+    --pages-gray-500: #7b8490;
+    --pages-gray-400: #9ca3af;
+    --pages-gray-300: #d1d5db;
+    --pages-gray-200: #e5e7eb;
+    --pages-gray-100: #f3f4f6;
+    --pages-gray-50: #f9fafb;
+
+    --pages-white: #ffffff;
+
+    --pages-green: #198754;
+    --pages-green-light: #ecfdf3;
+
+    --pages-blue: #0d6efd;
+    --pages-blue-light: #eff6ff;
+
+    --pages-orange: #f59e0b;
+    --pages-orange-light: #fffbeb;
+
+    --pages-purple: #7c3aed;
+    --pages-purple-light: #f5f3ff;
+
+    --pages-radius: 16px;
+    --pages-radius-sm: 10px;
+
+    --pages-shadow:
+            0 8px 30px rgba(15, 23, 42, .06);
+
+    --pages-shadow-hover:
+            0 14px 35px rgba(15, 23, 42, .10);
+
+    --pages-transition:
+            all .22s ease;
+
+    width: 100%;
+}
+
+
+/* ============================================================
+   BOX SIZING
+   ============================================================ */
+
+.bt-admin-pages *,
+.bt-admin-pages *::before,
+.bt-admin-pages *::after {
+    box-sizing: border-box;
+}
+
+
+/* ============================================================
+   ESTADÍSTICAS
+   ============================================================ */
+
+.pages-stats {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(4, minmax(0, 1fr));
+
+    gap: 16px;
+
+    margin: 24px 0;
+}
+
+
+.pages-stat-card {
+
+    min-width: 0;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    padding: 18px 20px;
+
+    background: var(--pages-white);
+
+    border: 1px solid var(--pages-gray-200);
+
+    border-radius: var(--pages-radius);
+
+    box-shadow: var(--pages-shadow);
+
+    transition: var(--pages-transition);
+}
+
+
+.pages-stat-card:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow: var(--pages-shadow-hover);
+
+    border-color: #d9dde3;
+}
+
+
+/* ============================================================
+   ICONOS ESTADÍSTICAS
+   ============================================================ */
+
+.pages-stat-icon {
+
+    width: 48px;
+    height: 48px;
+
+    min-width: 48px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background: var(--pages-red-light);
+
+    color: var(--pages-red);
+
+    font-size: 18px;
+}
+
+
+.pages-stat-icon.success {
+
+    background: var(--pages-green-light);
+
+    color: var(--pages-green);
+}
+
+
+.pages-stat-icon.warning {
+
+    background: var(--pages-orange-light);
+
+    color: var(--pages-orange);
+}
+
+
+.pages-stat-icon.legal {
+
+    background: var(--pages-purple-light);
+
+    color: var(--pages-purple);
+}
+
+
+/* ============================================================
+   CONTENIDO ESTADÍSTICA
+   ============================================================ */
+
+.pages-stat-content {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 3px;
+}
+
+
+.pages-stat-content span {
+
+    display: block;
+
+    color: var(--pages-gray-500);
+
+    font-size: 12px;
+
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+
+.pages-stat-content strong {
+
+    display: block;
+
+    color: var(--pages-black);
+
+    font-size: 24px;
+
+    font-weight: 800;
+
+    line-height: 1;
+}
+
+
+/* ============================================================
+   PANEL PRINCIPAL
+   ============================================================ */
+
+.pages-panel {
+
+    width: 100%;
+
+    overflow: hidden;
+
+    background: var(--pages-white);
+
+    border: 1px solid var(--pages-gray-200);
+
+    border-radius: var(--pages-radius);
+
+    box-shadow: var(--pages-shadow);
+}
+
+
+/* ============================================================
+   HEADER PANEL
+   ============================================================ */
+
+.pages-panel-header {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: space-between;
+
+    gap: 20px;
+
+    padding: 20px 22px;
+
+    border-bottom: 1px solid var(--pages-gray-200);
+
+    background: #ffffff;
+}
+
+
+.pages-panel-title {
+
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+
+.pages-panel-title strong {
+
+    color: var(--pages-black);
+
+    font-size: 16px;
+
+    font-weight: 800;
+}
+
+
+.pages-panel-title span {
+
+    color: var(--pages-gray-500);
+
+    font-size: 12px;
+
+    line-height: 1.5;
+}
+
+
+/* ============================================================
+   ACCIONES
+   ============================================================ */
+
+.pages-panel-actions {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    flex-shrink: 0;
+}
+
+
+.pages-primary-btn,
+.pages-secondary-btn {
+
+    min-height: 40px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    padding: 9px 14px;
+
+    border-radius: 10px;
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    font-weight: 750;
+
+    line-height: 1;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: var(--pages-transition);
+}
+
+
+.pages-primary-btn {
+
+    border: 1px solid var(--pages-red);
+
+    background:
+            linear-gradient(
+                    135deg,
+                    var(--pages-red),
+                    var(--pages-red-dark)
+            );
+
+    color: #ffffff;
+
+    box-shadow:
+            0 5px 14px rgba(227, 6, 19, .18);
+}
+
+
+.pages-primary-btn:hover {
+
+    color: #ffffff;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 8px 20px rgba(227, 6, 19, .26);
+}
+
+
+.pages-secondary-btn {
+
+    border: 1px solid var(--pages-gray-300);
+
+    background: #ffffff;
+
+    color: var(--pages-gray-700);
+}
+
+
+.pages-secondary-btn:hover {
+
+    border-color: #c4c9d0;
+
+    background: var(--pages-gray-50);
+
+    color: var(--pages-black);
+}
+
+
+.pages-primary-btn i,
+.pages-secondary-btn i {
+
+    font-size: 11px;
+}
+
+
+/* ============================================================
+   TOOLBAR
+   ============================================================ */
+
+.pages-toolbar {
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(240px, 1fr)
+        190px
+        190px;
+
+    gap: 10px;
+
+    align-items: center;
+
+    padding: 16px 20px;
+
+    background: #fcfcfd;
+
+    border-bottom: 1px solid var(--pages-gray-200);
+}
+
+
+/* ============================================================
+   BUSCADOR
+   ============================================================ */
+
+.pages-search-wrap {
+
+    position: relative;
+
+    min-width: 0;
+}
+
+
+.pages-search-wrap > i {
+
+    position: absolute;
+
+    left: 13px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: var(--pages-gray-400);
+
+    font-size: 12px;
+
+    pointer-events: none;
+}
+
+
+.pages-search-wrap .pages-input {
+
+    padding-left: 37px;
+}
+
+
+/* ============================================================
+   INPUTS
+   ============================================================ */
+
+.pages-input {
+
+    width: 100%;
+
+    height: 42px;
+
+    padding: 9px 12px;
+
+    border: 1px solid var(--pages-gray-300);
+
+    border-radius: 9px;
+
+    outline: none;
+
+    background: #ffffff;
+
+    color: var(--pages-dark);
+
+    font-family: inherit;
+
+    font-size: 12px;
+
+    transition: var(--pages-transition);
+}
+
+
+.pages-input::placeholder {
+
+    color: var(--pages-gray-400);
+}
+
+
+.pages-input:hover {
+
+    border-color: #c4c9d0;
+}
+
+
+.pages-input:focus {
+
+    border-color: var(--pages-red);
+
+    box-shadow:
+            0 0 0 3px rgba(227, 6, 19, .08);
+}
+
+
+.pages-select {
+
+    cursor: pointer;
+}
+
+
+/* ============================================================
+   TABLA
+   ============================================================ */
+
+.pages-table-wrap {
+
+    width: 100%;
+
+    overflow-x: auto;
+}
+
+
+.pages-table {
+
+    width: 100%;
+
+    min-width: 900px;
+
+    margin: 0;
+
+    border-collapse: collapse;
+
+    background: #ffffff;
+}
+
+
+.pages-table thead th {
+
+    padding: 13px 18px;
+
+    border-bottom: 1px solid var(--pages-gray-200);
+
+    background: #fafafa;
+
+    color: var(--pages-gray-500);
+
+    font-size: 10px;
+
+    font-weight: 800;
+
+    letter-spacing: .08em;
+
+    text-align: left;
+
+    text-transform: uppercase;
+
+    white-space: nowrap;
+}
+
+
+.pages-table tbody td {
+
+    padding: 16px 18px;
+
+    border-bottom: 1px solid #f0f0f2;
+
+    color: var(--pages-gray-700);
+
+    font-size: 12px;
+
+    vertical-align: middle;
+}
+
+
+.pages-table tbody tr {
+
+    transition: background .15s ease;
+}
+
+
+.pages-table tbody tr:hover {
+
+    background: #fafcff;
+}
+
+
+.pages-table tbody tr:last-child td {
+
+    border-bottom: 0;
+}
+
+
+/* ============================================================
+   NOMBRE DE PÁGINA
+   ============================================================ */
+
+.page-name {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.page-icon {
+
+    width: 40px;
+    height: 40px;
+
+    min-width: 40px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 11px;
+
+    background: var(--pages-red-light);
+
+    color: var(--pages-red);
+
+    font-size: 14px;
+}
+
+
+.page-name-content {
+
+    min-width: 0;
+}
+
+
+.page-name-content strong {
+
+    display: block;
+
+    overflow: hidden;
+
+    color: var(--pages-black);
+
+    font-size: 13px;
+
+    font-weight: 800;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+.page-name-content span {
+
+    display: block;
+
+    margin-top: 3px;
+
+    color: var(--pages-gray-500);
+
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   SLUG
+   ============================================================ */
+
+.page-slug {
+
+    display: inline-flex;
+
+    max-width: 240px;
+
+    padding: 6px 9px;
+
+    overflow: hidden;
+
+    border-radius: 7px;
+
+    background: var(--pages-gray-100);
+
+    color: var(--pages-gray-700);
+
+    font-family: monospace;
+
+    font-size: 10px;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   TIPO
+   ============================================================ */
+
+.page-type-badge {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 6px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.page-type-badge.legal {
+
+    background: var(--pages-purple-light);
+
+    color: var(--pages-purple);
+}
+
+
+.page-type-badge.general {
+
+    background: var(--pages-blue-light);
+
+    color: var(--pages-blue);
+}
+
+
+/* ============================================================
+   ESTADO
+   ============================================================ */
+
+.page-status {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    font-size: 10px;
+
+    font-weight: 800;
+}
+
+
+.page-status::before {
+
+    content: "";
+
+    width: 6px;
+    height: 6px;
+
+    border-radius: 50%;
+}
+
+
+.page-status.published {
+
+    background: var(--pages-green-light);
+
+    color: var(--pages-green);
+}
+
+
+.page-status.published::before {
+
+    background: #10b981;
+}
+
+
+.page-status.draft {
+
+    background: var(--pages-gray-100);
+
+    color: var(--pages-gray-600);
+}
+
+
+.page-status.draft::before {
+
+    background: #9ca3af;
+}
+
+
+/* ============================================================
+   FECHA
+   ============================================================ */
+
+.page-date {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.page-date strong {
+
+    color: var(--pages-gray-700);
+
+    font-size: 11px;
+
+    font-weight: 700;
+}
+
+
+.page-date span {
+
+    color: var(--pages-gray-400);
+
+    font-size: 10px;
+}
+
+
+/* ============================================================
+   ACCIONES TABLA
+   ============================================================ */
+
+.pages-actions-col {
+
+    width: 130px;
+
+    text-align: right !important;
+}
+
+
+.pages-actions {
+
+    display: flex;
+
+    justify-content: flex-end;
+
+    align-items: center;
+
+    gap: 6px;
+}
+
+
+.pages-action-btn {
+
+    width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--pages-gray-200);
+
+    border-radius: 9px;
+
+    background: #ffffff;
+
+    color: var(--pages-gray-600);
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transition: var(--pages-transition);
+}
+
+
+.pages-action-btn:hover {
+
+    transform: translateY(-1px);
+
+    border-color: #cbd5e1;
+
+    background: #f8fafc;
+
+    color: var(--pages-black);
+}
+
+
+.pages-action-btn.publish:hover {
+
+    border-color: #bbf7d0;
+
+    background: #f0fdf4;
+
+    color: #15803d;
+}
+
+
+.pages-action-btn.unpublish:hover {
+
+    border-color: #fecaca;
+
+    background: #fff5f5;
+
+    color: #dc2626;
+}
+
+
+/* ============================================================
+   EMPTY / LOADING
+   ============================================================ */
+
+.pages-loading,
+.pages-empty {
+
+    padding: 55px 20px !important;
+
+    color: var(--pages-gray-400) !important;
+
+    text-align: center !important;
+
+    font-size: 12px !important;
+}
+
+
+.pages-loading i {
+
+    margin-right: 7px;
+}
+
+
+.pages-error {
+
+    color: #dc2626 !important;
+
+    background: #fff7f7;
+}
+
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+
+@media (max-width: 1100px) {
+
+    .pages-stats {
+
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+}
+
+
+@media (max-width: 850px) {
+
+    .pages-panel-header {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+    }
+
+
+    .pages-panel-actions {
+
+        width: 100%;
+    }
+
+
+    .pages-primary-btn,
+    .pages-secondary-btn {
+
+        flex: 1;
+    }
+
+
+    .pages-toolbar {
+
+        grid-template-columns: 1fr 1fr;
+    }
+
+
+    .pages-search-wrap {
+
+        grid-column: 1 / -1;
+    }
+
+}
+
+
+@media (max-width: 600px) {
+
+    .pages-stats {
+
+        grid-template-columns: 1fr;
+
+        gap: 10px;
+    }
+
+
+    .pages-toolbar {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .pages-search-wrap {
+
+        grid-column: auto;
+    }
+
+
+    .pages-panel-header {
+
+        padding: 17px;
+    }
+
+
+    .pages-toolbar {
+
+        padding: 14px;
+    }
+
+}

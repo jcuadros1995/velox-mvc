@@ -1,0 +1,639 @@
+/* ==========================================================
+   BURGER TOWN
+   SYSTEM ERROR PAGES
+   ========================================================== */
+
+.bt-error-page {
+    min-height: calc(100vh - 140px);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 50px 35px;
+
+    position: relative;
+    overflow: hidden;
+
+    background:
+            radial-gradient(
+                    circle at 15% 15%,
+                    rgba(220, 38, 38, .055),
+                    transparent 28%
+            ),
+            radial-gradient(
+                    circle at 85% 85%,
+                    rgba(15, 23, 42, .045),
+                    transparent 30%
+            ),
+            #f6f7f9;
+}
+
+
+/* ==========================================================
+   DECORACIÓN
+   ========================================================== */
+
+.bt-error-page::before {
+    content: "";
+
+    position: absolute;
+
+    width: 430px;
+    height: 430px;
+
+    right: -220px;
+    top: -220px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(220, 38, 38, .07);
+}
+
+.bt-error-page::after {
+    content: "";
+
+    position: absolute;
+
+    width: 330px;
+    height: 330px;
+
+    left: -180px;
+    bottom: -180px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(15, 23, 42, .05);
+}
+
+
+/* ==========================================================
+   CARD PRINCIPAL
+   ========================================================== */
+
+.bt-error-card {
+    width: 100%;
+    max-width: 760px;
+
+    position: relative;
+    z-index: 2;
+
+    padding: 55px 65px;
+
+    text-align: center;
+
+    background: rgba(255, 255, 255, .97);
+
+    border: 1px solid rgba(15, 23, 42, .07);
+
+    border-radius: 26px;
+
+    box-shadow:
+            0 25px 70px rgba(15, 23, 42, .09),
+            0 4px 15px rgba(15, 23, 42, .035);
+
+    overflow: hidden;
+
+    animation:
+            btErrorEnter .5s cubic-bezier(.22, 1, .36, 1);
+}
+
+
+/* Línea superior Burger Town */
+
+.bt-error-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 4px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    #991b1b,
+                    #dc2626,
+                    #ef4444,
+                    #dc2626,
+                    #991b1b
+            );
+}
+
+
+/* ==========================================================
+   ICONO
+   ========================================================== */
+
+.bt-error-icon {
+    width: 92px;
+    height: 92px;
+
+    margin: 0 auto 27px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    position: relative;
+
+    border-radius: 25px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    color-mix(in srgb, var(--velox-primary, #6d28d9) 7%, white),
+                    #ffe4e6
+            );
+
+    border: 1px solid rgba(220, 38, 38, .10);
+
+    color: #dc2626;
+
+    box-shadow:
+            0 14px 35px rgba(220, 38, 38, .12);
+}
+
+
+.bt-error-icon::after {
+    content: "";
+
+    position: absolute;
+
+    inset: 7px;
+
+    border-radius: 19px;
+
+    border: 1px dashed rgba(220, 38, 38, .14);
+}
+
+
+.bt-error-icon i {
+    position: relative;
+    z-index: 2;
+
+    font-size: 36px;
+}
+
+
+/* ==========================================================
+   CÓDIGO 403
+   ========================================================== */
+
+.bt-error-code {
+    margin-bottom: 4px;
+
+    font-family:
+            Inter,
+            system-ui,
+            -apple-system,
+            BlinkMacSystemFont,
+            "Segoe UI",
+            sans-serif;
+
+    font-size: 86px;
+
+    line-height: .95;
+
+    font-weight: 900;
+
+    letter-spacing: -6px;
+
+    color: #111827;
+}
+
+
+/* pequeño texto */
+
+.bt-error-code::after {
+    content: "ACCESS DENIED";
+
+    display: block;
+
+    margin-top: 10px;
+
+    font-size: 10px;
+
+    line-height: 1;
+
+    letter-spacing: 3px;
+
+    font-weight: 800;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   TÍTULO
+   ========================================================== */
+
+.bt-error-title {
+    margin: 24px 0 12px;
+
+    color: #111827;
+
+    font-size: 28px;
+
+    line-height: 1.25;
+
+    font-weight: 800;
+
+    letter-spacing: -.7px;
+}
+
+
+/* ==========================================================
+   DESCRIPCIÓN
+   ========================================================== */
+
+.bt-error-description {
+    max-width: 560px;
+
+    margin: 0 auto;
+
+    color: #6b7280;
+
+    font-size: 15px;
+
+    line-height: 1.75;
+
+    font-weight: 400;
+}
+
+
+/* ==========================================================
+   META / ESTADO
+   ========================================================== */
+
+.bt-error-meta {
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin-top: 24px;
+
+    padding: 10px 16px;
+
+    border-radius: 10px;
+
+    background: #f8fafc;
+
+    border: 1px solid #e5e7eb;
+
+    color: #475569;
+
+    font-size: 12px;
+
+    font-weight: 700;
+}
+
+
+.bt-error-meta i {
+    color: #dc2626;
+
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   DIVISOR
+   ========================================================== */
+
+.bt-error-divider {
+    width: 100%;
+
+    height: 1px;
+
+    margin: 32px 0;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    #e5e7eb,
+                    transparent
+            );
+}
+
+
+/* ==========================================================
+   BOTONES
+   ========================================================== */
+
+.bt-error-actions {
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 12px;
+
+    flex-wrap: wrap;
+}
+
+
+.bt-error-btn {
+    min-width: 165px;
+
+    min-height: 48px;
+
+    padding: 0 20px;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    border-radius: 11px;
+
+    font-size: 13px;
+
+    font-weight: 700;
+
+    text-decoration: none;
+
+    transition:
+            transform .2s ease,
+            box-shadow .2s ease,
+            background .2s ease,
+            border-color .2s ease;
+}
+
+
+.bt-error-btn i {
+    font-size: 13px;
+}
+
+
+/* ==========================================================
+   BOTÓN PRINCIPAL
+   ========================================================== */
+
+.bt-error-btn-primary {
+    color: #fff;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #dc2626,
+                    #b91c1c
+            );
+
+    border: 1px solid #b91c1c;
+
+    box-shadow:
+            0 9px 22px rgba(220, 38, 38, .20);
+}
+
+
+.bt-error-btn-primary:hover {
+    color: #fff;
+
+    transform: translateY(-2px);
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #ef4444,
+                    #dc2626
+            );
+
+    box-shadow:
+            0 14px 28px rgba(220, 38, 38, .27);
+}
+
+
+/* ==========================================================
+   BOTÓN SECUNDARIO
+   ========================================================== */
+
+.bt-error-btn-secondary {
+    color: #374151;
+
+    background: #fff;
+
+    border: 1px solid #e2e8f0;
+
+    box-shadow:
+            0 4px 10px rgba(15, 23, 42, .03);
+}
+
+
+.bt-error-btn-secondary:hover {
+    color: #111827;
+
+    background: #f8fafc;
+
+    border-color: #cbd5e1;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 8px 18px rgba(15, 23, 42, .07);
+}
+
+
+/* ==========================================================
+   AYUDA
+   ========================================================== */
+
+.bt-error-help {
+    margin-top: 25px;
+
+    color: #94a3b8;
+
+    font-size: 11px;
+
+    line-height: 1.6;
+}
+
+
+.bt-error-help::before {
+    content: "•";
+
+    margin-right: 6px;
+
+    color: #dc2626;
+}
+
+
+/* ==========================================================
+   WARNING
+   ========================================================== */
+
+.bt-error-page.is-warning .bt-error-icon {
+    color: #d97706;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    #fffbeb,
+                    #fef3c7
+            );
+
+    border-color: rgba(217, 119, 6, .12);
+
+    box-shadow:
+            0 14px 35px rgba(217, 119, 6, .11);
+}
+
+
+.bt-error-page.is-warning .bt-error-icon::after {
+    border-color: rgba(217, 119, 6, .15);
+}
+
+
+.bt-error-page.is-warning .bt-error-meta i {
+    color: #d97706;
+}
+
+
+.bt-error-page.is-warning .bt-error-code::after {
+    color: #d97706;
+}
+
+
+/* ==========================================================
+   DARK VARIANT
+   ========================================================== */
+
+.bt-error-page.is-dark .bt-error-icon {
+    color: #475569;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    #f1f5f9,
+                    #e2e8f0
+            );
+
+    border-color: rgba(71, 85, 105, .10);
+
+    box-shadow:
+            0 14px 35px rgba(15, 23, 42, .08);
+}
+
+
+.bt-error-page.is-dark .bt-error-icon::after {
+    border-color: rgba(71, 85, 105, .13);
+}
+
+
+.bt-error-page.is-dark .bt-error-meta i {
+    color: #475569;
+}
+
+
+/* ==========================================================
+   ANIMACIÓN
+   ========================================================== */
+
+@keyframes btErrorEnter {
+
+    from {
+        opacity: 0;
+
+        transform:
+                translateY(18px)
+                scale(.985);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                translateY(0)
+                scale(1);
+    }
+}
+
+
+/* ==========================================================
+   MOBILE
+   ========================================================== */
+
+@media (max-width: 768px) {
+
+    .bt-error-page {
+        min-height: calc(100vh - 110px);
+
+        padding: 35px 18px;
+    }
+
+
+    .bt-error-card {
+        padding: 45px 28px;
+
+        border-radius: 22px;
+    }
+
+
+    .bt-error-code {
+        font-size: 68px;
+
+        letter-spacing: -4px;
+    }
+
+
+    .bt-error-title {
+        font-size: 24px;
+    }
+
+
+    .bt-error-description {
+        font-size: 14px;
+    }
+
+
+    .bt-error-actions {
+        flex-direction: column;
+    }
+
+
+    .bt-error-btn {
+        width: 100%;
+    }
+}
+
+
+@media (max-width: 420px) {
+
+    .bt-error-card {
+        padding: 38px 20px;
+    }
+
+
+    .bt-error-icon {
+        width: 78px;
+        height: 78px;
+
+        border-radius: 21px;
+    }
+
+
+    .bt-error-icon i {
+        font-size: 30px;
+    }
+
+
+    .bt-error-code {
+        font-size: 60px;
+    }
+
+
+    .bt-error-title {
+        font-size: 22px;
+    }
+}

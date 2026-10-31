@@ -1,0 +1,434 @@
+/* ============================================================
+   VELOX — ADMIN PAGE HEADER
+============================================================ */
+
+.admin-page-header {
+
+    position: relative;
+
+    width: 100%;
+
+    min-height: 168px;
+
+    margin-bottom: 28px;
+
+    padding: 28px 40px;
+
+    overflow: hidden;
+
+    border-radius: 28px;
+
+    background:
+            linear-gradient(
+                    110deg,
+                    #111827 0%,
+                    #14263c 38%,
+                    #155d83 72%,
+                    #087fb7 100%
+            );
+
+    color: #ffffff;
+
+    box-shadow:
+            0 16px 40px rgba(15, 23, 42, .10);
+
+}
+
+
+/* ============================================================
+   CONTENIDO
+============================================================ */
+
+.admin-page-header-content {
+
+    position: relative;
+
+    z-index: 3;
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    min-height: 112px;
+
+}
+
+
+/* ============================================================
+   ICONO
+============================================================ */
+
+.admin-page-header-icon {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    width: 76px;
+
+    height: 76px;
+
+    margin-right: 22px;
+
+    border: 1px solid
+    rgba(255, 255, 255, .20);
+
+    border-radius: 22px;
+
+    background:
+            rgba(255, 255, 255, .10);
+
+    box-shadow:
+            inset 0 1px 0
+            rgba(255, 255, 255, .10),
+
+            0 10px 25px
+            rgba(0, 0, 0, .12);
+
+    backdrop-filter:
+            blur(10px);
+
+    -webkit-backdrop-filter:
+            blur(10px);
+
+}
+
+
+.admin-page-header-icon i {
+
+    font-size: 2rem;
+
+    color: #ffffff;
+
+}
+
+
+/* ============================================================
+   TEXTO
+============================================================ */
+
+.admin-page-header-text {
+
+    position: relative;
+
+    min-width: 0;
+
+    padding-top: 2px;
+
+}
+
+
+.admin-page-header-eyebrow {
+
+    margin-bottom: 6px;
+
+    color:
+            rgba(255, 255, 255, .72);
+
+    font-size: .68rem;
+
+    font-weight: 800;
+
+    line-height: 1;
+
+    letter-spacing: .14em;
+
+    text-transform: uppercase;
+
+}
+
+
+.admin-page-header-title {
+
+    margin: 0;
+
+    color: #ffffff;
+
+    font-family:
+            var(--velox-font, 'Inter', sans-serif);
+
+    font-size: 2.15rem;
+
+    font-weight: 800;
+
+    line-height: 1.05;
+
+    letter-spacing: -.035em;
+
+}
+
+
+.admin-page-header-description {
+
+    margin: 9px 0 0;
+
+    max-width: 620px;
+
+    color:
+            rgba(255, 255, 255, .72);
+
+    font-size: .84rem;
+
+    font-weight: 500;
+
+    line-height: 1.5;
+
+}
+
+
+/* ============================================================
+   BADGE
+============================================================ */
+
+.admin-page-header-badge {
+
+    position: relative;
+
+    z-index: 4;
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 7px;
+
+    margin-left: auto;
+
+    align-self: flex-start;
+
+    min-height: 38px;
+
+    padding: 9px 15px;
+
+    border: 1px solid
+    rgba(255, 255, 255, .18);
+
+    border-radius: 999px;
+
+    background:
+            rgba(255, 255, 255, .11);
+
+    color: #ffffff;
+
+    font-size: .67rem;
+
+    font-weight: 800;
+
+    white-space: nowrap;
+
+    backdrop-filter:
+            blur(10px);
+
+    -webkit-backdrop-filter:
+            blur(10px);
+
+}
+
+
+.admin-page-header-badge i {
+
+    font-size: .68rem;
+
+    opacity: .9;
+
+}
+
+
+/* ============================================================
+   DECORACIÓN — CÍRCULOS
+============================================================ */
+
+.admin-page-header-orb {
+
+    position: absolute;
+
+    z-index: 1;
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+}
+
+
+.admin-page-header-orb-1 {
+
+    width: 245px;
+
+    height: 245px;
+
+    top: -95px;
+
+    right: -55px;
+
+    background:
+            rgba(255, 255, 255, .075);
+
+}
+
+
+.admin-page-header-orb-2 {
+
+    width: 155px;
+
+    height: 155px;
+
+    right: 125px;
+
+    bottom: -105px;
+
+    background:
+            rgba(255, 255, 255, .055);
+
+}
+
+
+.admin-page-header-orb-3 {
+
+    width: 90px;
+
+    height: 90px;
+
+    right: 310px;
+
+    top: -45px;
+
+    background:
+            rgba(255, 255, 255, .025);
+
+}
+
+
+/* ============================================================
+   BRILLO SUPERIOR
+============================================================ */
+
+.admin-page-header::before {
+
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+
+    left: 0;
+
+    right: 0;
+
+    height: 1px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255,255,255,.20),
+                    transparent
+            );
+
+    z-index: 4;
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 900px) {
+
+    .admin-page-header {
+
+        padding: 26px 28px;
+
+    }
+
+    .admin-page-header-title {
+
+        font-size: 1.8rem;
+
+    }
+
+    .admin-page-header-badge {
+
+        display: none;
+
+    }
+
+}
+
+
+@media (max-width: 576px) {
+
+    .admin-page-header {
+
+        min-height: auto;
+
+        padding: 24px 22px;
+
+        border-radius: 22px;
+
+    }
+
+
+    .admin-page-header-content {
+
+        align-items: flex-start;
+
+    }
+
+
+    .admin-page-header-icon {
+
+        width: 58px;
+
+        height: 58px;
+
+        margin-right: 15px;
+
+        border-radius: 17px;
+
+    }
+
+
+    .admin-page-header-icon i {
+
+        font-size: 1.45rem;
+
+    }
+
+
+    .admin-page-header-eyebrow {
+
+        font-size: .58rem;
+
+        letter-spacing: .11em;
+
+    }
+
+
+    .admin-page-header-title {
+
+        font-size: 1.45rem;
+
+        line-height: 1.1;
+
+    }
+
+
+    .admin-page-header-description {
+
+        margin-top: 7px;
+
+        font-size: .74rem;
+
+    }
+
+}

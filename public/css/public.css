@@ -1,0 +1,9062 @@
+/* =========================================================
+   VELOX MVC - PREMIUM LANDING PAGE
+========================================================= */
+
+:root {
+    --velox-primary: var(--velox-primary-config, #6d28d9);
+    --velox-primary-light: #8b5cf6;
+    --velox-primary-dark: #4c1d95;
+
+    --velox-dark: #09090b;
+    --velox-dark-soft: #111114;
+    --velox-text: #18181b;
+    --velox-muted: #71717a;
+    --velox-border: #e4e4e7;
+    --velox-background: #f8f8fa;
+    --velox-success: #10b981;
+
+    --velox-font:
+            var(
+                    --font-sans,
+                    "Chillax",
+                    "Helvetica Neue",
+                    Arial,
+                    sans-serif
+            );
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    overflow-x: hidden;
+    font-family: var(--velox-font) !important;
+}
+
+section {
+    scroll-margin-top: 80px;
+}
+
+/* =========================================================
+   NAVBAR
+========================================================= */
+
+.public-navbar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1050;
+
+    padding: 1.2rem 0;
+
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.4);
+
+    transition:
+            background 0.3s ease,
+            padding 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.public-navbar.navbar-scrolled {
+    padding: 0.75rem 0;
+
+    background: rgba(255, 255, 255, 0.94);
+
+    box-shadow:
+            0 10px 35px rgba(15, 23, 42, 0.08);
+}
+
+.velox-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+
+    color: #111827 !important;
+
+    font-size: 1.35rem;
+    font-weight: 800;
+
+    letter-spacing: -0.7px;
+
+    text-decoration: none;
+}
+
+.velox-brand small {
+    display: inline-block;
+
+    margin-left: 3px;
+
+    color: var(--velox-primary-light);
+
+    font-size: 0.65rem;
+    font-weight: 700;
+
+    letter-spacing: 0.5px;
+}
+
+.brand-mark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 38px;
+    height: 38px;
+
+    border-radius: 12px;
+
+    color: white;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+            );
+
+    box-shadow:
+            0 8px 22px rgba(109, 40, 217, 0.3);
+
+    transform: rotate(-5deg);
+
+    transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.velox-brand:hover .brand-mark {
+    transform: rotate(0deg) scale(1.08);
+
+    box-shadow:
+            0 10px 30px rgba(109, 40, 217, 0.4);
+}
+
+/* Logo cargado desde Settings: limitar tamaño y evitar desbordes. */
+.velox-brand .brand-mark .brand-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 4px;
+    object-fit: contain;
+    object-position: center;
+    border-radius: inherit;
+    transform: none;
+}
+
+.velox-brand:has(.brand-logo) .brand-mark {
+    overflow: hidden;
+    background: #ffffff;
+    box-shadow: none;
+    transform: none;
+}
+
+.velox-brand:has(.brand-logo):hover .brand-mark {
+    transform: scale(1.04);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+}
+
+.login-brand .brand-icon .brand-logo,
+.mobile-brand .brand-icon .brand-logo {
+    display: block;
+    width: 100%;
+    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 5px;
+    object-fit: contain;
+    object-position: center;
+    border-radius: inherit;
+}
+
+.login-brand .brand-icon:has(.brand-logo),
+.mobile-brand .brand-icon:has(.brand-logo) {
+    overflow: hidden;
+    background: #ffffff;
+}
+
+.public-navbar .nav-link {
+    position: relative;
+    transition:
+            color 0.25s ease,
+            transform 0.25s ease;
+}
+
+.public-navbar .nav-link::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 2px;
+    width: 0;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--velox-primary);
+    transform: translateX(-50%);
+    transition: width 0.25s ease;
+}
+
+.public-navbar .nav-link:hover {
+    color: var(--velox-primary) !important;
+}
+
+.public-navbar .nav-link:hover::after,
+.public-navbar .nav-link.active {
+    color: var(--velox-primary);
+    font-weight: 700;
+}
+
+/* =========================================================
+   RESERVATION NAV LINK
+========================================================= */
+
+.public-navbar .reservation-nav-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.public-navbar .reservation-nav-link.active {
+    color: var(--velox-primary);
+}
+
+
+/* =========================================================
+   LOGIN ACTIVE
+========================================================= */
+
+.public-navbar .btn-velox-primary.active {
+    transform: translateY(-1px);
+}
+
+/* =========================================================
+   VELOX NAVBAR DROPDOWN
+========================================================= */
+
+.public-navbar .dropdown-menu.velox-dropdown {
+    min-width: 280px;
+    padding: 0.65rem;
+    margin-top: 0.75rem;
+    border: 1px solid var(--velox-border);
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 18px 45px rgba(9, 9, 11, 0.12);
+    animation: veloxDropdownIn 0.2s ease-out;
+}
+
+
+/* =========================================================
+   DROPDOWN ITEM
+========================================================= */
+
+.public-navbar .velox-dropdown .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+
+    padding: 0.75rem 0.85rem;
+
+    border-radius: 11px;
+
+    color: var(--velox-text);
+
+    transition:
+            background-color 0.2s ease,
+            color 0.2s ease,
+            transform 0.2s ease;
+}
+
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.public-navbar .velox-dropdown .dropdown-item > i {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 10px;
+
+    background: rgba(109, 40, 217, 0.08);
+
+    color: var(--velox-primary);
+
+    font-size: 0.9rem;
+
+    transition:
+            background-color 0.2s ease,
+            color 0.2s ease;
+}
+
+
+/* =========================================================
+   TEXT
+========================================================= */
+
+.public-navbar .velox-dropdown .dropdown-item span {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.public-navbar .velox-dropdown .dropdown-item strong {
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.public-navbar .velox-dropdown .dropdown-item small {
+    font-size: 0.72rem;
+    color: var(--velox-muted);
+}
+
+
+/* =========================================================
+   HOVER
+========================================================= */
+
+.public-navbar .velox-dropdown .dropdown-item:hover {
+    background: rgba(109, 40, 217, 0.07);
+    color: var(--velox-primary);
+    transform: translateX(3px);
+}
+
+.public-navbar .velox-dropdown .dropdown-item:hover > i {
+    background: var(--velox-primary);
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   ACTIVE ITEM
+========================================================= */
+
+.public-navbar .velox-dropdown .dropdown-item.active {
+    background: var(--velox-primary);
+    color: #ffffff;
+}
+
+.public-navbar .velox-dropdown .dropdown-item.active small {
+    color: rgba(255, 255, 255, 0.75);
+}
+
+.public-navbar .velox-dropdown .dropdown-item.active > i {
+    background: rgba(255, 255, 255, 0.16);
+    color: #ffffff;
+}
+
+
+/* =========================================================
+   DROPDOWN TOGGLE
+========================================================= */
+
+.public-navbar .nav-link.dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+}
+
+.public-navbar .nav-link.dropdown-toggle::after {
+    margin-left: 0.45rem;
+    vertical-align: middle;
+}
+
+
+/* =========================================================
+   ANIMATION
+========================================================= */
+
+@keyframes veloxDropdownIn {
+
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .public-navbar .dropdown-menu.velox-dropdown {
+        width: 100%;
+        min-width: 0;
+        margin-top: 0.35rem;
+        border-radius: 13px;
+        box-shadow: none;
+    }
+
+    .public-navbar .velox-dropdown .dropdown-item {
+        padding: 0.7rem;
+    }
+
+}
+
+.btn-velox-primary {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 0.7rem 1.2rem;
+
+    border: 0;
+    border-radius: 12px;
+
+    color: white !important;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #111827,
+                    #1f2937
+            );
+
+    font-size: 0.85rem;
+    font-weight: 700;
+
+    box-shadow:
+            0 8px 20px rgba(17, 24, 39, 0.18);
+
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+}
+
+.btn-velox-primary:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 12px 28px rgba(17, 24, 39, 0.25);
+}
+
+
+/* =========================================================
+   HERO
+========================================================= */
+
+.velox-hero {
+    position: relative;
+
+    min-height: 100vh;
+
+    overflow: hidden;
+
+    color: white;
+
+    background:
+            radial-gradient(
+                    circle at 80% 20%,
+                    rgba(124, 58, 237, 0.3),
+                    transparent 35%
+            ),
+            radial-gradient(
+                    circle at 20% 80%,
+                    rgba(37, 99, 235, 0.2),
+                    transparent 35%
+            ),
+            #070711;
+}
+
+.hero-grid {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0.18;
+
+    background-image:
+            linear-gradient(
+                    rgba(255,255,255,0.05) 1px,
+                    transparent 1px
+            ),
+            linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.05) 1px,
+                    transparent 1px
+            );
+
+    background-size: 55px 55px;
+
+    mask-image:
+            linear-gradient(
+                    to bottom,
+                    black,
+                    transparent
+            );
+}
+
+.hero-glow {
+    position: absolute;
+
+    border-radius: 50%;
+
+    filter: blur(100px);
+
+    pointer-events: none;
+
+    animation: glowMove 9s ease-in-out infinite alternate;
+}
+
+.hero-glow-1 {
+    top: 10%;
+    right: 5%;
+
+    width: 350px;
+    height: 350px;
+
+    background: rgba(124, 58, 237, 0.2);
+}
+
+.hero-glow-2 {
+    bottom: 0;
+    left: 5%;
+
+    width: 300px;
+    height: 300px;
+
+    background: rgba(37, 99, 235, 0.18);
+
+    animation-delay: -4s;
+}
+
+@keyframes glowMove {
+    from {
+        transform: translate3d(0, 0, 0) scale(1);
+    }
+
+    to {
+        transform: translate3d(30px, -25px, 0) scale(1.15);
+    }
+}
+
+
+/* Floating shapes */
+
+.floating-shape {
+    position: absolute;
+
+    border: 1px solid rgba(255,255,255,0.08);
+
+    border-radius: 50%;
+
+    pointer-events: none;
+
+    animation:
+            floatShape 10s ease-in-out infinite;
+}
+
+.shape-one {
+    top: 20%;
+    left: 5%;
+
+    width: 60px;
+    height: 60px;
+}
+
+.shape-two {
+    right: 3%;
+    bottom: 20%;
+
+    width: 100px;
+    height: 100px;
+
+    animation-delay: -3s;
+}
+
+.shape-three {
+    top: 35%;
+    right: 40%;
+
+    width: 30px;
+    height: 30px;
+
+    animation-delay: -6s;
+}
+
+@keyframes floatShape {
+    0%,
+    100% {
+        transform: translateY(0) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-25px) rotate(180deg);
+    }
+}
+
+
+/* Hero content */
+
+.hero-badge {
+    display: inline-flex;
+    align-items: center;
+
+    padding: 0.55rem 0.9rem;
+
+    margin-bottom: 1.5rem;
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    border-radius: 100px;
+
+    color: rgba(255,255,255,0.9);
+
+    background: rgba(255,255,255,0.06);
+
+    backdrop-filter: blur(10px);
+
+    font-size: 0.78rem;
+    font-weight: 600;
+}
+
+.pulse-dot {
+    width: 7px;
+    height: 7px;
+
+    margin-right: 0.6rem;
+
+    border-radius: 50%;
+
+    background: #34d399;
+
+    box-shadow:
+            0 0 0 5px rgba(52,211,153,0.1);
+
+    animation: pulseDot 2s infinite;
+}
+
+@keyframes pulseDot {
+    0% {
+        box-shadow:
+                0 0 0 0 rgba(52,211,153,0.4);
+    }
+
+    70% {
+        box-shadow:
+                0 0 0 8px rgba(52,211,153,0);
+    }
+
+    100% {
+        box-shadow:
+                0 0 0 0 rgba(52,211,153,0);
+    }
+}
+
+.hero-title {
+    max-width: 850px;
+
+    margin-bottom: 1.5rem;
+
+    font-size: clamp(
+            3rem,
+            6vw,
+            5.8rem
+    );
+
+    line-height: 0.98;
+
+    font-weight: 800;
+
+    letter-spacing: -4px;
+}
+
+.hero-title span {
+    display: block;
+
+    color: transparent;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    #a78bfa,
+                    #60a5fa,
+                    #c084fc
+            );
+
+    background-clip: text;
+    -webkit-background-clip: text;
+
+    background-size: 200% auto;
+
+    animation: gradientText 5s linear infinite;
+}
+
+@keyframes gradientText {
+    to {
+        background-position: 200% center;
+    }
+}
+
+.hero-actions {
+    display: flex;
+
+    gap: 1rem;
+
+    flex-wrap: wrap;
+}
+
+.btn-hero-primary,
+.btn-hero-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.8rem;
+
+    min-height: 56px;
+
+    padding: 0.9rem 1.5rem;
+
+    border-radius: 14px;
+
+    font-weight: 700;
+
+    transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease,
+            background 0.3s ease;
+}
+
+.btn-hero-primary {
+    color: white;
+
+    border: 0;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+            );
+
+    box-shadow:
+            0 12px 35px rgba(99, 102, 241, 0.3);
+}
+
+.btn-hero-primary:hover {
+    color: white;
+
+    transform: translateY(-3px);
+
+    box-shadow:
+            0 18px 45px rgba(99, 102, 241, 0.45);
+}
+
+.btn-hero-secondary {
+    color: white;
+
+    border: 1px solid rgba(255,255,255,0.14);
+
+    background: rgba(255,255,255,0.05);
+}
+
+.btn-hero-secondary:hover {
+    color: white;
+
+    background: rgba(255,255,255,0.1);
+
+    transform: translateY(-3px);
+}
+
+.btn-hero-secondary i {
+    font-size: 0.7rem;
+}
+
+.hero-trust {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    gap: 1.4rem;
+
+    margin-top: 2rem;
+
+    color: rgba(255,255,255,0.45);
+
+    font-size: 0.75rem;
+}
+
+.trust-item {
+    display: flex;
+    align-items: center;
+
+    gap: 0.45rem;
+}
+
+.trust-item i {
+    color: var(--velox-primary-light);
+}
+
+
+/* =========================================================
+   HERO DASHBOARD
+========================================================= */
+
+.hero-dashboard {
+    position: relative;
+
+    width: 100%;
+
+    border: 1px solid rgba(255,255,255,0.12);
+
+    border-radius: 24px;
+
+    overflow: hidden;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(255,255,255,0.1),
+                    rgba(255,255,255,0.03)
+            );
+
+    box-shadow:
+            0 40px 100px rgba(0,0,0,0.5),
+            inset 0 1px 0 rgba(255,255,255,0.08);
+
+    backdrop-filter: blur(25px);
+
+    transform:
+            perspective(1200px)
+            rotateY(-5deg)
+            rotateX(3deg);
+
+    animation: dashboardFloat 6s ease-in-out infinite;
+}
+
+@keyframes dashboardFloat {
+    0%,
+    100% {
+        transform:
+                perspective(1200px)
+                rotateY(-5deg)
+                rotateX(3deg)
+                translateY(0);
+    }
+
+    50% {
+        transform:
+                perspective(1200px)
+                rotateY(-3deg)
+                rotateX(2deg)
+                translateY(-12px);
+    }
+}
+
+.dashboard-glow {
+    position: absolute;
+
+    top: -100px;
+    right: -80px;
+
+    width: 250px;
+    height: 250px;
+
+    border-radius: 50%;
+
+    background: rgba(124,58,237,0.25);
+
+    filter: blur(70px);
+}
+
+.dashboard-topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 1rem 1.2rem;
+
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+
+    background: rgba(255,255,255,0.03);
+}
+
+.dashboard-dots {
+    display: flex;
+
+    gap: 5px;
+}
+
+.dashboard-dots span {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: rgba(255,255,255,0.25);
+}
+
+.dashboard-title {
+    color: rgba(255,255,255,0.6);
+
+    font-size: 0.7rem;
+}
+
+.dashboard-status {
+    display: flex;
+    align-items: center;
+
+    gap: 5px;
+
+    color: #6ee7b7;
+
+    font-size: 0.65rem;
+}
+
+.dashboard-status span {
+    width: 5px;
+    height: 5px;
+
+    border-radius: 50%;
+
+    background: #34d399;
+}
+
+.dashboard-body {
+    padding: 1.4rem;
+}
+
+.dashboard-welcome small {
+    color: rgba(255,255,255,0.4);
+
+    font-size: 0.65rem;
+}
+
+.dashboard-welcome h4 {
+    margin: 0.2rem 0 1.3rem;
+
+    color: white;
+
+    font-size: 1rem;
+}
+
+.dashboard-cards {
+    display: grid;
+
+    gap: 0.6rem;
+}
+
+.mini-card {
+    display: flex;
+    align-items: center;
+
+    gap: 0.7rem;
+
+    padding: 0.7rem;
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 12px;
+
+    background: rgba(255,255,255,0.04);
+}
+
+.mini-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border-radius: 10px;
+
+    color: #a78bfa;
+
+    background: rgba(139,92,246,0.12);
+
+    font-size: 0.75rem;
+}
+
+.mini-card-icon.dark {
+    color: #60a5fa;
+
+    background: rgba(37,99,235,0.12);
+}
+
+.mini-card-icon.purple {
+    color: #f0abfc;
+
+    background: rgba(217,70,239,0.12);
+}
+
+.mini-card div:nth-child(2) {
+    flex: 1;
+}
+
+.mini-card small {
+    display: block;
+
+    color: rgba(255,255,255,0.4);
+
+    font-size: 0.55rem;
+}
+
+.mini-card strong {
+    display: block;
+
+    margin-top: 2px;
+
+    color: white;
+
+    font-size: 0.8rem;
+}
+
+.positive {
+    color: #34d399;
+
+    font-size: 0.55rem;
+}
+
+.dashboard-chart {
+    margin-top: 1rem;
+
+    padding: 1rem;
+
+    border: 1px solid rgba(255,255,255,0.06);
+
+    border-radius: 14px;
+
+    background: rgba(255,255,255,0.025);
+}
+
+.chart-header {
+    display: flex;
+    justify-content: space-between;
+
+    margin-bottom: 1rem;
+}
+
+.chart-header small {
+    display: block;
+
+    color: rgba(255,255,255,0.4);
+
+    font-size: 0.55rem;
+}
+
+.chart-header strong {
+    color: #a78bfa;
+
+    font-size: 0.8rem;
+}
+
+.chart-header span {
+    color: rgba(255,255,255,0.3);
+
+    font-size: 0.5rem;
+}
+
+.fake-chart {
+    position: relative;
+
+    display: flex;
+    align-items: end;
+
+    justify-content: space-between;
+
+    height: 100px;
+
+    padding-top: 15px;
+}
+
+.chart-bar {
+    width: 7%;
+
+    border-radius: 4px 4px 0 0;
+
+    background:
+            linear-gradient(
+                    to top,
+                    rgba(124,58,237,0.2),
+                    var(--velox-primary-light)
+            );
+
+    animation: chartGrow 1.5s ease both;
+}
+
+.bar-1 { height: 35%; }
+.bar-2 { height: 50%; }
+.bar-3 { height: 40%; }
+.bar-4 { height: 70%; }
+.bar-5 { height: 55%; }
+.bar-6 { height: 85%; }
+.bar-7 { height: 72%; }
+
+@keyframes chartGrow {
+    from {
+        transform: scaleY(0);
+        transform-origin: bottom;
+    }
+
+    to {
+        transform: scaleY(1);
+    }
+}
+
+.chart-line {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    top: 35%;
+
+    border-top: 1px dashed rgba(255,255,255,0.08);
+}
+
+
+/* Scroll */
+
+.scroll-indicator {
+    position: absolute;
+
+    bottom: 25px;
+    left: 50%;
+
+    display: flex;
+    align-items: center;
+
+    gap: 0.7rem;
+
+    color: rgba(255,255,255,0.35);
+
+    font-size: 0.65rem;
+
+    text-decoration: none;
+
+    transform: translateX(-50%);
+}
+
+.scroll-indicator span {
+    display: block;
+
+    width: 20px;
+    height: 32px;
+
+    border: 1px solid rgba(255,255,255,0.2);
+
+    border-radius: 20px;
+
+    position: relative;
+}
+
+.scroll-indicator span::after {
+    content: "";
+
+    position: absolute;
+
+    top: 6px;
+    left: 50%;
+
+    width: 3px;
+    height: 6px;
+
+    border-radius: 10px;
+
+    background: white;
+
+    transform: translateX(-50%);
+
+    animation: scrollDot 1.8s infinite;
+}
+
+@keyframes scrollDot {
+    from {
+        transform:
+                translate(-50%, 0);
+        opacity: 1;
+    }
+
+    to {
+        transform:
+                translate(-50%, 12px);
+        opacity: 0;
+    }
+}
+
+
+/* =========================================================
+   SECTIONS
+========================================================= */
+
+.section-light,
+.metrics-section,
+.testimonials-section,
+.contact-section {
+    padding: 7rem 0;
+}
+
+.services-section {
+    background: #f8fafc;
+}
+
+.section-heading {
+    max-width: 720px;
+
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.5rem;
+
+    margin-bottom: 1rem;
+
+    color: #7c3aed;
+
+    font-size: 0.72rem;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+}
+
+.section-eyebrow.light {
+    color: #a78bfa;
+}
+
+.section-heading h2 {
+    margin-bottom: 1rem;
+
+    color: #111827;
+
+    font-size: clamp(
+            2.2rem,
+            4vw,
+            3.4rem
+    );
+
+    line-height: 1.05;
+
+    font-weight: 800;
+
+    letter-spacing: -2px;
+}
+
+.section-heading h2 span {
+    color: #7c3aed;
+}
+
+.section-heading p {
+    margin: 0;
+
+    color: #6b7280;
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   SERVICE CARDS
+========================================================= */
+
+.service-card {
+    position: relative;
+
+    height: 100%;
+
+    padding: 2rem;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 22px;
+
+    background: white;
+
+    overflow: hidden;
+
+    transition:
+            transform 0.35s ease,
+            box-shadow 0.35s ease,
+            border-color 0.35s ease;
+}
+
+.service-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: -80px;
+    right: -80px;
+
+    width: 160px;
+    height: 160px;
+
+    border-radius: 50%;
+
+    background: rgba(124,58,237,0.05);
+
+    transition: transform 0.5s ease;
+}
+
+.service-card:hover {
+    transform: translateY(-10px);
+
+    border-color: rgba(124,58,237,0.2);
+
+    box-shadow:
+            0 25px 60px rgba(15,23,42,0.1);
+}
+
+.service-card:hover::before {
+    transform: scale(1.8);
+}
+
+.service-number {
+    position: absolute;
+
+    top: 1.5rem;
+    right: 1.5rem;
+
+    color: #e5e7eb;
+
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.service-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 1.5rem;
+
+    border-radius: 16px;
+
+    font-size: 1.25rem;
+}
+
+.service-icon.purple {
+    color: #7c3aed;
+    background: #f3e8ff;
+}
+
+.service-icon.blue {
+    color: #2563eb;
+    background: #dbeafe;
+}
+
+.service-icon.green {
+    color: #059669;
+    background: #d1fae5;
+}
+
+.service-icon.orange {
+    color: #ea580c;
+    background: #ffedd5;
+}
+
+.service-icon.cyan {
+    color: #0891b2;
+    background: #cffafe;
+}
+
+.service-icon.pink {
+    color: #db2777;
+    background: #fce7f3;
+}
+
+.service-card h4 {
+    margin-bottom: 0.8rem;
+
+    color: #111827;
+
+    font-size: 1.15rem;
+    font-weight: 750;
+
+    letter-spacing: -0.4px;
+}
+
+.service-card p {
+    margin-bottom: 1.5rem;
+
+    color: #6b7280;
+
+    font-size: 0.88rem;
+    line-height: 1.75;
+}
+
+.service-card a {
+    display: inline-flex;
+    align-items: center;
+
+    gap: 0.5rem;
+
+    color: #111827;
+
+    font-size: 0.8rem;
+    font-weight: 700;
+
+    text-decoration: none;
+}
+
+.service-card a i {
+    transition: transform 0.25s ease;
+}
+
+.service-card:hover a i {
+    transform: translateX(5px);
+}
+
+
+/* =========================================================
+   VALUE SECTION
+========================================================= */
+
+.value-section {
+    position: relative;
+
+    padding: 8rem 0;
+
+    overflow: hidden;
+
+    color: white;
+
+    background:
+            radial-gradient(
+                    circle at 80% 50%,
+                    rgba(124,58,237,0.2),
+                    transparent 35%
+            ),
+            #09090f;
+}
+
+.value-grid {
+    position: absolute;
+    inset: 0;
+
+    opacity: 0.15;
+
+    background-image:
+            linear-gradient(
+                    rgba(255,255,255,0.04) 1px,
+                    transparent 1px
+            ),
+            linear-gradient(
+                    90deg,
+                    rgba(255,255,255,0.04) 1px,
+                    transparent 1px
+            );
+
+    background-size: 50px 50px;
+}
+
+.value-title {
+    margin-bottom: 1.5rem;
+
+    font-size: clamp(
+            2.8rem,
+            5vw,
+            4.8rem
+    );
+
+    line-height: 1;
+
+    letter-spacing: -3px;
+}
+
+.value-title span {
+    color: #a78bfa;
+}
+
+.value-description {
+    max-width: 550px;
+
+    margin-bottom: 2rem;
+
+    color: rgba(255,255,255,0.55);
+
+    font-size: 1rem;
+    line-height: 1.8;
+}
+
+.value-list {
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 1.5rem;
+}
+
+.value-item {
+    display: flex;
+
+    gap: 1rem;
+}
+
+.value-check {
+    flex: 0 0 auto;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid rgba(167,139,250,0.25);
+
+    border-radius: 10px;
+
+    color: #a78bfa;
+
+    background: rgba(124,58,237,0.12);
+
+    font-size: 0.7rem;
+}
+
+.value-item strong {
+    display: block;
+
+    margin-bottom: 0.25rem;
+
+    color: white;
+
+    font-size: 0.9rem;
+}
+
+.value-item p {
+    margin: 0;
+
+    color: rgba(255,255,255,0.42);
+
+    font-size: 0.78rem;
+
+    line-height: 1.6;
+}
+
+
+/* Visual */
+
+.value-visual {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    height: 520px;
+}
+
+.value-orbit {
+    position: absolute;
+
+    border: 1px solid rgba(139,92,246,0.2);
+
+    border-radius: 50%;
+}
+
+.orbit-one {
+    width: 340px;
+    height: 340px;
+
+    animation: orbitRotate 20s linear infinite;
+}
+
+.orbit-two {
+    width: 470px;
+    height: 470px;
+
+    border-color: rgba(96,165,250,0.1);
+
+    animation:
+            orbitRotate 30s linear infinite reverse;
+}
+
+@keyframes orbitRotate {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.value-center {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 120px;
+    height: 120px;
+
+    border: 1px solid rgba(255,255,255,0.15);
+
+    border-radius: 35px;
+
+    color: white;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+            );
+
+    box-shadow:
+            0 0 70px rgba(124,58,237,0.4);
+
+    font-size: 2rem;
+
+    animation: centerPulse 4s ease-in-out infinite;
+}
+
+@keyframes centerPulse {
+    50% {
+        box-shadow:
+                0 0 100px rgba(124,58,237,0.6);
+    }
+}
+
+.value-floating {
+    position: absolute;
+    z-index: 3;
+
+    display: flex;
+    align-items: center;
+
+    gap: 0.5rem;
+
+    padding: 0.7rem 1rem;
+
+    border: 1px solid rgba(255,255,255,0.1);
+
+    border-radius: 12px;
+
+    color: rgba(255,255,255,0.8);
+
+    background: rgba(255,255,255,0.06);
+
+    backdrop-filter: blur(15px);
+
+    font-size: 0.65rem;
+
+    animation: floatingCard 5s ease-in-out infinite;
+}
+
+.value-floating i {
+    color: #a78bfa;
+}
+
+.value-floating-1 {
+    top: 25%;
+    left: 5%;
+}
+
+.value-floating-2 {
+    top: 20%;
+    right: 5%;
+
+    animation-delay: -1s;
+}
+
+.value-floating-3 {
+    right: 5%;
+    bottom: 22%;
+
+    animation-delay: -2s;
+}
+
+.value-floating-4 {
+    bottom: 18%;
+    left: 5%;
+
+    animation-delay: -3s;
+}
+
+@keyframes floatingCard {
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-12px);
+    }
+}
+
+
+/* =========================================================
+   METRICS
+========================================================= */
+
+.metrics-section {
+    background: white;
+}
+
+.metric-card {
+    padding: 2rem 1rem;
+
+    text-align: center;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 20px;
+
+    transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+            0 20px 50px rgba(15,23,42,0.08);
+}
+
+.metric-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    margin: 0 auto 1rem;
+
+    border-radius: 14px;
+
+    color: #7c3aed;
+
+    background: #f3e8ff;
+}
+
+.metric-value {
+    color: #111827;
+
+    font-size: clamp(
+            2rem,
+            4vw,
+            3rem
+    );
+
+    line-height: 1;
+
+    font-weight: 800;
+
+    letter-spacing: -2px;
+}
+
+.metric-label {
+    margin-top: 0.6rem;
+
+    color: #6b7280;
+
+    font-size: 0.75rem;
+}
+
+
+/* =========================================================
+   TESTIMONIALS
+========================================================= */
+
+.testimonials-section {
+    background: #f8fafc;
+}
+
+.testimonial-card {
+    position: relative;
+
+    height: 100%;
+
+    padding: 2.5rem;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 24px;
+
+    background: white;
+
+    transition:
+            transform 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.testimonial-card:hover {
+    transform: translateY(-7px);
+
+    box-shadow:
+            0 25px 60px rgba(15,23,42,0.09);
+}
+
+.testimonial-stars {
+    margin-bottom: 1.3rem;
+
+    color: #f59e0b;
+
+    font-size: 0.75rem;
+}
+
+.testimonial-card blockquote {
+    margin-bottom: 2rem;
+
+    color: #374151;
+
+    font-size: 1.05rem;
+
+    line-height: 1.8;
+
+    font-weight: 500;
+}
+
+.testimonial-author {
+    display: flex;
+    align-items: center;
+
+    gap: 0.8rem;
+}
+
+.author-avatar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 46px;
+    height: 46px;
+
+    border-radius: 14px;
+
+    color: white;
+
+    background: #111827;
+
+    font-size: 0.75rem;
+    font-weight: 800;
+}
+
+.author-avatar.purple {
+    background:
+            linear-gradient(
+                    135deg,
+                    #7c3aed,
+                    #2563eb
+            );
+}
+
+.testimonial-author strong {
+    display: block;
+
+    color: #111827;
+
+    font-size: 0.8rem;
+}
+
+.testimonial-author small {
+    display: block;
+
+    margin-top: 2px;
+
+    color: #9ca3af;
+
+    font-size: 0.7rem;
+}
+
+
+/* =========================================================
+   CTA
+========================================================= */
+
+.cta-section {
+    position: relative;
+
+    padding: 4rem 0;
+
+    overflow: hidden;
+
+    background: #f8fafc;
+}
+
+.cta-glow {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    width: 600px;
+    height: 300px;
+
+    border-radius: 50%;
+
+    background:
+            radial-gradient(
+                    circle,
+                    rgba(124,58,237,0.15),
+                    transparent 70%
+            );
+
+    transform: translate(-50%, -50%);
+
+    filter: blur(30px);
+}
+
+.cta-card {
+    position: relative;
+
+    padding: 5rem 3rem;
+
+    overflow: hidden;
+
+    border-radius: 30px;
+
+    text-align: center;
+
+    color: white;
+
+    background:
+            radial-gradient(
+                    circle at 20% 20%,
+                    rgba(139,92,246,0.3),
+                    transparent 30%
+            ),
+            radial-gradient(
+                    circle at 80% 80%,
+                    rgba(37,99,235,0.3),
+                    transparent 30%
+            ),
+            #09090f;
+
+    box-shadow:
+            0 30px 80px rgba(15,23,42,0.2);
+}
+
+.cta-content {
+    max-width: 750px;
+
+    margin: auto;
+}
+
+.cta-card h2 {
+    margin-bottom: 1rem;
+
+    font-size: clamp(
+            2.3rem,
+            5vw,
+            4.2rem
+    );
+
+    line-height: 1;
+
+    letter-spacing: -2.5px;
+}
+
+.cta-card h2 span {
+    display: block;
+
+    color: #a78bfa;
+}
+
+.cta-card p {
+    max-width: 550px;
+
+    margin: 0 auto 2rem;
+
+    color: rgba(255,255,255,0.5);
+
+    line-height: 1.8;
+}
+
+
+/* =========================================================
+   CONTACT
+========================================================= */
+
+.contact-section {
+    background: white;
+}
+
+.contact-info {
+    height: 100%;
+
+    padding: 2rem 0;
+}
+
+.contact-info h3 {
+    margin-bottom: 1rem;
+
+    color: #111827;
+
+    font-size: 2rem;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+}
+
+.contact-info h3 span {
+    color: #7c3aed;
+}
+
+.contact-info > p {
+    max-width: 450px;
+
+    margin-bottom: 2.5rem;
+
+    color: #6b7280;
+
+    line-height: 1.8;
+}
+
+.contact-detail {
+    display: flex;
+    align-items: center;
+
+    gap: 1rem;
+
+    margin-bottom: 1.5rem;
+}
+
+.contact-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 45px;
+    height: 45px;
+
+    flex: 0 0 auto;
+
+    border-radius: 13px;
+
+    color: #7c3aed;
+
+    background: #f3e8ff;
+}
+
+.contact-detail small {
+    display: block;
+
+    margin-bottom: 3px;
+
+    color: #9ca3af;
+
+    font-size: 0.65rem;
+}
+
+.contact-detail strong {
+    display: block;
+
+    color: #374151;
+
+    font-size: 0.8rem;
+}
+
+.contact-socials {
+    display: flex;
+
+    gap: 0.7rem;
+
+    margin-top: 2.5rem;
+}
+
+.contact-socials a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 40px;
+    height: 40px;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    color: #6b7280;
+
+    text-decoration: none;
+
+    transition:
+            color 0.25s ease,
+            background 0.25s ease,
+            transform 0.25s ease;
+}
+
+.contact-socials a:hover {
+    color: white;
+
+    background: #111827;
+
+    transform: translateY(-3px);
+}
+
+.contact-form {
+    height: 100%;
+
+    padding: 2.5rem;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 24px;
+
+    background: #f8fafc;
+
+    box-shadow:
+            0 20px 60px rgba(15,23,42,0.05);
+}
+
+.contact-form label {
+    display: block;
+
+    margin-bottom: 0.5rem;
+
+    color: #374151;
+
+    font-size: 0.72rem;
+    font-weight: 700;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+
+.contact-form input,
+.contact-form textarea {
+    width: 100%;
+
+    border: 1px solid #e5e7eb;
+
+    border-radius: 12px;
+
+    outline: none;
+
+    color: #111827;
+
+    background: white;
+
+    font-size: 0.8rem;
+
+    transition:
+            border-color 0.25s ease,
+            box-shadow 0.25s ease;
+}
+
+.contact-form input {
+    height: 52px;
+
+    padding: 0 1rem 0 2.8rem;
+}
+
+.contact-form textarea {
+    padding: 1rem;
+
+    resize: vertical;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+    border-color: var(--velox-primary-light);
+
+    box-shadow:
+            0 0 0 4px rgba(139,92,246,0.1);
+}
+
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+    color: #b0b7c3;
+}
+
+.btn-submit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 0.7rem;
+
+    width: 100%;
+
+    min-height: 54px;
+
+    border: 0;
+    border-radius: 13px;
+
+    color: white;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #111827,
+                    #1f2937
+            );
+
+    font-weight: 700;
+
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+}
+
+.btn-submit:hover {
+    color: white;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 12px 30px rgba(17,24,39,0.2);
+}
+
+
+/* =========================================================
+   FOOTER
+========================================================= */
+
+.velox-footer {
+    padding: 4rem 0 1.5rem;
+
+    color: white;
+
+    background: #09090f;
+}
+
+.footer-main {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+
+    gap: 3rem;
+
+    padding-bottom: 3rem;
+}
+
+.footer-brand {
+    color: white !important;
+}
+
+.footer-main > div:first-child > p {
+    max-width: 300px;
+
+    margin-top: 1rem;
+
+    color: rgba(255,255,255,0.4);
+
+    font-size: 0.75rem;
+
+    line-height: 1.7;
+}
+
+.footer-links {
+    display: flex;
+
+    flex-wrap: wrap;
+
+    justify-content: flex-end;
+
+    gap: 1.5rem;
+}
+
+.footer-links a {
+    color: rgba(255,255,255,0.5);
+
+    font-size: 0.75rem;
+
+    text-decoration: none;
+
+    transition: color 0.25s ease;
+}
+
+.footer-links a:hover {
+    color: white;
+}
+
+.footer-bottom {
+    display: flex;
+    justify-content: space-between;
+
+    gap: 1rem;
+
+    padding-top: 1.5rem;
+
+    border-top: 1px solid rgba(255,255,255,0.08);
+
+    color: rgba(255,255,255,0.3);
+
+    font-size: 0.65rem;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 991.98px) {
+
+    .public-navbar .navbar-collapse {
+        margin-top: 1rem;
+
+        padding: 1rem;
+
+        border: 1px solid #e5e7eb;
+
+        border-radius: 18px;
+
+        background: rgba(255,255,255,0.98);
+
+        box-shadow:
+                0 20px 50px rgba(15,23,42,0.1);
+    }
+
+    .public-navbar .nav-link {
+        padding: 0.75rem !important;
+    }
+
+    .public-navbar .nav-link::after {
+        display: none;
+    }
+
+    .hero-title {
+        letter-spacing: -2.5px;
+    }
+
+    .hero-dashboard {
+        max-width: 600px;
+
+        margin: 0 auto;
+    }
+
+    .value-visual {
+        height: 450px;
+    }
+
+    .orbit-one {
+        width: 280px;
+        height: 280px;
+    }
+
+    .orbit-two {
+        width: 380px;
+        height: 380px;
+    }
+}
+
+
+@media (max-width: 767.98px) {
+
+    .section-light,
+    .metrics-section,
+    .testimonials-section,
+    .contact-section {
+        padding: 5rem 0;
+    }
+
+    .velox-hero {
+        min-height: auto;
+    }
+
+    .velox-hero .row {
+        min-height: auto !important;
+        padding-top: 8rem !important;
+        padding-bottom: 5rem !important;
+    }
+
+    .hero-title {
+        font-size: clamp(
+                2.8rem,
+                13vw,
+                4rem
+        );
+
+        letter-spacing: -2px;
+    }
+
+    .hero-description {
+        font-size: 1rem;
+
+        line-height: 1.7;
+    }
+
+    .hero-actions {
+        flex-direction: column;
+    }
+
+    .btn-hero-primary,
+    .btn-hero-secondary {
+        width: 100%;
+    }
+
+    .hero-trust {
+        flex-direction: column;
+
+        gap: 0.7rem;
+    }
+
+    .hero-dashboard {
+        transform: none;
+
+        animation: none;
+    }
+
+    .dashboard-body {
+        padding: 1rem;
+    }
+
+    .mini-card {
+        padding: 0.6rem;
+    }
+
+    .scroll-indicator {
+        display: none;
+    }
+
+    .value-section {
+        padding: 5rem 0;
+    }
+
+    .value-title {
+        font-size: 3rem;
+
+        letter-spacing: -2px;
+    }
+
+    .value-visual {
+        height: 350px;
+
+        margin-top: 1rem;
+    }
+
+    .orbit-one {
+        width: 220px;
+        height: 220px;
+    }
+
+    .orbit-two {
+        width: 300px;
+        height: 300px;
+    }
+
+    .value-center {
+        width: 90px;
+        height: 90px;
+
+        border-radius: 26px;
+    }
+
+    .value-floating {
+        padding: 0.55rem 0.7rem;
+
+        font-size: 0.55rem;
+    }
+
+    .value-floating-1 {
+        left: 0;
+    }
+
+    .value-floating-2 {
+        right: 0;
+    }
+
+    .value-floating-3 {
+        right: 0;
+    }
+
+    .value-floating-4 {
+        left: 0;
+    }
+
+    .cta-card {
+        padding: 3.5rem 1.5rem;
+    }
+
+    .cta-card h2 {
+        letter-spacing: -1.5px;
+    }
+
+    .contact-form {
+        padding: 1.5rem;
+    }
+
+    .footer-main {
+        flex-direction: column;
+    }
+
+    .footer-links {
+        justify-content: flex-start;
+    }
+
+    .footer-bottom {
+        flex-direction: column;
+    }
+}
+
+
+@media (max-width: 420px) {
+
+    .velox-brand {
+        font-size: 1.15rem;
+    }
+
+    .brand-mark {
+        width: 34px;
+        height: 34px;
+    }
+
+    .hero-title {
+        font-size: 2.6rem;
+    }
+
+    .hero-badge {
+        font-size: 0.65rem;
+    }
+
+    .dashboard-topbar {
+        padding: 0.8rem;
+    }
+
+    .dashboard-body {
+        padding: 0.8rem;
+    }
+
+    .dashboard-chart {
+        padding: 0.7rem;
+    }
+
+    .section-heading h2 {
+        font-size: 2.2rem;
+    }
+
+    .service-card {
+        padding: 1.5rem;
+    }
+
+    .testimonial-card {
+        padding: 1.5rem;
+    }
+
+    .metric-card {
+        padding: 1.5rem 0.5rem;
+    }
+
+    .metric-value {
+        font-size: 1.9rem;
+    }
+}
+
+
+/* =========================================================
+   ACCESSIBILITY
+========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ================================================================
+   PAGE
+================================================================ */
+
+.velox-login-page {
+    min-height: 100vh;
+    position: relative;
+    overflow: hidden;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background:
+            radial-gradient(
+                    circle at 10% 10%,
+                    rgba(109, 40, 217, 0.08),
+                    transparent 35%
+            ),
+            radial-gradient(
+                    circle at 90% 90%,
+                    rgba(139, 92, 246, 0.06),
+                    transparent 35%
+            ),
+            #f7f7f9;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    padding: 40px 20px;
+}
+
+
+/* ================================================================
+   BACKGROUND
+================================================================ */
+
+.login-background {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.bg-grid {
+    position: absolute;
+    inset: 0;
+
+    background-image:
+            linear-gradient(
+                    rgba(0, 0, 0, 0.025) 1px,
+                    transparent 1px
+            ),
+            linear-gradient(
+                    90deg,
+                    rgba(0, 0, 0, 0.025) 1px,
+                    transparent 1px
+            );
+
+    background-size: 45px 45px;
+
+    mask-image: linear-gradient(
+            to bottom,
+            transparent,
+            black 20%,
+            black 80%,
+            transparent
+    );
+}
+
+
+/* ================================================================
+   FLOATING ORBS
+================================================================ */
+
+.bg-orb {
+    position: absolute;
+    border-radius: 50%;
+
+    filter: blur(80px);
+
+    opacity: 0.35;
+
+    animation:
+            veloxFloat 12s ease-in-out infinite;
+}
+
+.bg-orb-1 {
+    width: 350px;
+    height: 350px;
+
+    background: rgba(124, 58, 237, 0.20);
+
+    top: -150px;
+    left: -100px;
+}
+
+.bg-orb-2 {
+    width: 280px;
+    height: 280px;
+
+    background: rgba(99, 102, 241, 0.15);
+
+    right: -80px;
+    bottom: -100px;
+
+    animation-delay: -4s;
+}
+
+.bg-orb-3 {
+    width: 180px;
+    height: 180px;
+
+    background: rgba(168, 85, 247, 0.12);
+
+    top: 40%;
+    right: 20%;
+
+    animation-delay: -8s;
+}
+
+@keyframes veloxFloat {
+
+    0%,
+    100% {
+        transform: translate3d(0, 0, 0);
+    }
+
+    50% {
+        transform: translate3d(
+                20px,
+                -25px,
+                0
+        );
+    }
+}
+
+
+/* ================================================================
+   CONTAINER
+================================================================ */
+
+.login-container {
+    position: relative;
+    z-index: 2;
+    max-width: 1180px;
+    display: flex;
+    justify-content: center;
+    margin-top: 70px;
+}
+
+
+/* ================================================================
+   MAIN CARD
+================================================================ */
+
+.login-card {
+    width: 100%;
+
+    display: grid;
+    grid-template-columns:
+        minmax(420px, 0.95fr)
+        minmax(430px, 1.05fr);
+
+    background: #ffffff;
+
+    border-radius: 28px;
+
+    overflow: hidden;
+
+    box-shadow:
+            0 40px 100px rgba(0, 0, 0, 0.10),
+            0 10px 30px rgba(0, 0, 0, 0.04);
+
+    animation:
+            loginCardAppear 0.8s
+            cubic-bezier(.16, 1, .3, 1)
+            forwards;
+}
+
+@keyframes loginCardAppear {
+
+    from {
+        opacity: 0;
+        transform:
+                translateY(25px)
+                scale(0.97);
+    }
+
+    to {
+        opacity: 1;
+        transform:
+                translateY(0)
+                scale(1);
+    }
+}
+
+
+/* ================================================================
+   LEFT SHOWCASE
+================================================================ */
+
+.login-showcase {
+    position: relative;
+
+    min-height: 720px;
+
+    overflow: hidden;
+
+    color: #ffffff;
+
+    background:
+            radial-gradient(
+                    circle at 80% 10%,
+                    rgba(139, 92, 246, 0.35),
+                    transparent 30%
+            ),
+            radial-gradient(
+                    circle at 10% 90%,
+                    rgba(79, 70, 229, 0.25),
+                    transparent 35%
+            ),
+            linear-gradient(
+                    145deg,
+                    #09090b 0%,
+                    #111113 55%,
+                    #1b102b 100%
+            );
+}
+
+
+/* Grid */
+.login-showcase::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    opacity: 0.18;
+
+    background-image:
+            linear-gradient(
+                    rgba(255,255,255,.06) 1px,
+                    transparent 1px
+            ),
+            linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.06) 1px,
+                    transparent 1px
+            );
+
+    background-size: 40px 40px;
+}
+
+
+/* Glow */
+.showcase-glow {
+    position: absolute;
+
+    width: 420px;
+    height: 420px;
+
+    top: -180px;
+    right: -160px;
+
+    border-radius: 50%;
+
+    background:
+            radial-gradient(
+                    circle,
+                    rgba(139, 92, 246, 0.25),
+                    transparent 70%
+            );
+
+    filter: blur(20px);
+
+    animation:
+            showcaseGlow 8s ease-in-out infinite;
+}
+
+@keyframes showcaseGlow {
+
+    0%,
+    100% {
+        transform: scale(1);
+    }
+
+    50% {
+        transform: scale(1.15);
+    }
+}
+
+
+/* ================================================================
+   SHOWCASE CONTENT
+================================================================ */
+
+.showcase-content {
+    position: relative;
+    z-index: 2;
+
+    height: 100%;
+
+    min-height: 720px;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 48px;
+}
+
+
+/* ================================================================
+   BRAND
+================================================================ */
+
+.login-brand,
+.mobile-brand {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.brand-icon {
+    width: 44px;
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 13px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    var(--velox-primary-light),
+                    #5b21b6
+            );
+
+    box-shadow:
+            0 8px 25px
+            rgba(124, 58, 237, 0.35);
+
+    font-size: 21px;
+    font-weight: 800;
+
+    color: #ffffff;
+
+    position: relative;
+    overflow: hidden;
+}
+
+.brand-icon::after {
+    content: "";
+
+    position: absolute;
+
+    width: 60px;
+    height: 10px;
+
+    background: rgba(255,255,255,.25);
+
+    transform: rotate(-45deg)
+    translateX(-60px);
+
+    animation:
+            logoShine 4s ease-in-out infinite;
+}
+
+@keyframes logoShine {
+
+    0% {
+        transform:
+                rotate(-45deg)
+                translateX(-70px);
+    }
+
+    35%,
+    100% {
+        transform:
+                rotate(-45deg)
+                translateX(80px);
+    }
+}
+
+.brand-text {
+    display: flex;
+    align-items: baseline;
+    gap: 5px;
+}
+
+.brand-name {
+    font-size: 21px;
+    font-weight: 800;
+    letter-spacing: -0.7px;
+}
+
+.brand-version {
+    font-size: 12px;
+    font-weight: 600;
+
+    color: #a78bfa;
+
+    letter-spacing: 1px;
+}
+
+
+/* ================================================================
+   SHOWCASE MAIN
+================================================================ */
+
+.showcase-main {
+    margin-top: auto;
+    margin-bottom: auto;
+
+    max-width: 500px;
+}
+
+.showcase-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 7px 12px;
+
+    border-radius: 100px;
+
+    background:
+            rgba(255,255,255,0.07);
+
+    border:
+            1px solid rgba(255,255,255,0.10);
+
+    color: #c4b5fd;
+
+    font-size: 10px;
+    font-weight: 700;
+
+    letter-spacing: 1.3px;
+}
+
+.badge-dot {
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #a78bfa;
+
+    box-shadow:
+            0 0 0 4px
+            rgba(167,139,250,.12);
+
+    animation:
+            badgePulse 2s infinite;
+}
+
+@keyframes badgePulse {
+
+    0%,
+    100% {
+        box-shadow:
+                0 0 0 4px
+                rgba(167,139,250,.12);
+    }
+
+    50% {
+        box-shadow:
+                0 0 0 8px
+                rgba(167,139,250,0);
+    }
+}
+
+
+/* ================================================================
+   SHOWCASE TITLE
+================================================================ */
+
+.showcase-main h1 {
+    margin: 24px 0 18px;
+
+    font-size: clamp(
+            2.5rem,
+            4vw,
+            3.7rem
+    );
+
+    line-height: 1.05;
+
+    letter-spacing: -2.5px;
+
+    font-weight: 800;
+}
+
+.showcase-main h1 span {
+    display: block;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    #ffffff,
+                    #c4b5fd
+            );
+
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    -webkit-text-fill-color: transparent;
+}
+
+.showcase-main > p {
+    margin-bottom: 32px;
+
+    color: #a1a1aa;
+
+    font-size: 15px;
+
+    line-height: 1.75;
+
+    max-width: 450px;
+}
+
+
+/* ================================================================
+   FEATURES
+================================================================ */
+
+.showcase-features {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+}
+
+.showcase-feature {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+
+    transition:
+            transform .3s ease;
+}
+
+.showcase-feature:hover {
+    transform: translateX(6px);
+}
+
+.feature-icon {
+    width: 38px;
+    height: 38px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 11px;
+
+    background:
+            rgba(139, 92, 246, 0.12);
+
+    border:
+            1px solid
+            rgba(139, 92, 246, 0.18);
+
+    color: #a78bfa;
+
+    font-size: 14px;
+}
+
+.showcase-feature strong,
+.showcase-feature span {
+    display: block;
+}
+
+.showcase-feature strong {
+    font-size: 13px;
+
+    color: #f4f4f5;
+
+    margin-bottom: 2px;
+}
+
+.showcase-feature span {
+    font-size: 11px;
+
+    color: #71717a;
+}
+
+
+/* ================================================================
+   STATS
+================================================================ */
+
+.showcase-bottom {
+    display: flex;
+    align-items: center;
+
+    gap: 25px;
+
+    padding-top: 30px;
+
+    border-top:
+            1px solid
+            rgba(255,255,255,.08);
+}
+
+.mini-stat strong,
+.mini-stat span {
+    display: block;
+}
+
+.mini-stat strong {
+    font-size: 20px;
+
+    font-weight: 750;
+
+    color: #ffffff;
+}
+
+.mini-stat span {
+    margin-top: 3px;
+
+    font-size: 9px;
+
+    color: #71717a;
+
+    text-transform: uppercase;
+
+    letter-spacing: .8px;
+}
+
+.stat-divider {
+    width: 1px;
+    height: 30px;
+
+    background:
+            rgba(255,255,255,.10);
+}
+
+
+/* ================================================================
+   RIGHT FORM PANEL
+================================================================ */
+
+.login-form-panel {
+    display: flex;
+    align-items: center;
+
+    background: #ffffff;
+
+    padding: 60px 70px;
+}
+
+.login-form-content {
+    width: 100%;
+    max-width: 420px;
+
+    margin: auto;
+}
+
+
+/* ================================================================
+   MOBILE BRAND
+================================================================ */
+
+.mobile-brand {
+    display: none;
+
+    margin-bottom: 45px;
+}
+
+
+/* ================================================================
+   HEADER
+================================================================ */
+
+.login-header {
+    margin-bottom: 38px;
+}
+
+.login-welcome {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: var(--velox-primary);
+
+    font-size: 10px;
+    font-weight: 800;
+
+    letter-spacing: 1.5px;
+}
+
+.login-header h2 {
+    margin: 0 0 9px;
+
+    color: #18181b;
+
+    font-size: 34px;
+
+    line-height: 1.15;
+
+    letter-spacing: -1.4px;
+
+    font-weight: 800;
+}
+
+.login-header p {
+    margin: 0;
+
+    color: #71717a;
+
+    font-size: 13px;
+
+    line-height: 1.65;
+}
+
+
+/* ================================================================
+   FORM FIELD
+================================================================ */
+
+.login-field {
+    margin-bottom: 24px;
+}
+
+.login-field label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #3f3f46;
+
+    font-size: 12px;
+
+    font-weight: 650;
+}
+
+.field-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 8px;
+}
+
+.field-header label {
+    margin-bottom: 0;
+}
+
+
+/* ================================================================
+   INPUT
+================================================================ */
+
+.input-wrapper {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+
+    height: 54px;
+
+    border:
+            1px solid #e4e4e7;
+
+    border-radius: 13px;
+
+    background: #fafafa;
+
+    transition:
+            border-color .25s ease,
+            box-shadow .25s ease,
+            background .25s ease,
+            transform .25s ease;
+}
+
+.input-wrapper:focus-within {
+    background: #ffffff;
+
+    border-color:
+            var(--velox-primary-light);
+
+    box-shadow:
+            0 0 0 4px
+            rgba(109,40,217,.08);
+
+    transform: translateY(-1px);
+}
+
+.input-icon {
+    width: 48px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: #a1a1aa;
+
+    font-size: 14px;
+
+    transition:
+            color .25s ease;
+}
+
+.input-wrapper:focus-within .input-icon {
+    color: var(--velox-primary);
+}
+
+.login-input {
+    width: 100%;
+    height: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    color: #18181b;
+
+    font-size: 13px;
+
+    padding: 0 10px 0 2px;
+
+    min-width: 0;
+}
+
+.login-input::placeholder {
+    color: #a1a1aa;
+}
+
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus {
+    -webkit-text-fill-color: #18181b;
+
+    -webkit-box-shadow:
+            0 0 0 1000px #ffffff inset;
+}
+
+
+/* ================================================================
+   INPUT STATUS
+================================================================ */
+
+.input-status {
+    display: none;
+
+    width: 42px;
+
+    color: var(--velox-success);
+
+    font-size: 12px;
+
+    text-align: center;
+}
+
+.login-input:valid:not(:placeholder-shown)
+~ .input-status {
+    display: block;
+}
+
+
+/* ================================================================
+   PASSWORD BUTTON
+================================================================ */
+
+.btn-toggle-password {
+    width: 45px;
+    height: 100%;
+
+    border: none;
+
+    background: transparent;
+
+    color: #a1a1aa;
+
+    cursor: pointer;
+
+    transition:
+            color .2s ease;
+}
+
+.btn-toggle-password:hover {
+    color: #52525b;
+}
+
+
+/* ================================================================
+   FORGOT PASSWORD
+================================================================ */
+
+.forgot-password-link {
+    color: var(--velox-primary);
+
+    font-size: 11px;
+
+    font-weight: 650;
+
+    text-decoration: none;
+
+    transition:
+            color .2s ease;
+}
+
+.forgot-password-link:hover {
+    color: var(--velox-primary-dark);
+
+    text-decoration: underline;
+}
+
+
+/* ================================================================
+   REMEMBER
+================================================================ */
+
+.login-options {
+    margin-top: -4px;
+
+    margin-bottom: 27px;
+}
+
+.remember-me {
+    display: inline-flex !important;
+    align-items: center;
+
+    gap: 9px;
+
+    margin: 0 !important;
+
+    cursor: pointer;
+
+    color: #71717a !important;
+
+    font-size: 11px !important;
+
+    font-weight: 500 !important;
+}
+
+.remember-me input {
+    display: none;
+}
+
+.custom-checkbox {
+    width: 17px;
+    height: 17px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border:
+            1px solid #d4d4d8;
+
+    border-radius: 5px;
+
+    background: #ffffff;
+
+    transition:
+            all .2s ease;
+
+    font-size: 9px;
+
+    color: transparent;
+}
+
+.remember-me input:checked
++ .custom-checkbox {
+    border-color:
+            var(--velox-primary);
+
+    background:
+            var(--velox-primary);
+
+    color: #ffffff;
+}
+
+
+/* ================================================================
+   LOGIN BUTTON
+================================================================ */
+
+.btn-login-submit {
+    position: relative;
+
+    width: 100%;
+    height: 56px;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #18181b,
+                    #27272a
+            );
+
+    color: #ffffff;
+
+    cursor: pointer;
+
+    font-size: 12px;
+
+    font-weight: 750;
+
+    letter-spacing: .4px;
+
+    overflow: hidden;
+
+    box-shadow:
+            0 10px 25px
+            rgba(24,24,27,.18);
+
+    transition:
+            transform .25s ease,
+            box-shadow .25s ease;
+}
+
+.btn-login-submit::before {
+    content: "";
+
+    position: absolute;
+
+    inset: 0;
+
+    background:
+            linear-gradient(
+                    110deg,
+                    transparent 25%,
+                    rgba(255,255,255,.15) 50%,
+                    transparent 75%
+            );
+
+    transform:
+            translateX(-120%);
+
+    transition:
+            transform .7s ease;
+}
+
+.btn-login-submit:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+            0 15px 30px
+            rgba(24,24,27,.23);
+}
+
+.btn-login-submit:hover::before {
+    transform:
+            translateX(120%);
+}
+
+.btn-login-submit:active {
+    transform: translateY(0);
+}
+
+.btn-login-content {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 13px;
+}
+
+.btn-login-content i {
+    transition:
+            transform .25s ease;
+}
+
+.btn-login-submit:hover
+.btn-login-content i {
+    transform: translateX(4px);
+}
+
+.btn-login-loading {
+    display: none;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 10px;
+}
+
+.btn-login-submit.loading
+.btn-login-content {
+    display: none;
+}
+
+.btn-login-submit.loading
+.btn-login-loading {
+    display: flex;
+}
+
+
+/* ================================================================
+   SECURITY
+================================================================ */
+
+.login-security {
+    display: flex;
+    align-items: center;
+
+    gap: 11px;
+
+    margin-top: 25px;
+
+    padding: 12px 14px;
+
+    border:
+            1px solid #f0f0f2;
+
+    border-radius: 11px;
+
+    background: #fafafa;
+}
+
+.security-icon {
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    border-radius: 8px;
+
+    background:
+            rgba(16,185,129,.08);
+
+    color: #10b981;
+
+    font-size: 11px;
+}
+
+.login-security strong,
+.login-security span {
+    display: block;
+}
+
+.login-security strong {
+    color: #3f3f46;
+
+    font-size: 10px;
+
+    font-weight: 700;
+}
+
+.login-security span {
+    margin-top: 2px;
+
+    color: #a1a1aa;
+
+    font-size: 9px;
+}
+
+
+/* ================================================================
+   FOOTER
+================================================================ */
+
+.login-footer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 30px;
+
+    color: #a1a1aa;
+
+    font-size: 9px;
+}
+
+.footer-separator {
+    color: #d4d4d8;
+}
+
+
+/* ================================================================
+   RESPONSIVE - TABLET
+================================================================ */
+
+@media (max-width: 991.98px) {
+
+    .velox-login-page {
+        padding: 25px 15px;
+    }
+
+    .login-card {
+        grid-template-columns:
+            1fr 1fr;
+    }
+
+    .login-showcase {
+        min-height: 650px;
+    }
+
+    .showcase-content {
+        min-height: 650px;
+
+        padding: 38px;
+    }
+
+    .showcase-main h1 {
+        font-size: 2.5rem;
+    }
+
+    .login-form-panel {
+        padding: 45px 35px;
+    }
+
+}
+
+
+/* ================================================================
+   RESPONSIVE - MOBILE
+================================================================ */
+
+@media (max-width: 767.98px) {
+
+    .velox-login-page {
+        min-height: 100vh;
+
+        padding:
+                20px 14px;
+    }
+
+    .login-container {
+        padding: 0;
+    }
+
+    .login-card {
+        display: block;
+
+        border-radius: 22px;
+
+        box-shadow:
+                0 25px 60px
+                rgba(0,0,0,.10);
+    }
+
+    .login-showcase {
+        display: none;
+    }
+
+    .login-form-panel {
+        min-height: calc(100vh - 40px);
+
+        padding:
+                38px 24px 28px;
+    }
+
+    .login-form-content {
+        max-width: 100%;
+    }
+
+    .mobile-brand {
+        display: flex;
+    }
+
+    .login-header {
+        margin-bottom: 32px;
+    }
+
+    .login-header h2 {
+        font-size: 30px;
+    }
+
+    .login-footer {
+        flex-wrap: wrap;
+    }
+
+}
+
+
+/* ================================================================
+   RESPONSIVE - SMALL MOBILE
+================================================================ */
+
+@media (max-width: 380px) {
+
+    .velox-login-page {
+        padding: 10px;
+    }
+
+    .login-form-panel {
+        min-height: calc(100vh - 20px);
+
+        padding:
+                30px 20px 22px;
+    }
+
+    .mobile-brand {
+        margin-bottom: 35px;
+    }
+
+    .login-header h2 {
+        font-size: 27px;
+    }
+
+    .login-header p {
+        font-size: 12px;
+    }
+
+    .field-header {
+        align-items: flex-start;
+        flex-direction: column;
+
+        gap: 6px;
+    }
+
+    .login-field {
+        margin-bottom: 21px;
+    }
+
+}
+
+
+/* ================================================================
+   ACCESSIBILITY
+================================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    *,
+    *::before,
+    *::after {
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: .01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+}
+
+/* ================================================================
+   PASSWORD INPUT ICON - FIX
+================================================================ */
+
+.input-wrapper .input-icon {
+    width: 50px;
+    min-width: 50px;
+    height: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    flex-shrink: 0;
+
+    color: #a1a1aa;
+
+    font-size: 14px;
+
+    line-height: 1;
+
+    overflow: visible;
+}
+
+.input-wrapper .input-icon i {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 16px;
+    height: 16px;
+
+    line-height: 1;
+
+    font-size: 14px;
+
+    font-style: normal;
+
+    transform: none;
+}
+
+.input-wrapper:focus-within .input-icon {
+    color: var(--velox-primary);
+}
+
+
+/* ================================================================
+   PASSWORD ICON
+================================================================ */
+
+.password-icon {
+    padding-left: 1px;
+}
+
+.password-icon i {
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+}
+
+/* ============================================================
+   VELOX RESTAURANT RESERVATIONS
+   ============================================================ */
+
+.reservation-page {
+    --reservation-primary: #6d28d9;
+    --reservation-primary-light: #8b5cf6;
+    --reservation-primary-dark: #4c1d95;
+    --reservation-dark: #09090b;
+    --reservation-text: #18181b;
+    --reservation-muted: #71717a;
+    --reservation-border: #e4e4e7;
+    --reservation-background: #f8f8fa;
+    --reservation-card: #ffffff;
+    --reservation-success: #10b981;
+
+    min-height: 100vh;
+    background:
+            radial-gradient(
+                    circle at 10% 10%,
+                    rgba(109, 40, 217, 0.08),
+                    transparent 30%
+            ),
+            radial-gradient(
+                    circle at 90% 20%,
+                    rgba(139, 92, 246, 0.08),
+                    transparent 28%
+            ),
+            var(--reservation-background);
+
+    color: var(--reservation-text);
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+}
+
+
+/* ============================================================
+   HERO
+   ============================================================ */
+
+.reservation-hero {
+    position: relative;
+    min-height: 390px;
+    display: flex;
+    align-items: center;
+    overflow: hidden;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    rgba(9, 9, 11, 0.98),
+                    rgba(24, 24, 27, 0.96)
+            );
+
+    color: #fff;
+}
+
+.reservation-hero::before {
+    content: "";
+    position: absolute;
+    width: 550px;
+    height: 550px;
+    border-radius: 50%;
+
+    background:
+            radial-gradient(
+                    circle,
+                    rgba(139, 92, 246, 0.32),
+                    rgba(109, 40, 217, 0.08) 45%,
+                    transparent 70%
+            );
+
+    top: -300px;
+    right: -120px;
+
+    pointer-events: none;
+}
+
+.reservation-hero::after {
+    content: "";
+    position: absolute;
+    width: 420px;
+    height: 420px;
+    border-radius: 50%;
+
+    background:
+            radial-gradient(
+                    circle,
+                    rgba(109, 40, 217, 0.20),
+                    transparent 70%
+            );
+
+    bottom: -280px;
+    left: -100px;
+
+    pointer-events: none;
+}
+
+.reservation-hero .hero-content {
+    position: relative;
+    z-index: 2;
+    width: min(1180px, calc(100% - 40px));
+    margin: 0 auto;
+    padding: 80px 0;
+    margin-top: 60px;
+}
+
+.reservation-hero .hero-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    padding: 8px 14px;
+
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 999px;
+
+    background: rgba(255, 255, 255, 0.06);
+
+    color: #c4b5fd;
+
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+
+    backdrop-filter: blur(10px);
+}
+
+.reservation-hero .hero-eyebrow::before {
+    content: "";
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #a78bfa;
+
+    box-shadow:
+            0 0 0 5px rgba(167, 139, 250, 0.12),
+            0 0 18px rgba(167, 139, 250, 0.7);
+}
+
+.reservation-hero .hero-title {
+    width: 100%;
+    margin: 24px 0 18px;
+    font-size: 2.1rem;
+    line-height: 1.04;
+    letter-spacing: -0.035em;
+
+    color: #fff;
+}
+
+.reservation-hero .hero-description {
+    width: 100%;
+    margin: 0;
+    color: rgba(255, 255, 255, 0.66);
+    font-size: 1.05rem;
+    line-height: 1.75;
+}
+
+
+/* ============================================================
+   MAIN WRAPPER
+   ============================================================ */
+
+.reservation-wrapper {
+    position: relative;
+    z-index: 5;
+
+    width: min(1180px, calc(100% - 32px));
+
+    margin: -75px auto 80px;
+}
+
+
+/* ============================================================
+   MAIN CARD
+   ============================================================ */
+
+.reservation-card {
+    position: relative;
+
+    overflow: hidden;
+
+    background: var(--reservation-card);
+
+    border: 1px solid var(--reservation-border);
+
+    border-radius: 22px;
+
+    box-shadow:
+            0 25px 70px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    transition:
+            border-color 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+.reservation-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 8%;
+    right: 8%;
+
+    height: 1px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(32, 199, 183, 0.45),
+                    transparent
+            );
+
+    pointer-events: none;
+}
+
+.reservation-card:hover {
+    border-color: rgba(32, 199, 183, 0.15);
+
+    box-shadow:
+            0 30px 80px rgba(0, 0, 0, 0.42),
+            0 0 0 1px rgba(32, 199, 183, 0.025);
+}
+
+.reservation-content {
+    padding: 38px;
+}
+
+
+/* ============================================================
+   VELOX — RESERVATION STEPPER
+============================================================ */
+
+.reservation-steps {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    width: 100%;
+    margin: 0 auto 15px;
+
+    padding: 0 8px;
+}
+
+
+/* ============================================================
+   STEP
+============================================================ */
+
+.reservation-step {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    min-width: 120px;
+
+    color: #66758a;
+
+    text-align: center;
+
+    transition:
+            color 0.3s ease,
+            transform 0.3s ease;
+}
+
+
+/* ============================================================
+   INDICATOR
+============================================================ */
+
+.step-indicator {
+    position: relative;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 46px;
+    height: 46px;
+
+    margin-bottom: 11px;
+
+    border-radius: 50%;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(255,255,255,.055),
+                    rgba(255,255,255,.025)
+            );
+
+    border: 1px solid rgba(255,255,255,.10);
+
+    box-shadow:
+            0 8px 25px rgba(0,0,0,.22),
+            inset 0 1px 0 rgba(255,255,255,.04);
+
+    transition:
+            all .3s ease;
+}
+
+
+/* Número */
+
+.step-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: #718198;
+
+    font-size: .82rem;
+    font-weight: 800;
+
+    transition:
+            color .3s ease,
+            background .3s ease;
+}
+
+
+/* ============================================================
+   LABEL
+============================================================ */
+
+.step-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    gap: 3px;
+}
+
+.step-label {
+    color: #718198;
+
+    font-size: .78rem;
+    font-weight: 700;
+
+    letter-spacing: .01em;
+
+    transition:
+            color .3s ease;
+}
+
+.step-description {
+    color: #46566b;
+
+    font-size: .67rem;
+    font-weight: 500;
+
+    white-space: nowrap;
+
+    transition:
+            color .3s ease;
+}
+
+
+/* ============================================================
+   LÍNEA
+============================================================ */
+
+.step-line {
+    position: relative;
+
+    flex: 1;
+
+    height: 2px;
+
+    margin-top: 22px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    rgba(255,255,255,.08),
+                    rgba(255,255,255,.05)
+            );
+
+    overflow: hidden;
+}
+
+
+/* Progreso */
+
+.step-line-progress {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    width: 0%;
+    height: 100%;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    #129d91,
+                    #20c7b7
+            );
+
+    box-shadow:
+            0 0 10px rgba(32,199,183,.25);
+
+    transition:
+            width .45s ease;
+}
+
+
+/* ============================================================
+   ACTIVE
+============================================================ */
+
+.reservation-step.active {
+    color: #20c7b7;
+}
+
+.reservation-step.active .step-indicator {
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(32,199,183,.18),
+                    rgba(32,199,183,.07)
+            );
+
+    border-color:
+            rgba(32,199,183,.55);
+
+    box-shadow:
+            0 0 0 5px rgba(32,199,183,.06),
+            0 10px 30px rgba(32,199,183,.16),
+            inset 0 1px 0 rgba(255,255,255,.06);
+
+    transform: translateY(-2px);
+}
+
+.reservation-step.active .step-number {
+    color: #20c7b7;
+}
+
+.reservation-step.active .step-label {
+    color: #ffffff;
+}
+
+.reservation-step.active .step-description {
+    color: #7fded5;
+}
+
+
+/* ============================================================
+   COMPLETED
+============================================================ */
+
+.reservation-step.completed .step-indicator {
+
+    background:
+            linear-gradient(
+                    145deg,
+                    #20c7b7,
+                    #129d91
+            );
+
+    border-color: #20c7b7;
+
+    box-shadow:
+            0 8px 25px rgba(32,199,183,.20);
+}
+
+.reservation-step.completed .step-number {
+    color: #031615;
+}
+
+.reservation-step.completed .step-label {
+    color: #cbd7e4;
+}
+
+.reservation-step.completed .step-description {
+    color: #607187;
+}
+
+.reservation-step.completed + .step-line .step-line-progress {
+    width: 100%;
+}
+
+/* ================================================================
+   INFORMACIÓN PÚBLICA DE LA SEDE
+================================================================ */
+
+.public-branch-information {
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 20px;
+    background:
+            rgba(255, 255, 255, .035);
+    border:
+            1px solid rgba(255, 255, 255, .07);
+    box-shadow:
+            0 15px 40px rgba(0, 0, 0, .12);
+    animation:
+            publicBranchInformationAppear
+            .35s
+            ease
+            both;
+}
+
+
+@keyframes publicBranchInformationAppear {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+                translateY(8px);
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+                translateY(0);
+    }
+}
+
+
+/* ================================================================
+   HEADER
+================================================================ */
+
+.public-branch-information-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 14px;
+
+    margin-bottom: 20px;
+}
+
+
+.public-branch-information-icon {
+
+    width: 46px;
+    height: 46px;
+
+    flex: 0 0 46px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background:
+            rgba(167, 139, 250, .12);
+
+    color:
+            #a78bfa;
+
+    font-size: 17px;
+}
+
+
+.public-branch-information-eyebrow {
+
+    display: block;
+
+    margin-bottom: 4px;
+
+    font-size: 9px;
+
+    font-weight: 800;
+
+    letter-spacing: .16em;
+
+    opacity: .45;
+}
+
+
+.public-branch-information-title {
+
+    margin: 0;
+
+    font-size: 20px;
+
+    line-height: 1.2;
+
+    font-weight: 750;
+
+    letter-spacing: -.02em;
+}
+
+
+/* ================================================================
+   INFORMATION GRID
+================================================================ */
+
+.public-branch-information-grid {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    gap: 10px;
+
+    margin-bottom: 20px;
+}
+
+
+.public-branch-information-item {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 11px;
+
+    min-width: 0;
+
+    padding: 12px;
+
+    border-radius: 14px;
+
+    background:
+            rgba(255, 255, 255, .025);
+
+    border:
+            1px solid rgba(255, 255, 255, .045);
+}
+
+
+.public-branch-information-item-icon {
+
+    width: 34px;
+    height: 34px;
+
+    flex: 0 0 34px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+            rgba(255, 255, 255, .045);
+
+    font-size: 12px;
+
+    opacity: .7;
+}
+
+
+.public-branch-information-item > div:last-child {
+
+    min-width: 0;
+}
+
+
+.public-branch-information-item span {
+
+    display: block;
+
+    margin-bottom: 3px;
+
+    font-size: 10px;
+
+    opacity: .45;
+}
+
+
+.public-branch-information-item strong {
+
+    display: block;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+
+    font-size: 12px;
+
+    font-weight: 600;
+}
+
+
+/* ================================================================
+   HORARIOS
+================================================================ */
+
+.public-branch-hours {
+
+    padding-top: 18px;
+
+    border-top:
+            1px solid rgba(255, 255, 255, .06);
+}
+
+
+.public-branch-hours-header {
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 10px;
+
+    margin-bottom: 10px;
+}
+
+
+.public-branch-hours-icon {
+
+    width: 32px;
+    height: 32px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background:
+            rgba(255, 255, 255, .045);
+
+    font-size: 12px;
+
+    opacity: .7;
+}
+
+
+/* ================================================================
+   RESPONSIVE
+================================================================ */
+
+@media (max-width: 700px) {
+
+    .public-branch-information {
+
+        padding: 17px;
+    }
+
+
+    .public-branch-information-grid {
+
+        grid-template-columns: 1fr;
+    }
+
+
+    .public-branch-information-title {
+
+        font-size: 17px;
+    }
+}
+
+/* ============================================================
+   SECTION TITLES
+   ============================================================ */
+
+.reservation-page .section-title {
+    color: #ffffff;
+    font-size: 1.65rem;
+    font-weight: 600;
+    letter-spacing: -0.025em;
+}
+
+.reservation-page .section-description {
+    color: var(--reservation-text-soft);
+    font-size: 0.92rem;
+    line-height: 1.6;
+}
+
+.reservation-page .custom-input {
+    min-height: 50px;
+
+    padding: 0.7rem 0.9rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    border-radius: 13px;
+
+    background: rgba(5, 15, 27, 0.82);
+
+    color: #ffffff;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+    font-size: 0.92rem;
+
+    box-shadow:
+            inset 0 1px 2px rgba(0, 0, 0, 0.25);
+
+    transition:
+            border-color 0.25s ease,
+            box-shadow 0.25s ease,
+            background 0.25s ease;
+}
+
+.reservation-page .custom-input:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+.reservation-page .custom-input:focus {
+    color: #ffffff;
+
+    background: rgba(5, 15, 27, 0.95);
+
+    border-color: rgba(32, 199, 183, 0.55);
+
+    box-shadow:
+            0 0 0 4px rgba(32, 199, 183, 0.08),
+            0 10px 30px rgba(0, 0, 0, 0.18);
+
+    outline: none;
+}
+
+.reservation-page .form-label-custom {
+    color: #dce5ef;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+
+    margin-bottom: 9px;
+}
+
+.reservation-page .people-selector {
+    display: flex;
+    align-items: center;
+
+    min-height: 50px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    border-radius: 13px;
+
+    background: rgba(5, 15, 27, 0.82);
+}
+
+.reservation-page .people-button {
+    width: 45px;
+    height: 48px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #a9b6c8;
+
+    font-size: 1.25rem;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            color 0.2s ease;
+}
+
+.reservation-page .people-button:hover {
+    background: rgba(32, 199, 183, 0.08);
+
+    color: var(--reservation-primary);
+}
+
+.reservation-page .people-value {
+    flex: 1;
+
+    text-align: center;
+
+    color: #ffffff;
+
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+/* ============================================================
+   FORM
+   ============================================================ */
+
+.form-label-custom {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #3f3f46;
+
+    font-size: 0.78rem;
+    font-weight: 800;
+
+    letter-spacing: 0.02em;
+}
+
+.custom-input {
+    min-height: 50px;
+
+    padding: 0.7rem 0.9rem;
+
+    border: 1px solid #d4d4d8;
+    border-radius: 12px;
+
+    background: #fff;
+
+    color: #18181b;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+    font-size: 0.92rem;
+
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
+
+    transition:
+            border-color 0.2s ease,
+            box-shadow 0.2s ease,
+            background 0.2s ease;
+}
+
+.custom-input:hover {
+    border-color: #a1a1aa;
+}
+
+.custom-input:focus {
+    border-color: var(--reservation-primary);
+
+    background: #fff;
+
+    box-shadow:
+            0 0 0 4px rgba(109, 40, 217, 0.10);
+
+    outline: none;
+}
+
+.custom-input::placeholder {
+    color: #a1a1aa;
+}
+
+
+/* ============================================================
+   PEOPLE SELECTOR
+   ============================================================ */
+
+.people-selector {
+    display: flex;
+    align-items: center;
+
+    min-height: 50px;
+
+    overflow: hidden;
+
+    border: 1px solid #d4d4d8;
+    border-radius: 12px;
+
+    background: #fff;
+}
+
+.people-button {
+    width: 45px;
+    height: 48px;
+
+    border: 0;
+
+    background: transparent;
+
+    color: #52525b;
+
+    font-size: 1.25rem;
+    font-weight: 500;
+
+    cursor: pointer;
+
+    transition:
+            background 0.2s ease,
+            color 0.2s ease;
+}
+
+.people-button:hover {
+    background: #f4f4f5;
+    color: var(--reservation-primary);
+}
+
+.people-button:active {
+    transform: scale(0.94);
+}
+
+.people-value {
+    flex: 1;
+
+    text-align: center;
+
+    color: #18181b;
+
+    font-size: 0.95rem;
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   SEARCH BUTTON
+   ============================================================ */
+
+.btn-search {
+    min-height: 50px;
+
+    border: 0;
+    border-radius: 12px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    var(--reservation-primary),
+                    var(--reservation-primary-light)
+            );
+
+    color: #fff;
+
+    font-size: 0.9rem;
+    font-weight: 800;
+
+    box-shadow:
+            0 10px 22px rgba(109, 40, 217, 0.20);
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            filter 0.2s ease;
+}
+
+.btn-search:hover {
+    color: #fff;
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.03);
+
+    box-shadow:
+            0 15px 28px rgba(109, 40, 217, 0.27);
+}
+
+.btn-search:active {
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   AVAILABILITY
+   ============================================================ */
+
+.availability-container {
+    display: none;
+
+    margin-top: 42px;
+    padding-top: 36px;
+
+    border-top: 1px solid #eeeeef;
+}
+
+.availability-container.visible {
+    display: block;
+
+    animation: reservationFadeUp 0.45s ease both;
+}
+
+.availability-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 24px;
+}
+
+.selected-info {
+    color: var(--reservation-muted);
+
+    font-size: 0.83rem;
+    font-weight: 600;
+
+    text-transform: capitalize;
+}
+
+
+/* ============================================================
+   TIME GROUPS
+   ============================================================ */
+
+.time-group {
+    margin-bottom: 30px;
+}
+
+.time-group:last-child {
+    margin-bottom: 0;
+}
+
+.time-group-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin-bottom: 14px;
+
+    font-size: 0.76rem;
+    font-weight: 800;
+
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.time-group-title::after {
+    content: "";
+
+    height: 1px;
+
+    flex: 1;
+
+    background: #e4e4e7;
+}
+
+.time-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(145px, 1fr));
+
+    gap: 12px;
+}
+
+
+/* ============================================================
+   TIME SLOT
+   ============================================================ */
+
+/* ============================================================
+   VELOX — HORARIOS DISPONIBLES
+   DARK PREMIUM TIME SLOTS
+============================================================ */
+
+.time-grid {
+    display: grid;
+
+    grid-template-columns:
+        repeat(auto-fill, minmax(210px, 1fr));
+
+    gap: 14px;
+}
+
+
+/* ============================================================
+   TIME SLOT
+============================================================ */
+
+.time-slot {
+    position: relative;
+
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 142px;
+
+    padding: 20px 20px 18px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.075);
+
+    border-radius: 18px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(19, 35, 55, 0.96),
+                    rgba(10, 22, 37, 0.98)
+            );
+
+    color: #ffffff;
+
+    text-align: left;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 14px 35px rgba(0, 0, 0, 0.20),
+            inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+    transition:
+            transform 0.3s cubic-bezier(.2,.8,.2,1),
+            border-color 0.3s ease,
+            background 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+
+/* ============================================================
+   LÍNEA SUPERIOR
+============================================================ */
+
+.time-slot::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 8%;
+    right: 8%;
+
+    height: 2px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(32, 199, 183, 0.65),
+                    transparent
+            );
+
+    opacity: 0.45;
+
+    transform: scaleX(0.35);
+
+    transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+}
+
+
+/* ============================================================
+   GLOW DECORATIVO
+============================================================ */
+
+.time-slot::after {
+    content: "";
+
+    position: absolute;
+
+    width: 130px;
+    height: 130px;
+
+    top: -75px;
+    right: -55px;
+
+    border-radius: 50%;
+
+    background:
+            rgba(32, 199, 183, 0.075);
+
+    filter: blur(35px);
+
+    pointer-events: none;
+
+    opacity: 0.7;
+
+    transition:
+            opacity 0.3s ease,
+            transform 0.3s ease;
+}
+
+
+/* ============================================================
+   HOVER
+============================================================ */
+
+.time-slot:hover {
+    transform: translateY(-5px);
+
+    border-color:
+            rgba(32, 199, 183, 0.25);
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(23, 42, 65, 0.98),
+                    rgba(11, 26, 43, 0.99)
+            );
+
+    box-shadow:
+            0 22px 48px rgba(0, 0, 0, 0.34),
+            0 0 30px rgba(32, 199, 183, 0.045);
+}
+
+
+.time-slot:hover::before {
+    opacity: 1;
+
+    transform: scaleX(1);
+}
+
+
+.time-slot:hover::after {
+    opacity: 1;
+
+    transform: scale(1.15);
+}
+
+
+/* ============================================================
+   HORA PRINCIPAL
+============================================================ */
+
+.time-slot-time {
+    position: relative;
+
+    z-index: 2;
+
+    margin-bottom: 5px;
+
+    color: #ffffff;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 1.22rem;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.02em;
+}
+
+
+/* ============================================================
+   RANGO DEL HORARIO
+============================================================ */
+
+.time-slot-duration {
+    position: relative;
+
+    z-index: 2;
+
+    margin-top: 0;
+
+    color: #718198;
+
+    font-size: 0.73rem;
+
+    font-weight: 600;
+
+    letter-spacing: 0.01em;
+}
+
+
+/* ============================================================
+   DISPONIBILIDAD
+============================================================ */
+
+.time-slot-availability {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    width: 100%;
+
+    margin-top: 17px;
+
+    padding-top: 13px;
+
+    border-top:
+            1px solid rgba(255, 255, 255, 0.065);
+}
+
+
+.time-slot-availability-icon {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 27px;
+    height: 27px;
+
+    flex: 0 0 27px;
+
+    border-radius: 8px;
+
+    background:
+            rgba(32, 199, 183, 0.08);
+
+    border:
+            1px solid rgba(32, 199, 183, 0.12);
+
+    color: #20c7b7;
+
+    font-size: 0.72rem;
+
+    transition:
+            background 0.3s ease,
+            border-color 0.3s ease,
+            transform 0.3s ease;
+}
+
+
+.time-slot:hover .time-slot-availability-icon {
+    background:
+            rgba(32, 199, 183, 0.13);
+
+    border-color:
+            rgba(32, 199, 183, 0.22);
+
+    transform: scale(1.05);
+}
+
+
+.time-slot-availability-text {
+    color: #9cabbc;
+
+    font-size: 0.70rem;
+
+    font-weight: 600;
+
+    line-height: 1.3;
+}
+
+
+.time-slot-availability-text::first-letter {
+    color: #ffffff;
+}
+
+
+/* ============================================================
+   SELECTED
+============================================================ */
+
+.time-slot.selected {
+    border-color:
+            rgba(32, 199, 183, 0.55);
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(20, 54, 64, 0.98),
+                    rgba(10, 29, 42, 0.99)
+            );
+
+    box-shadow:
+            0 20px 45px rgba(0, 0, 0, 0.32),
+            0 0 0 1px rgba(32, 199, 183, 0.08),
+            0 0 35px rgba(32, 199, 183, 0.08);
+}
+
+
+.time-slot.selected::before {
+    opacity: 1;
+
+    transform: scaleX(1);
+}
+
+
+.time-slot.selected::after {
+    opacity: 1;
+}
+
+
+.time-slot.selected .time-slot-time {
+    color: #20c7b7;
+}
+
+
+.time-slot.selected .time-slot-duration {
+    color: #82bdb8;
+}
+
+
+.time-slot.selected .time-slot-availability-icon {
+    background:
+            rgba(32, 199, 183, 0.15);
+
+    border-color:
+            rgba(32, 199, 183, 0.25);
+}
+
+
+/* ============================================================
+   FOCUS — ACCESIBILIDAD
+============================================================ */
+
+.time-slot:focus-visible {
+    outline: none;
+
+    border-color:
+            rgba(32, 199, 183, 0.65);
+
+    box-shadow:
+            0 0 0 4px rgba(32, 199, 183, 0.10),
+            0 15px 40px rgba(0, 0, 0, 0.30);
+}
+
+
+/* ============================================================
+   ACTIVE
+============================================================ */
+
+.time-slot:active {
+    transform: translateY(-2px);
+}
+
+/* ============================================================
+   LOADING
+   ============================================================ */
+
+.loading-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 13px;
+
+    min-height: 150px;
+
+    padding: 30px;
+
+    border: 1px dashed #d4d4d8;
+    border-radius: 16px;
+
+    background: #fafafa;
+
+    color: #71717a;
+
+    font-size: 0.88rem;
+    font-weight: 600;
+}
+
+.loading-box .spinner {
+    width: 22px;
+    height: 22px;
+
+    border: 3px solid #e4e4e7;
+    border-top-color: var(--reservation-primary);
+
+    border-radius: 50%;
+
+    animation: reservationSpin 0.75s linear infinite;
+}
+
+
+/* ============================================================
+   EMPTY / ERROR
+   ============================================================ */
+
+.empty-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 220px;
+
+    padding: 40px 20px;
+
+    border: 1px dashed #d4d4d8;
+    border-radius: 18px;
+
+    background:
+            linear-gradient(
+                    180deg,
+                    #fff,
+                    #fafafa
+            );
+
+    text-align: center;
+}
+
+.empty-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 58px;
+    height: 58px;
+
+    margin-bottom: 17px;
+
+    border-radius: 50%;
+
+    background: #f4f4f5;
+
+    color: #71717a;
+
+    font-size: 1.35rem;
+}
+
+.empty-box h5 {
+    margin: 0 0 7px;
+
+    color: #27272a;
+
+    font-size: 1rem;
+    font-weight: 800;
+}
+
+.empty-box p {
+    max-width: 440px;
+
+    margin: 0;
+
+    color: #71717a;
+
+    font-size: 0.83rem;
+    line-height: 1.6;
+}
+
+
+/* ============================================================
+   VELOX — RESUMEN DE RESERVA
+   DARK PREMIUM / RESPONSIVE
+============================================================ */
+
+.reservation-summary {
+    position: relative;
+    display: none;
+    width: 100%;
+
+    margin-top: 24px;
+    padding: 22px 24px;
+
+    overflow: hidden;
+
+    border: 1px solid rgba(255, 255, 255, 0.075);
+
+    border-radius: 18px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(19, 35, 55, 0.96),
+                    rgba(10, 22, 37, 0.98)
+            );
+
+    box-shadow:
+            0 15px 40px rgba(0, 0, 0, 0.24),
+            inset 0 1px 0 rgba(255, 255, 255, 0.025);
+
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+
+    box-sizing: border-box;
+}
+
+.reservation-summary.visible {
+    display: block;
+
+    animation: reservationFadeUp 0.4s ease both;
+}
+
+
+/* ============================================================
+   LÍNEA SUPERIOR
+============================================================ */
+
+.reservation-summary::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 8%;
+    right: 8%;
+
+    height: 2px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(32, 199, 183, 0.55),
+                    transparent
+            );
+
+    opacity: 0.75;
+}
+
+
+/* ============================================================
+   GLOW DECORATIVO
+============================================================ */
+
+.reservation-summary::after {
+    content: "";
+
+    position: absolute;
+
+    width: 160px;
+    height: 160px;
+
+    top: -100px;
+    right: -55px;
+
+    border-radius: 50%;
+
+    background: rgba(32, 199, 183, 0.055);
+
+    filter: blur(40px);
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   TÍTULO
+============================================================ */
+
+.reservation-summary .summary-title {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+
+    width: 100%;
+
+    margin: 0 0 17px;
+
+    padding: 0 0 16px;
+
+    color: #ffffff;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 0.92rem;
+
+    font-weight: 800;
+
+    line-height: 1.3;
+
+    border-bottom:
+            1px solid rgba(255, 255, 255, 0.065);
+
+    box-sizing: border-box;
+}
+
+
+/* Icono del título */
+
+.reservation-summary .summary-title::before {
+    content: "\f570";
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 30px;
+    height: 30px;
+
+    flex: 0 0 30px;
+
+    margin-right: 10px;
+
+    border-radius: 9px;
+
+    background:
+            rgba(32, 199, 183, 0.09);
+
+    border:
+            1px solid rgba(32, 199, 183, 0.14);
+
+    color: #20c7b7;
+
+    font-family: "Font Awesome 6 Free";
+
+    font-size: 0.72rem;
+
+    font-weight: 900;
+}
+
+
+/* ============================================================
+   FILAS
+============================================================ */
+
+.reservation-summary .summary-row {
+    position: relative;
+
+    display: grid;
+
+    grid-template-columns:
+        minmax(85px, 0.35fr)
+        minmax(0, 1fr);
+
+    align-items: center;
+
+    width: 100%;
+
+    min-height: 45px;
+
+    margin: 0;
+
+    padding: 10px 0;
+
+    border-bottom:
+            1px solid rgba(255, 255, 255, 0.055);
+
+    box-sizing: border-box;
+}
+
+
+/* Última fila */
+
+.reservation-summary .summary-row:last-child {
+    border-bottom: none;
+
+    padding-bottom: 0;
+}
+
+
+/* ============================================================
+   LABEL
+============================================================ */
+
+.reservation-summary .summary-label {
+    display: flex;
+
+    align-items: center;
+
+    min-width: 0;
+
+    color: #718198;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 0.72rem;
+
+    font-weight: 600;
+
+    line-height: 1.4;
+
+    white-space: nowrap;
+}
+
+
+/* Iconos */
+
+.reservation-summary .summary-label::before {
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 18px;
+
+    margin-right: 7px;
+
+    flex: 0 0 18px;
+
+    color: #20c7b7;
+
+    font-family: "Font Awesome 6 Free";
+
+    font-size: 0.65rem;
+
+    font-weight: 900;
+
+    opacity: 0.8;
+}
+
+
+/* Sede */
+
+.reservation-summary .summary-row:nth-child(2)
+.summary-label::before {
+    content: "\f3c5";
+}
+
+
+/* Fecha */
+
+.reservation-summary .summary-row:nth-child(3)
+.summary-label::before {
+    content: "\f133";
+}
+
+
+/* Horario */
+
+.reservation-summary .summary-row:nth-child(4)
+.summary-label::before {
+    content: "\f017";
+}
+
+
+/* Personas */
+
+.reservation-summary .summary-row:nth-child(5)
+.summary-label::before {
+    content: "\f0c0";
+}
+
+
+/* ============================================================
+   VALORES
+============================================================ */
+
+.reservation-summary .summary-value {
+    display: block;
+
+    min-width: 0;
+
+    margin: 0;
+
+    overflow-wrap: anywhere;
+    word-break: normal;
+
+    color: #e9f0f7;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 0.76rem;
+
+    font-weight: 700;
+
+    line-height: 1.45;
+
+    text-align: right;
+}
+
+
+/* Horario destacado */
+
+.reservation-summary #summaryTime {
+    color: #20c7b7;
+
+    font-weight: 800;
+}
+
+
+/* ============================================================
+   HOVER
+============================================================ */
+
+.reservation-summary:hover {
+    border-color:
+            rgba(32, 199, 183, 0.14);
+
+    box-shadow:
+            0 20px 48px rgba(0, 0, 0, 0.30),
+            0 0 30px rgba(32, 199, 183, 0.025),
+            inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+
+/* ============================================================
+   RESPONSIVE — TABLET
+============================================================ */
+
+@media (max-width: 768px) {
+
+    .reservation-summary {
+        padding: 20px;
+    }
+
+    .reservation-summary .summary-row {
+        grid-template-columns:
+            minmax(90px, 0.40fr)
+            minmax(0, 1fr);
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE — MOBILE
+============================================================ */
+
+@media (max-width: 576px) {
+
+    .reservation-summary {
+        margin-top: 20px;
+
+        padding: 18px;
+
+        border-radius: 16px;
+    }
+
+
+    .reservation-summary .summary-title {
+        margin-bottom: 12px;
+
+        padding-bottom: 14px;
+
+        font-size: 0.86rem;
+    }
+
+
+    .reservation-summary .summary-row {
+        grid-template-columns:
+            1fr;
+
+        align-items: flex-start;
+
+        gap: 5px;
+
+        min-height: auto;
+
+        padding: 11px 0;
+    }
+
+
+    .reservation-summary .summary-label {
+        font-size: 0.68rem;
+    }
+
+
+    .reservation-summary .summary-value {
+        width: 100%;
+
+        padding-left: 25px;
+
+        font-size: 0.74rem;
+
+        text-align: left;
+    }
+
+
+    .reservation-summary #summaryTime {
+        font-size: 0.78rem;
+    }
+}
+
+/* ============================================================
+   CUSTOMER SECTION
+   ============================================================ */
+
+.customer-section {
+    display: none;
+
+    margin-top: 35px;
+    padding-top: 35px;
+
+    border-top: 1px solid #eeeeef;
+}
+
+.customer-section.visible {
+    display: block;
+
+    animation: reservationFadeUp 0.45s ease both;
+}
+
+.customer-section .section-title {
+    margin-bottom: 4px;
+}
+
+
+/* ============================================================
+   VELOX — CONFIRMAR RESERVA
+   MISMO ESTILO QUE "CONSULTAR RESERVA"
+============================================================ */
+
+.btn-confirm {
+    position: relative;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
+    min-height: 50px;
+
+    padding: 0.75rem 1.25rem;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    #20c7b7 0%,
+                    #129d91 100%
+            );
+
+    color: #031615;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 0.9rem;
+
+    font-weight: 800;
+
+    line-height: 1.2;
+
+    letter-spacing: -0.01em;
+
+    cursor: pointer;
+
+    box-shadow:
+            0 10px 28px rgba(32, 199, 183, 0.20);
+
+    transition:
+            transform 0.2s ease,
+            box-shadow 0.2s ease,
+            filter 0.2s ease;
+}
+
+
+/* ============================================================
+   ICONO
+============================================================ */
+
+.btn-confirm i {
+    font-size: 1rem;
+
+    transition:
+            transform 0.2s ease;
+}
+
+
+/* ============================================================
+   HOVER
+============================================================ */
+
+.btn-confirm:hover {
+    color: #031615;
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.06);
+
+    box-shadow:
+            0 14px 35px rgba(32, 199, 183, 0.28);
+}
+
+
+.btn-confirm:hover i {
+    transform: scale(1.08);
+}
+
+
+/* ============================================================
+   ACTIVE
+============================================================ */
+
+.btn-confirm:active {
+    transform: translateY(0);
+
+    box-shadow:
+            0 7px 18px rgba(32, 199, 183, 0.18);
+}
+
+
+/* ============================================================
+   FOCUS — ACCESIBILIDAD
+============================================================ */
+
+.btn-confirm:focus-visible {
+    outline: none;
+
+    box-shadow:
+            0 0 0 4px rgba(32, 199, 183, 0.12),
+            0 10px 28px rgba(32, 199, 183, 0.20);
+}
+
+
+/* ============================================================
+   DISABLED
+============================================================ */
+
+.btn-confirm:disabled {
+    opacity: 0.55;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    filter: grayscale(0.15);
+
+    box-shadow: none;
+}
+
+
+/* ============================================================
+   VELOX — RESERVATION SUCCESS
+   PREMIUM CONFIRMATION
+============================================================ */
+
+.success-container {
+    display: none;
+
+    position: relative;
+
+    width: 100%;
+
+    padding: 20px 0 40px;
+
+    text-align: center;
+
+    opacity: 0;
+
+    visibility: hidden;
+
+    transform: translateY(12px);
+}
+
+/* ============================================================
+   VISIBLE
+============================================================ */
+
+.success-container.visible {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    opacity: 1;
+
+    visibility: visible;
+
+    transform: translateY(0);
+
+    animation:
+            successContainerIn 0.45s ease both;
+}
+
+
+
+/* ============================================================
+   ANIMACIÓN
+============================================================ */
+
+@keyframes successContainerIn {
+
+    from {
+        opacity: 0;
+
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+
+        transform: translateY(0);
+    }
+}
+
+/* ============================================================
+   CARD
+============================================================ */
+
+.success-card {
+    position: relative;
+
+    width: min(100%, 560px);
+
+    padding: 46px 42px 40px;
+
+    overflow: hidden;
+
+    text-align: center;
+
+    border: 1px solid rgba(255, 255, 255, 0.08);
+
+    border-radius: 24px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(19, 38, 57, 0.97),
+                    rgba(9, 22, 37, 0.98)
+            );
+
+    box-shadow:
+            0 30px 80px rgba(0, 0, 0, 0.38),
+            inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+
+/* ============================================================
+   DECORACIÓN SUPERIOR
+============================================================ */
+
+.success-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 10%;
+    right: 10%;
+
+    height: 2px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    #20c7b7,
+                    transparent
+            );
+
+    opacity: 0.65;
+}
+
+
+/* ============================================================
+   GLOW
+============================================================ */
+
+.success-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 220px;
+    height: 220px;
+
+    top: -130px;
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    border-radius: 50%;
+
+    background:
+            rgba(32, 199, 183, 0.07);
+
+    filter: blur(50px);
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   ICONO DE ÉXITO
+============================================================ */
+
+.success-icon-wrapper {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    margin-bottom: 24px;
+}
+
+
+.success-icon {
+    position: relative;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 76px;
+    height: 76px;
+
+    border-radius: 50%;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(32, 199, 183, 0.18),
+                    rgba(32, 199, 183, 0.06)
+            );
+
+    border:
+            1px solid rgba(32, 199, 183, 0.42);
+
+    color: #20c7b7;
+
+    font-size: 2rem;
+
+    box-shadow:
+            0 0 0 8px rgba(32, 199, 183, 0.045),
+            0 15px 35px rgba(32, 199, 183, 0.14),
+            inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    animation:
+            successIconIn 0.55s cubic-bezier(.2,.8,.2,1);
+}
+
+
+.success-icon::after {
+    content: "";
+
+    position: absolute;
+
+    inset: -8px;
+
+    border-radius: 50%;
+
+    border: 1px solid rgba(32, 199, 183, 0.12);
+
+    animation:
+            successPulse 2.5s ease-out infinite;
+}
+
+
+@keyframes successIconIn {
+
+    0% {
+        opacity: 0;
+
+        transform:
+                scale(0.55)
+                rotate(-15deg);
+    }
+
+    70% {
+        transform:
+                scale(1.08)
+                rotate(2deg);
+    }
+
+    100% {
+        opacity: 1;
+
+        transform:
+                scale(1)
+                rotate(0);
+    }
+}
+
+
+@keyframes successPulse {
+
+    0% {
+        opacity: 0.7;
+
+        transform: scale(0.9);
+    }
+
+    70% {
+        opacity: 0;
+
+        transform: scale(1.25);
+    }
+
+    100% {
+        opacity: 0;
+
+        transform: scale(1.25);
+    }
+}
+
+
+/* ============================================================
+   TÍTULO
+============================================================ */
+
+.success-title {
+    position: relative;
+
+    z-index: 2;
+
+    margin: 0 0 12px;
+
+    color: #ffffff;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 1.65rem;
+
+    font-weight: 800;
+
+    letter-spacing: -0.035em;
+}
+
+
+/* ============================================================
+   MENSAJE
+============================================================ */
+
+.success-message {
+    position: relative;
+
+    z-index: 2;
+
+    max-width: 430px;
+
+    margin: 0 auto 28px;
+
+    color: #9cabbc;
+
+    font-size: 0.86rem;
+
+    line-height: 1.7;
+}
+
+
+/* ============================================================
+   CÓDIGO DE RESERVA
+============================================================ */
+
+.reservation-code-container {
+    position: relative;
+
+    z-index: 2;
+
+    padding: 20px 20px 18px;
+
+    border:
+            1px solid rgba(32, 199, 183, 0.14);
+
+    border-radius: 16px;
+
+    background:
+            rgba(4, 16, 28, 0.58);
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.025);
+}
+
+
+/* Label */
+
+.reservation-code-label {
+    display: block;
+
+    margin-bottom: 9px;
+
+    color: #617187;
+
+    font-size: 0.63rem;
+
+    font-weight: 800;
+
+    letter-spacing: 0.14em;
+}
+
+
+/* Código */
+
+.success-card .reservation-code {
+    display: block;
+
+    color: #20c7b7;
+
+    font-family:
+            "DM Sans",
+            monospace;
+
+    font-size: 1.45rem;
+
+    font-weight: 900;
+
+    letter-spacing: 0.10em;
+
+    line-height: 1.3;
+
+    text-shadow:
+            0 0 22px rgba(32, 199, 183, 0.14);
+}
+
+
+/* Ayuda */
+
+.reservation-code-hint {
+    display: block;
+
+    margin-top: 7px;
+
+    color: #53647a;
+
+    font-size: 0.66rem;
+
+    font-weight: 500;
+}
+
+
+/* ============================================================
+   AVISO
+============================================================ */
+
+.success-notice {
+    position: relative;
+
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    margin: 22px auto 26px;
+
+    color: #718198;
+
+    font-size: 0.70rem;
+
+    line-height: 1.5;
+}
+
+
+.success-notice i {
+    flex: 0 0 auto;
+
+    color: #20c7b7;
+
+    font-size: 0.85rem;
+}
+
+
+/* ============================================================
+   BOTÓN NUEVA RESERVA
+============================================================ */
+
+.btn-new-reservation {
+    position: relative;
+
+    z-index: 2;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 9px;
+
+    width: 100%;
+
+    min-height: 50px;
+
+    padding: 0.75rem 1.25rem;
+
+    border: 1px solid rgba(255, 255, 255, 0.10);
+
+    border-radius: 12px;
+
+    background:
+            rgba(255, 255, 255, 0.045);
+
+    color: #dce5ef;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 0.82rem;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+            background 0.25s ease,
+            border-color 0.25s ease,
+            color 0.25s ease,
+            transform 0.2s ease,
+            box-shadow 0.25s ease;
+}
+
+
+.btn-new-reservation i {
+    color: #20c7b7;
+
+    font-size: 0.95rem;
+
+    transition:
+            transform 0.35s ease;
+}
+
+
+.btn-new-reservation:hover {
+    transform: translateY(-2px);
+
+    background:
+            rgba(32, 199, 183, 0.08);
+
+    border-color:
+            rgba(32, 199, 183, 0.25);
+
+    color: #ffffff;
+
+    box-shadow:
+            0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+
+.btn-new-reservation:hover i {
+    transform: rotate(180deg);
+}
+
+
+.btn-new-reservation:active {
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   FOCUS
+============================================================ */
+
+.btn-new-reservation:focus-visible {
+    outline: none;
+
+    box-shadow:
+            0 0 0 4px rgba(32, 199, 183, 0.10),
+            0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 576px) {
+
+    .success-container {
+        padding:
+                10px
+                0
+                30px;
+    }
+
+    .success-card {
+        padding:
+                36px 22px
+                30px;
+
+        border-radius: 20px;
+    }
+
+    .success-icon {
+        width: 68px;
+        height: 68px;
+
+        font-size: 1.75rem;
+    }
+
+    .success-title {
+        font-size: 1.4rem;
+    }
+
+    .success-message {
+        font-size: 0.80rem;
+    }
+
+    .success-card .reservation-code {
+        font-size: 1.20rem;
+
+        letter-spacing: 0.07em;
+    }
+
+    .success-notice {
+        align-items: flex-start;
+
+        text-align: left;
+    }
+}
+
+
+/* ============================================================
+   TOAST
+   ============================================================ */
+
+.reservation-toast {
+    position: fixed;
+
+    right: 25px;
+    bottom: 25px;
+
+    z-index: 9999;
+
+    max-width: 360px;
+
+    padding: 14px 18px;
+
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 12px;
+
+    background: rgba(24, 24, 27, 0.96);
+
+    color: #fff;
+
+    font-size: 0.82rem;
+    font-weight: 600;
+    line-height: 1.45;
+
+    box-shadow:
+            0 18px 40px rgba(0, 0, 0, 0.22);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(15px);
+
+    transition:
+            opacity 0.25s ease,
+            transform 0.25s ease,
+            visibility 0.25s ease;
+
+    backdrop-filter: blur(12px);
+}
+
+.reservation-toast.show {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   ANIMATIONS
+   ============================================================ */
+
+@keyframes reservationSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes reservationFadeUp {
+    from {
+        opacity: 0;
+        transform: translateY(14px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes reservationSuccess {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE TABLET
+   ============================================================ */
+
+@media (max-width: 991.98px) {
+
+    .reservation-hero {
+        min-height: 350px;
+    }
+
+    .reservation-hero .hero-content {
+        padding: 70px 0;
+    }
+
+    .reservation-wrapper {
+        margin-top: -55px;
+    }
+
+    .reservation-content {
+        padding: 30px;
+    }
+
+    .reservation-steps .step span:last-child {
+        display: none;
+    }
+
+    .reservation-steps .step {
+        gap: 0;
+    }
+
+    .reservation-steps .step-number {
+        width: 36px;
+        height: 36px;
+    }
+
+    .reservation-steps .step-line {
+        margin: 0 10px;
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE MOBILE
+   ============================================================ */
+
+@media (max-width: 767.98px) {
+
+    .reservation-hero {
+        min-height: 390px;
+    }
+
+    .reservation-hero .hero-content {
+        width: min(100% - 32px, 1180px);
+
+        padding: 65px 0;
+    }
+
+    .reservation-hero .hero-title {
+        font-size: 2.65rem;
+    }
+
+    .reservation-hero .hero-description {
+        font-size: 0.94rem;
+    }
+
+    .reservation-wrapper {
+        width: calc(100% - 20px);
+
+        margin-top: -50px;
+        margin-bottom: 40px;
+    }
+
+    .reservation-card {
+        border-radius: 20px;
+    }
+
+    .reservation-content {
+        padding: 23px 18px;
+    }
+
+    .reservation-steps {
+        margin-bottom: 32px;
+    }
+
+    .reservation-steps .step-number {
+        width: 32px;
+        height: 32px;
+    }
+
+    .reservation-steps .step-line {
+        margin: 0 6px;
+    }
+
+    .reservation-page .section-title {
+        font-size: 1.45rem;
+    }
+
+    .time-grid {
+        grid-template-columns:
+            repeat(2, minmax(0, 1fr));
+    }
+
+    .time-slot {
+        min-height: 72px;
+    }
+
+    .summary-row {
+        align-items: flex-start;
+    }
+
+    .summary-value {
+        max-width: 60%;
+
+        text-align: right;
+    }
+
+    .btn-confirm {
+        width: 100%;
+    }
+
+    .success-container {
+        padding: 55px 18px 65px;
+    }
+
+    .reservation-toast {
+        right: 15px;
+        bottom: 15px;
+        left: 15px;
+
+        max-width: none;
+    }
+}
+
+
+/* ============================================================
+   RESPONSIVE SMALL MOBILE
+   ============================================================ */
+
+@media (max-width: 420px) {
+
+    .reservation-hero {
+        min-height: 370px;
+    }
+
+    .reservation-hero .hero-title {
+        font-size: 2.25rem;
+    }
+
+    .reservation-hero .hero-description {
+        font-size: 0.88rem;
+    }
+
+    .reservation-content {
+        padding: 20px 15px;
+    }
+
+    .reservation-steps .step-number {
+        width: 29px;
+        height: 29px;
+    }
+
+    .reservation-steps .step-line {
+        margin: 0 4px;
+    }
+
+    .time-grid {
+        grid-template-columns: 1fr 1fr;
+
+        gap: 8px;
+    }
+
+    .time-slot {
+        min-height: 68px;
+
+        padding: 11px;
+    }
+
+    .time-slot-time {
+        font-size: 0.9rem;
+    }
+
+    .time-slot-duration {
+        font-size: 0.67rem;
+    }
+
+    .reservation-summary {
+        padding: 19px;
+    }
+
+    .success-icon {
+        width: 72px;
+        height: 72px;
+
+        font-size: 1.9rem;
+    }
+
+    .reservation-code {
+        min-width: 180px;
+
+        font-size: 1rem;
+    }
+}
+
+
+/* ============================================================
+   ACCESSIBILITY
+   ============================================================ */
+
+@media (prefers-reduced-motion: reduce) {
+
+    .reservation-page *,
+    .reservation-page *::before,
+    .reservation-page *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+
+/* ============================================================
+  VELOX — CONSULTA DE RESERVAS
+  DARK PREMIUM EXPERIENCE
+============================================================ */
+
+.reservation-search-page {
+    --velox-bg: #07111f;
+    --velox-bg-secondary: #0b1728;
+    --velox-card: rgba(17, 31, 50, 0.88);
+    --velox-card-hover: rgba(22, 40, 63, 0.96);
+    --velox-border: rgba(255, 255, 255, 0.08);
+    --velox-border-hover: rgba(255, 255, 255, 0.16);
+    --velox-text: #f4f7fb;
+    --velox-text-soft: #a9b6c8;
+    --velox-text-muted: #718198;
+    --velox-primary: #20c7b7;
+    --velox-primary-dark: #129d91;
+    --velox-success: #38d39f;
+    --velox-warning: #f5c451;
+    --velox-danger: #ff6b7a;
+
+    min-height: 100vh;
+
+    background:
+            radial-gradient(
+                    circle at 15% 10%,
+                    rgba(32, 199, 183, 0.09),
+                    transparent 32%
+            ),
+            radial-gradient(
+                    circle at 85% 20%,
+                    rgba(48, 105, 180, 0.08),
+                    transparent 30%
+            ),
+            linear-gradient(
+                    180deg,
+                    #07111f 0%,
+                    #081321 52%,
+                    #06101c 100%
+            );
+
+    color: var(--velox-text);
+}
+
+html:has(.reservation-search-page),
+body:has(.reservation-search-page) {
+    background: #06101c;
+}
+
+body:has(.reservation-search-page) {
+    margin: 0;
+}
+
+
+/* ============================================================
+   HERO
+============================================================ */
+
+.reservation-search-hero {
+    position: relative;
+    padding: 150px 0 70px;
+    overflow: hidden;
+}
+
+
+/*
+ * Luz ambiental superior.
+ */
+.reservation-search-hero::before {
+    content: "";
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    top: -280px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: rgba(32, 199, 183, 0.10);
+
+    filter: blur(100px);
+    border-radius: 50%;
+
+    pointer-events: none;
+}
+
+
+/* ============================================================
+   WRAPPER
+============================================================ */
+
+.reservation-search-wrapper {
+    position: relative;
+    z-index: 2;
+
+    max-width: 1000px;
+    margin: 0 auto;
+
+    transition:
+            transform 0.6s ease,
+            opacity 0.6s ease;
+}
+
+
+/* ============================================================
+   HEADING
+============================================================ */
+
+.reservation-search-heading {
+    text-align: center;
+    max-width: 760px;
+    margin: 0 auto 38px;
+}
+
+
+.reservation-search-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+
+    padding: 8px 15px;
+
+    border: 1px solid rgba(32, 199, 183, 0.18);
+
+    border-radius: 999px;
+
+    background: rgba(32, 199, 183, 0.06);
+
+    color: var(--velox-primary);
+
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+
+    margin-bottom: 20px;
+}
+
+
+.reservation-search-eyebrow i {
+    font-size: 0.72rem;
+}
+
+
+.reservation-search-heading h1 {
+    margin: 0 0 15px;
+
+    color: #ffffff;
+
+    font-size: clamp(2.2rem, 4vw, 3.5rem);
+
+    font-weight: 700;
+
+    letter-spacing: -0.045em;
+
+    line-height: 1.05;
+}
+
+
+.reservation-search-heading p {
+    max-width: 650px;
+
+    margin: 0 auto;
+
+    color: var(--velox-text-soft);
+
+    font-size: 1rem;
+
+    line-height: 1.75;
+}
+
+
+/* ============================================================
+   SEARCH CARD
+============================================================ */
+
+.reservation-search-card {
+    position: relative;
+
+    padding: 34px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(22, 39, 61, 0.94),
+                    rgba(11, 24, 40, 0.94)
+            );
+
+    border: 1px solid var(--velox-border);
+
+    border-radius: 22px;
+
+    box-shadow:
+            0 25px 70px rgba(0, 0, 0, 0.35),
+            inset 0 1px 0 rgba(255, 255, 255, 0.035);
+
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+
+    transition:
+            border-color 0.3s ease,
+            box-shadow 0.3s ease;
+}
+
+
+.reservation-search-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 8%;
+    right: 8%;
+
+    height: 1px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(32, 199, 183, 0.45),
+                    transparent
+            );
+}
+
+
+.reservation-search-card:hover {
+    border-color: rgba(32, 199, 183, 0.15);
+
+    box-shadow:
+            0 30px 80px rgba(0, 0, 0, 0.42),
+            0 0 0 1px rgba(32, 199, 183, 0.025);
+}
+
+
+/* ============================================================
+   LABEL
+============================================================ */
+
+.reservation-search-card .form-label {
+    color: #dce5ef;
+
+    font-size: 0.82rem;
+
+    font-weight: 600;
+
+    margin-bottom: 9px;
+}
+
+
+/* ============================================================
+   INPUT
+============================================================ */
+
+.reservation-search-input {
+    position: relative;
+}
+
+
+.reservation-search-input > i {
+    position: absolute;
+
+    left: 17px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    z-index: 2;
+
+    color: var(--velox-primary);
+
+    font-size: 0.95rem;
+
+    pointer-events: none;
+}
+
+
+.reservation-search-input .form-control {
+    height: 55px;
+
+    padding: 0 18px 0 48px;
+
+    color: #ffffff;
+
+    background: rgba(5, 15, 27, 0.82);
+
+    border: 1px solid rgba(255, 255, 255, 0.09);
+
+    border-radius: 13px;
+
+    font-size: 0.95rem;
+
+    box-shadow:
+            inset 0 1px 2px rgba(0, 0, 0, 0.25);
+
+    transition:
+            border-color 0.25s ease,
+            box-shadow 0.25s ease,
+            background 0.25s ease;
+}
+
+
+.reservation-search-input .form-control::placeholder {
+    color: #617086;
+}
+
+
+.reservation-search-input .form-control:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+}
+
+
+.reservation-search-input .form-control:focus {
+    color: #ffffff;
+
+    background: rgba(5, 15, 27, 0.95);
+
+    border-color: rgba(32, 199, 183, 0.55);
+
+    box-shadow:
+            0 0 0 4px rgba(32, 199, 183, 0.08),
+            0 10px 30px rgba(0, 0, 0, 0.18);
+}
+
+
+/* ============================================================
+   VALIDACIÓN
+============================================================ */
+
+.reservation-search-input .form-control.is-valid {
+    border-color: rgba(56, 211, 159, 0.55);
+
+    background-image: none;
+
+    box-shadow:
+            0 0 0 3px rgba(56, 211, 159, 0.06);
+}
+
+
+.reservation-search-input .form-control.is-invalid {
+    border-color: rgba(255, 107, 122, 0.65);
+
+    background-image: none;
+
+    box-shadow:
+            0 0 0 3px rgba(255, 107, 122, 0.06);
+}
+
+
+.reservation-search-card .invalid-feedback {
+    color: #ff8793;
+
+    font-size: 0.78rem;
+
+    margin-top: 8px;
+}
+
+
+/* ============================================================
+   ACTIONS
+============================================================ */
+
+.reservation-search-actions {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 25px;
+}
+
+
+.reservation-search-button {
+    min-width: 225px;
+
+    height: 52px;
+
+    padding: 0 25px;
+
+    border: 0;
+
+    border-radius: 12px;
+
+    background:
+            linear-gradient(
+                    135deg,
+                    var(--velox-primary),
+                    var(--velox-primary-dark)
+            );
+
+    color: #031615;
+
+    font-size: 0.86rem;
+
+    font-weight: 700;
+
+    box-shadow:
+            0 10px 28px rgba(32, 199, 183, 0.20);
+
+    transition:
+            transform 0.25s ease,
+            box-shadow 0.25s ease,
+            filter 0.25s ease;
+}
+
+
+.reservation-search-button:hover {
+    color: #031615;
+
+    transform: translateY(-2px);
+
+    filter: brightness(1.06);
+
+    box-shadow:
+            0 14px 35px rgba(32, 199, 183, 0.28);
+}
+
+
+.reservation-search-button:active {
+    transform: translateY(0);
+}
+
+
+.reservation-search-button:disabled {
+    opacity: 0.7;
+
+    transform: none;
+
+    cursor: not-allowed;
+}
+
+
+/* ============================================================
+   HINT
+============================================================ */
+
+.reservation-search-hint {
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 8px;
+
+    margin-top: 19px;
+
+    color: var(--velox-text-muted);
+
+    font-size: 0.75rem;
+
+    line-height: 1.5;
+
+    text-align: center;
+}
+
+
+.reservation-search-hint i {
+    color: #60758e;
+}
+
+
+.reservation-search-hint strong {
+    color: #9aaabd;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   RESULTS SECTION
+============================================================ */
+
+.reservation-search-results-section {
+    position: relative;
+
+    padding: 20px 0 100px;
+
+    opacity: 0;
+
+    transform: translateY(25px);
+
+    transition:
+            opacity 0.6s ease,
+            transform 0.6s ease;
+}
+
+
+.reservation-search-results-section.results-visible {
+    opacity: 1;
+
+    transform: translateY(0);
+}
+
+
+/* ============================================================
+   RESULTS HEADER
+============================================================ */
+
+.reservation-results-header {
+    display: flex;
+
+    align-items: flex-end;
+    justify-content: space-between;
+
+    gap: 20px;
+
+    margin-bottom: 30px;
+
+    padding-bottom: 22px;
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+.reservation-results-eyebrow {
+    display: block;
+
+    margin-bottom: 7px;
+
+    color: var(--velox-primary);
+
+    font-size: 0.68rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.12em;
+
+    text-transform: uppercase;
+}
+
+
+.reservation-results-header h2 {
+    margin: 0;
+
+    color: #ffffff;
+
+    font-size: 1.7rem;
+
+    font-weight: 700;
+
+    letter-spacing: -0.025em;
+}
+
+
+.reservation-results-count {
+    display: inline-flex;
+
+    align-items: center;
+
+    min-height: 32px;
+
+    padding: 6px 13px;
+
+    border-radius: 999px;
+
+    color: #b8c6d6;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+
+    font-size: 0.72rem;
+
+    font-weight: 600;
+}
+
+
+/* ============================================================
+   RESERVATION CARD
+============================================================ */
+
+.reservation-result-card {
+    position: relative;
+
+    height: 100%;
+
+    min-height: 365px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    overflow: hidden;
+
+    padding: 22px;
+
+    background:
+            linear-gradient(
+                    155deg,
+                    rgba(19, 35, 55, 0.96),
+                    rgba(10, 22, 37, 0.98)
+            );
+
+    border: 1px solid rgba(255, 255, 255, 0.075);
+
+    border-radius: 19px;
+
+    box-shadow:
+            0 18px 45px rgba(0, 0, 0, 0.25);
+
+    transition:
+            transform 0.35s cubic-bezier(.2,.8,.2,1),
+            border-color 0.35s ease,
+            box-shadow 0.35s ease,
+            background 0.35s ease;
+}
+
+
+/*
+ * Línea superior decorativa.
+ */
+.reservation-result-card::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+
+    height: 2px;
+
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(32, 199, 183, 0.75),
+                    transparent
+            );
+
+    opacity: 0.7;
+
+    transition: opacity 0.3s ease;
+}
+
+
+/*
+ * Glow interno.
+ */
+.reservation-result-card::after {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -100px;
+    right: -80px;
+
+    background: rgba(32, 199, 183, 0.07);
+
+    border-radius: 50%;
+
+    filter: blur(45px);
+
+    pointer-events: none;
+}
+
+
+.reservation-result-card:hover {
+    transform: translateY(-7px);
+
+    background:
+            linear-gradient(
+                    155deg,
+                    rgba(23, 42, 65, 0.98),
+                    rgba(11, 26, 43, 0.99)
+            );
+
+    border-color: rgba(32, 199, 183, 0.24);
+
+    box-shadow:
+            0 25px 55px rgba(0, 0, 0, 0.38),
+            0 0 30px rgba(32, 199, 183, 0.045);
+}
+
+
+.reservation-result-card:hover::before {
+    opacity: 1;
+}
+
+
+/* ============================================================
+   CARD TOP
+============================================================ */
+
+.reservation-result-card-top {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    gap: 10px;
+
+    margin-bottom: 22px;
+}
+
+
+.reservation-result-code {
+    color: #c9d5e3;
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+
+    font-size: 0.73rem;
+
+    font-weight: 700;
+
+    letter-spacing: 0.07em;
+}
+
+
+.reservation-result-status {
+    display: inline-flex;
+
+    align-items: center;
+
+    gap: 5px;
+
+    padding: 5px 9px;
+
+    border-radius: 999px;
+
+    font-size: 0.62rem;
+
+    font-weight: 700;
+
+    white-space: nowrap;
+}
+
+
+.reservation-status-success {
+    color: #54e2b0;
+
+    background: rgba(56, 211, 159, 0.09);
+
+    border: 1px solid rgba(56, 211, 159, 0.15);
+}
+
+
+.reservation-status-warning {
+    color: var(--velox-primary);
+
+    background: rgba(245, 196, 81, 0.09);
+
+    border: 1px solid rgba(245, 196, 81, 0.15);
+}
+
+
+.reservation-status-primary {
+    color: #6db7ff;
+
+    background: rgba(69, 151, 255, 0.09);
+
+    border: 1px solid rgba(69, 151, 255, 0.15);
+}
+
+
+.reservation-status-secondary {
+    color: #9caabc;
+
+    background: rgba(156, 170, 188, 0.08);
+
+    border: 1px solid rgba(156, 170, 188, 0.13);
+}
+
+
+.reservation-status-danger {
+    color: #ff8290;
+
+    background: rgba(255, 107, 122, 0.09);
+
+    border: 1px solid rgba(255, 107, 122, 0.15);
+}
+
+
+.reservation-status-dark {
+    color: #c4ccd7;
+
+    background: rgba(196, 204, 215, 0.07);
+
+    border: 1px solid rgba(196, 204, 215, 0.11);
+}
+
+
+/* ============================================================
+   CARD ICON
+============================================================ */
+
+.reservation-result-icon {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 48px;
+    height: 48px;
+
+    margin-bottom: 18px;
+
+    border-radius: 14px;
+
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(32, 199, 183, 0.15),
+                    rgba(32, 199, 183, 0.055)
+            );
+
+    border: 1px solid rgba(32, 199, 183, 0.14);
+
+    color: var(--velox-primary);
+
+    font-size: 1rem;
+
+    box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+
+/* ============================================================
+   CARD MAIN
+============================================================ */
+
+.reservation-result-main {
+    position: relative;
+    z-index: 2;
+
+    margin-bottom: 20px;
+}
+
+
+.reservation-result-main h3 {
+    margin: 0 0 8px;
+
+    color: #ffffff;
+
+    font-size: 1.05rem;
+
+    font-weight: 700;
+
+    text-transform: capitalize;
+}
+
+
+.reservation-result-time {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    margin: 0;
+
+    color: #8292a7;
+
+    font-size: 0.78rem;
+
+    font-weight: 500;
+}
+
+
+.reservation-result-time i {
+    color: var(--velox-primary);
+
+    font-size: 0.73rem;
+}
+
+
+/* ============================================================
+   CARD DETAILS
+============================================================ */
+
+.reservation-result-details {
+    position: relative;
+    z-index: 2;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 13px;
+
+    padding: 16px 0;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+
+    border-bottom: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+
+.reservation-result-detail {
+    display: flex;
+
+    align-items: flex-start;
+
+    gap: 11px;
+}
+
+
+.reservation-result-detail > i {
+    flex: 0 0 28px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    width: 28px;
+    height: 28px;
+
+    border-radius: 8px;
+
+    background: rgba(255, 255, 255, 0.045);
+
+    color: #8191a5;
+
+    font-size: 0.67rem;
+}
+
+
+.reservation-result-detail div {
+    min-width: 0;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 2px;
+}
+
+
+.reservation-result-detail small {
+    color: #68788e;
+
+    font-size: 0.62rem;
+
+    font-weight: 500;
+}
+
+
+.reservation-result-detail strong {
+    overflow: hidden;
+
+    color: #cbd6e3;
+
+    font-size: 0.74rem;
+
+    font-weight: 600;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
+}
+
+
+/* ============================================================
+   CARD FOOTER
+============================================================ */
+
+.reservation-result-footer {
+    position: relative;
+    z-index: 2;
+
+    margin-top: auto;
+
+    padding-top: 17px;
+}
+
+
+.reservation-result-footer span {
+    display: flex;
+
+    align-items: center;
+
+    gap: 7px;
+
+    overflow: hidden;
+
+    color: #63748a;
+
+    font-size: 0.65rem;
+
+    white-space: nowrap;
+
+    text-overflow: ellipsis;
+}
+
+
+.reservation-result-footer i {
+    flex-shrink: 0;
+
+    color: #71849a;
+}
+
+
+/* ============================================================
+   SEARCH MESSAGE
+============================================================ */
+
+.reservation-search-message {
+    display: flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 10px;
+
+    max-width: 650px;
+
+    margin: 0 auto 28px;
+
+    padding: 15px 18px;
+
+    border-radius: 12px;
+
+    font-size: 0.8rem;
+
+    text-align: center;
+}
+
+
+.reservation-search-message-error {
+    color: #ff9ba5;
+
+    background: rgba(255, 107, 122, 0.07);
+
+    border: 1px solid rgba(255, 107, 122, 0.12);
+}
+
+
+.reservation-search-message-info {
+    color: #a8b8ca;
+
+    background: rgba(255, 255, 255, 0.04);
+
+    border: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+
+/* ============================================================
+   ANIMACIÓN DE TARJETAS
+============================================================ */
+
+.results-visible .reservation-result-card {
+    animation: reservationCardAppear 0.55s ease both;
+}
+
+
+.results-visible
+.reservation-result-card:nth-child(2) {
+    animation-delay: 0.06s;
+}
+
+
+.results-visible
+.reservation-result-card:nth-child(3) {
+    animation-delay: 0.12s;
+}
+
+
+.results-visible
+.reservation-result-card:nth-child(4) {
+    animation-delay: 0.18s;
+}
+
+
+.results-visible
+.reservation-result-card:nth-child(5) {
+    animation-delay: 0.24s;
+}
+
+
+.results-visible
+.reservation-result-card:nth-child(6) {
+    animation-delay: 0.30s;
+}
+
+
+.results-visible
+.reservation-result-card:nth-child(7) {
+    animation-delay: 0.36s;
+}
+
+
+.results-visible
+.reservation-result-card:nth-child(8) {
+    animation-delay: 0.42s;
+}
+
+
+@keyframes reservationCardAppear {
+
+    from {
+        opacity: 0;
+
+        transform:
+                translateY(20px)
+                scale(0.98);
+    }
+
+    to {
+        opacity: 1;
+
+        transform:
+                translateY(0)
+                scale(1);
+    }
+
+}
+
+
+/* ============================================================
+   RESPONSIVE
+============================================================ */
+
+@media (max-width: 991.98px) {
+
+    .reservation-search-hero {
+        padding: 70px 0 50px;
+    }
+
+
+    .reservation-search-card {
+        padding: 28px;
+    }
+
+}
+
+
+@media (max-width: 767.98px) {
+
+    .reservation-search-hero {
+        padding: 55px 0 40px;
+    }
+
+
+    .reservation-search-heading {
+        margin-bottom: 28px;
+    }
+
+
+    .reservation-search-heading h1 {
+        font-size: 2.25rem;
+    }
+
+
+    .reservation-search-heading p {
+        font-size: 0.9rem;
+    }
+
+
+    .reservation-search-card {
+        padding: 22px 18px;
+
+        border-radius: 17px;
+    }
+
+
+    .reservation-search-button {
+        width: 100%;
+    }
+
+
+    .reservation-search-hint {
+        align-items: flex-start;
+
+        font-size: 0.7rem;
+    }
+
+
+    .reservation-results-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        margin-bottom: 24px;
+    }
+
+
+    .reservation-result-card {
+        min-height: auto;
+    }
+
+}
+
+
+@media (max-width: 575.98px) {
+
+    .reservation-search-heading h1 {
+        font-size: 2rem;
+    }
+
+
+    .reservation-search-eyebrow {
+        font-size: 0.65rem;
+
+        padding: 7px 12px;
+    }
+
+
+    .reservation-result-card {
+        padding: 19px;
+
+        border-radius: 16px;
+    }
+
+
+    .reservation-result-card-top {
+        margin-bottom: 18px;
+    }
+
+}
+
+
+/* ============================================================
+   CANCELACIÓN DE RESERVA
+============================================================ */
+
+.reservation-result-cancel {
+    position: relative;
+
+    z-index: 3;
+
+    margin-top: 15px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid rgba(255, 255, 255, 0.055);
+}
+
+
+.reservation-cancel-button {
+    width: 100%;
+
+    height: 38px;
+
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border-radius: 10px;
+
+    border: 1px solid rgba(255, 107, 122, 0.17);
+
+    background: rgba(255, 107, 122, 0.045);
+
+    color: #ff8793;
+
+    font-family: inherit;
+
+    font-size: 0.7rem;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+            background 0.25s ease,
+            border-color 0.25s ease,
+            color 0.25s ease,
+            transform 0.25s ease,
+            box-shadow 0.25s ease;
+}
+
+
+.reservation-cancel-button:hover {
+    background: rgba(255, 107, 122, 0.09);
+
+    border-color: rgba(255, 107, 122, 0.32);
+
+    color: #ff9ba5;
+
+    transform: translateY(-1px);
+
+    box-shadow:
+            0 7px 20px rgba(255, 107, 122, 0.07);
+}
+
+
+.reservation-cancel-button:active {
+    transform: translateY(0);
+}
+
+
+.reservation-cancel-button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+}
+
+
+/* ============================================================
+   RESERVA CANCELADA
+============================================================ */
+
+.reservation-card-cancelled {
+    border-color: rgba(255, 107, 122, 0.16);
+}
+
+
+.reservation-card-cancelled::before {
+    background:
+            linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 107, 122, 0.55),
+                    transparent
+            );
+}
+
+
+.reservation-card-cancelled .reservation-result-icon {
+    background:
+            linear-gradient(
+                    145deg,
+                    rgba(255, 107, 122, 0.13),
+                    rgba(255, 107, 122, 0.04)
+            );
+
+    border-color:
+            rgba(255, 107, 122, 0.14);
+
+    color: #ff7f8b;
+}
+
+
+.reservation-cancelled-label {
+    width: 100%;
+
+    min-height: 38px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+
+    border-radius: 10px;
+
+    color: #ff8793;
+
+    background: rgba(255, 107, 122, 0.045);
+
+    border: 1px solid rgba(255, 107, 122, 0.11);
+
+    font-size: 0.7rem;
+
+    font-weight: 600;
+}
+
+
+.reservation-cancelled-label i {
+    font-size: 0.72rem;
+}
+
+/* ============================================================
+   VELOX — RESERVAS
+   DARK PREMIUM THEME
+============================================================ */
+
+html:has(.reservation-page),
+body:has(.reservation-page) {
+    background: #06101c;
+}
+
+body:has(.reservation-page) {
+    margin: 0;
+}
+
+.reservation-page {
+    --reservation-primary: #20c7b7;
+    --reservation-primary-light: #38d6c7;
+    --reservation-primary-dark: #129d91;
+
+    --reservation-bg: #07111f;
+    --reservation-bg-secondary: #0b1728;
+
+    --reservation-card:
+            linear-gradient(
+                    145deg,
+                    rgba(22, 39, 61, 0.94),
+                    rgba(11, 24, 40, 0.94)
+            );
+
+    --reservation-text: #f4f7fb;
+    --reservation-text-soft: #a9b6c8;
+    --reservation-text-muted: #718198;
+
+    --reservation-border: rgba(255, 255, 255, 0.08);
+    --reservation-border-hover: rgba(255, 255, 255, 0.16);
+
+    min-height: 100vh;
+
+    background:
+            radial-gradient(
+                    circle at 15% 10%,
+                    rgba(32, 199, 183, 0.09),
+                    transparent 32%
+            ),
+            radial-gradient(
+                    circle at 85% 20%,
+                    rgba(48, 105, 180, 0.08),
+                    transparent 30%
+            ),
+            linear-gradient(
+                    180deg,
+                    #07111f 0%,
+                    #081321 52%,
+                    #06101c 100%
+            );
+
+    color: var(--reservation-text);
+
+    font-family: var(--font-sans, var(--velox-font, 'Chillax', 'Helvetica Neue', Arial, sans-serif));
+}
+
+/* =========================================================
+   PUBLIC BRANCH BUSINESS HOURS
+========================================================= */
+
+.public-branch-hours {
+    margin-top: 22px;
+    padding: 20px;
+    border-radius: 18px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.08);
+}
+
+.public-branch-hours-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 15px;
+}
+
+.public-branch-hours-header strong {
+    display: block;
+    font-size: 15px;
+    margin-top: 3px;
+}
+
+.public-branch-hours-header > i {
+    width: 38px;
+    height: 38px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(167,139,250,.12);
+}
+
+.public-branch-hours-eyebrow {
+    display: block;
+    font-size: 9px;
+    font-weight: 800;
+    letter-spacing: .14em;
+    opacity: .5;
+}
+
+.public-branch-hours-list {
+    display: grid;
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+    gap: 6px 25px;
+}
+
+.public-hours-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 9px 0;
+    border-bottom:
+            1px solid rgba(255,255,255,.05);
+    font-size: 12px;
+}
+
+.public-hours-row span {
+    opacity: .62;
+}
+
+.public-hours-row strong {
+    font-weight: 650;
+}
+
+.public-hours-loading,
+.public-hours-error {
+    padding: 15px 0;
+    text-align: center;
+    font-size: 12px;
+    opacity: .55;
+}
+
+
+@media (max-width: 700px) {
+
+    .public-branch-hours-list {
+        grid-template-columns: 1fr;
+    }
+
+}
+
+/* ============================================================
+   VELOX — RESERVATION WIZARD
+   ONE STEP AT A TIME
+============================================================ */
+
+
+/*
+|--------------------------------------------------------------------------
+| TRANSICIÓN GENERAL
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm {
+    position: relative;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PASO 1
+| Sede + fecha + personas
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-1
+> section:first-child {
+
+    display: block;
+
+    animation:
+            reservationWizardIn
+            .4s
+            ease
+            both;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PASO 2
+| Horarios
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-2
+> section:first-child {
+
+    display: none !important;
+}
+
+
+#bookingForm.reservation-wizard-step-2
+#availabilityContainer {
+
+    display: block;
+
+    margin-top: 0;
+
+    padding-top: 0;
+
+    border-top: 0;
+
+    animation:
+            reservationWizardIn
+            .4s
+            ease
+            both;
+}
+
+
+#bookingForm.reservation-wizard-step-2
+#availabilityContainer
+.availability-header {
+
+    display: flex;
+}
+
+
+#bookingForm.reservation-wizard-step-2
+#availabilityContent {
+
+    display: block;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| OCULTAR RESUMEN Y DATOS EN PASO 2
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-2
+#reservationSummary {
+
+    display: none !important;
+}
+
+
+#bookingForm.reservation-wizard-step-2
+#customerSection {
+
+    display: none !important;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PASO 3
+| Datos del cliente
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-3
+> section:first-child {
+
+    display: none !important;
+}
+
+
+#bookingForm.reservation-wizard-step-3
+#availabilityContainer {
+
+    display: block;
+
+    margin-top: 0;
+
+    padding-top: 0;
+
+    border-top: 0;
+
+    animation:
+            reservationWizardIn
+            .4s
+            ease
+            both;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| OCULTAR HORARIOS EN PASO 3
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-3
+#availabilityContainer
+.availability-header {
+
+    display: none !important;
+}
+
+
+#bookingForm.reservation-wizard-step-3
+#availabilityContent {
+
+    display: none !important;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MOSTRAR RESUMEN EN PASO 3
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-3
+#reservationSummary {
+
+    display: block;
+
+    margin-top: 0;
+
+    animation:
+            reservationWizardIn
+            .4s
+            ease
+            both;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MOSTRAR DATOS DEL CLIENTE EN PASO 3
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-3
+#customerSection {
+
+    display: block;
+
+    margin-top: 24px;
+
+    padding-top: 24px;
+
+    animation:
+            reservationWizardIn
+            .45s
+            ease
+            both;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PASO 4
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-4 {
+
+    display: none !important;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| ANIMACIÓN
+|--------------------------------------------------------------------------
+*/
+
+@keyframes reservationWizardIn {
+
+    from {
+
+        opacity: 0;
+
+        transform:
+                translateY(18px);
+
+    }
+
+    to {
+
+        opacity: 1;
+
+        transform:
+                translateY(0);
+
+    }
+
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MEJORAR TRANSICIÓN DEL CONTENEDOR
+|--------------------------------------------------------------------------
+*/
+
+.reservation-card {
+
+    transition:
+            min-height
+            .35s
+            ease;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MÓVIL
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 768px) {
+
+    #bookingForm.reservation-wizard-step-2
+    #availabilityContainer,
+    #bookingForm.reservation-wizard-step-3
+    #availabilityContainer {
+
+        margin-top: 0;
+
+        padding-top: 0;
+    }
+
+
+    #bookingForm.reservation-wizard-step-3
+    #customerSection {
+
+        margin-top: 18px;
+
+        padding-top: 18px;
+    }
+
+}
+
+/* ============================================================
+   VELOX — WIZARD NAVIGATION
+============================================================ */
+
+.reservation-wizard-navigation {
+
+    display: flex;
+
+    align-items: center;
+
+    justify-content: flex-start;
+
+    width: 100%;
+
+    margin-top: 22px;
+
+    padding-top: 18px;
+
+    border-top:
+            1px solid
+            rgba(255, 255, 255, 0.055);
+}
+
+
+/* ============================================================
+   BOTÓN ATRÁS
+============================================================ */
+
+.btn-wizard-back {
+
+    display: inline-flex;
+
+    align-items: center;
+
+    justify-content: center;
+
+    gap: 9px;
+
+    min-height: 44px;
+
+    padding:
+            10px 18px;
+
+    border:
+            1px solid
+            rgba(255, 255, 255, 0.09);
+
+    border-radius: 10px;
+
+    background:
+            rgba(255, 255, 255, 0.035);
+
+    color:
+            #8b9aae;
+
+    font-family:
+            var(
+                    --velox-font,
+                    'Inter',
+                    sans-serif
+            );
+
+    font-size:
+            0.78rem;
+
+    font-weight:
+            700;
+
+    cursor:
+            pointer;
+
+    transition:
+            all
+            0.2s
+            ease;
+}
+
+
+.btn-wizard-back i {
+
+    font-size:
+            0.72rem;
+
+    transition:
+            transform
+            0.2s
+            ease;
+}
+
+
+.btn-wizard-back:hover {
+
+    border-color:
+            rgba(
+                    255,
+                    255,
+                    255,
+                    0.16
+            );
+
+    background:
+            rgba(
+                    255,
+                    255,
+                    255,
+                    0.065
+            );
+
+    color:
+            #ffffff;
+
+    transform:
+            translateX(-2px);
+}
+
+
+.btn-wizard-back:hover i {
+
+    transform:
+            translateX(-3px);
+}
+
+
+.btn-wizard-back:active {
+
+    transform:
+            translateX(0);
+}
+
+
+/* ============================================================
+   VISIBILIDAD
+============================================================ */
+
+#step2Navigation,
+#step3Navigation {
+
+    display: none;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PASO 2
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-2
+#step2Navigation {
+
+    display: flex;
+
+    animation:
+            reservationWizardIn
+            .35s
+            ease
+            both;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| PASO 3
+|--------------------------------------------------------------------------
+*/
+
+#bookingForm.reservation-wizard-step-3
+#step3Navigation {
+
+    display: flex;
+
+    animation:
+            reservationWizardIn
+            .35s
+            ease
+            both;
+}
+
+
+/*
+|--------------------------------------------------------------------------
+| MÓVIL
+|--------------------------------------------------------------------------
+*/
+
+@media (max-width: 576px) {
+
+    .reservation-wizard-navigation {
+
+        margin-top: 18px;
+
+        padding-top: 15px;
+    }
+
+
+    .btn-wizard-back {
+
+        width: 100%;
+    }
+
+}
