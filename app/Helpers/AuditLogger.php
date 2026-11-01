@@ -182,6 +182,84 @@ class AuditLogger
         return [$module, $action];
     }
 
+    /**
+     * Registra eventos públicos de autenticación y recuperación.
+     * No recibe ni almacena contraseñas, tokens ni códigos de recuperación.
+     */
+    public static function recordSecurityEvent(
+        string $action,
+        string $identifier = '',
+        ?array $authenticatedUser = null,
+        int $status = 200,
+        string $route = ''
+    ): void {
+        try {
+            $user = $authenticatedUser ?? (Auth::user() ?? []);
+            $userId = isset($user['id']) ? (int)$user['id'] : null;
+            $email = trim((string)($user['email'] ?? ''));
+            $safeIdentifier = self::maskIdentifier($identifier);
+
+            if ($email === '' && filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+                $email = strtolower(trim($identifier));
+            }
+
+            $name = trim((string)(
+                $user['name']
+                ?? $user['full_name']
+                ?? trim((string)($user['first_name'] ?? '') . ' ' . (string)($user['last_name'] ?? ''))
+            ));
+            if ($name === '') {
+                $name = $safeIdentifier !== '' ? $safeIdentifier : 'Visitante';
+            }
+
+            $db = Database::getConnection();
+            $stmt = $db->prepare("
+                INSERT INTO admin_audit_logs
+                    (user_id, user_name, user_email, user_role, branch_id,
+                     module, action, http_method, route, ip_address, user_agent,
+                     response_status, created_at)
+                VALUES
+                    (:user_id, :user_name, :user_email, :user_role, :branch_id,
+                     'Autenticación y seguridad', :action, :http_method, :route,
+                     :ip_address, :user_agent, :response_status, NOW())
+            ");
+            $stmt->execute([
+                ':user_id' => $userId,
+                ':user_name' => $name,
+                ':user_email' => $email !== '' ? $email : null,
+                ':user_role' => isset($user['role_name']) ? (string)$user['role_name'] : null,
+                ':branch_id' => isset($user['branch_id']) ? (int)$user['branch_id'] : null,
+                ':action' => substr($action . ($safeIdentifier !== '' ? ' · Identificador: ' . $safeIdentifier : ''), 0, 160),
+                ':http_method' => strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'POST')),
+                ':route' => substr($route !== '' ? $route : (string)(parse_url($_SERVER['REQUEST_URI'] ?? '', PHP_URL_PATH) ?: '/'), 0, 255),
+                ':ip_address' => self::clientIp(),
+                ':user_agent' => substr((string)($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500),
+                ':response_status' => $status
+            ]);
+        } catch (Throwable $e) {
+            error_log('[AUTH_AUDIT_LOG] ' . $e->getMessage());
+        }
+    }
+
+    private static function maskIdentifier(string $identifier): string
+    {
+        $identifier = trim($identifier);
+        if ($identifier === '') return '';
+
+        if (filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+            [$local, $domain] = explode('@', $identifier, 2);
+            $visible = substr($local, 0, 1);
+            return $visible . str_repeat('*', max(2, strlen($local) - 1)) . '@' . $domain;
+        }
+
+        $digits = preg_replace('/\D+/', '', $identifier);
+        if ($digits !== '' && strlen($digits) >= 4) {
+            return '••••' . substr($digits, -4);
+        }
+
+        return substr($identifier, 0, 2) . '***';
+    }
+
     private static function clientIp(): ?string
     {
         $ip = trim((string)($_SERVER['REMOTE_ADDR'] ?? ''));
