@@ -1997,3 +1997,7 @@ textarea.is-valid {
         animation-duration: .01ms !important;
     }
 }
+
+
+/* Ajuste de separación: el navbar compartido ya ocupa su propio espacio. */
+.bt-contact-page .bt-contact-hero { margin-top: 0 !important; }
