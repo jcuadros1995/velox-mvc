@@ -324,3 +324,13 @@
         transition-duration: .01ms !important;
     }
 }
+
+
+/* Alinea el contenido del hero con el navbar compartido. */
+.bt-branches-page .bt-branches-hero { padding-top: 82px !important; }
+@media (max-width: 991.98px) {
+    .bt-branches-page .bt-branches-hero { padding-top: 76px !important; }
+}
+@media (max-width: 600px) {
+    .bt-branches-page .bt-branches-hero { padding-top: 70px !important; }
+}
