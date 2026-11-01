@@ -11,6 +11,28 @@ date_default_timezone_set('America/Bogota');
  * in the server environment for production. The local fallback uses the
  * web-server configured SERVER_NAME instead.
  */
+if (getenv('APP_URL') === false) {
+    $envFile = dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env';
+    if (is_file($envFile) && is_readable($envFile)) {
+        foreach (file($envFile, FILE_IGNORE_NEW_LINES) ?: [] as $envLine) {
+            $envLine = trim($envLine);
+            if (strpos($envLine, 'APP_URL=') !== 0) {
+                continue;
+            }
+            $envValue = trim(substr($envLine, 8));
+            if (strlen($envValue) >= 2) {
+                $first = $envValue[0];
+                $last = substr($envValue, -1);
+                if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                    $envValue = substr($envValue, 1, -1);
+                }
+            }
+            putenv('APP_URL=' . $envValue);
+            break;
+        }
+    }
+}
+
 $configuredAppUrl = trim((string) (getenv('APP_URL') ?: ''));
 
 if ($configuredAppUrl !== '') {
