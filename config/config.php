@@ -44,7 +44,11 @@ if ($configuredAppUrl !== '') {
         && !isset($parts['user'])
         && !isset($parts['pass'])
         && !isset($parts['query'])
-        && !isset($parts['fragment']);
+        && !isset($parts['fragment'])
+        && (
+            strtolower((string) ($parts['scheme'] ?? '')) === 'https' ||
+            in_array(strtolower((string) ($parts['host'] ?? '')), ['localhost', '127.0.0.1', '::1'], true)
+        );
 
     if (!$validUrl) {
         throw new RuntimeException('APP_URL must be a valid canonical HTTP(S) URL without credentials, query or fragment.');
@@ -73,6 +77,13 @@ if ($configuredAppUrl !== '') {
     $scriptName = str_replace('\\\\', '/', (string) ($_SERVER['SCRIPT_NAME'] ?? '/index.php'));
     $scriptDirectory = str_replace('\\\\', '/', dirname($scriptName));
     $basePath = ($scriptDirectory === '/' || $scriptDirectory === '.') ? '' : rtrim($scriptDirectory, '/');
+    if (
+        !$isHttps &&
+        !in_array(strtolower($serverName), ['localhost', '127.0.0.1', '::1'], true)
+    ) {
+        throw new RuntimeException('Production APP_URL must use HTTPS.');
+    }
+
     $baseUrl = $protocol . $serverName . $portSuffix . $basePath;
     $baseUrl = preg_replace('/\\/public$/', '', $baseUrl);
 }
