@@ -763,3 +763,23 @@
         transition: none !important;
     }
 }
+
+
+/* Shared scroll state: identical navbar behavior on every public route. */
+.public-navbar {
+    padding: .82rem 0;
+    transition: padding .22s ease, background .22s ease, box-shadow .22s ease;
+}
+
+.public-navbar.navbar-scrolled {
+    padding: .62rem 0;
+    background: rgba(255, 255, 255, .985);
+    box-shadow: 0 8px 28px rgba(17, 24, 39, .085);
+}
+
+@media (max-width: 991.98px) {
+    .public-navbar,
+    .public-navbar.navbar-scrolled {
+        padding: .6rem 0;
+    }
+}
