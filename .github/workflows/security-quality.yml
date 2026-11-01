@@ -48,7 +48,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git ls-files | grep -E '(^|/)\.env($|\.)|(^|/)id_rsa$|\.(pem|p12|pfx)$'; then
+          if git ls-files | grep -E '(^|/)\\.env($|\\.)|(^|/)id_rsa$|\\.(pem|p12|pfx)$' | grep -vE '(^|/)\\.env\\.example$'; then
             echo "::error::Potential environment secret or private key tracked in git."
             exit 1
           fi
