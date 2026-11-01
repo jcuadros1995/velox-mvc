@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
         emailError.textContent = '';
 
         const codeValid = /^RSV-[A-Z0-9]{6}$/.test(code);
-        const emailValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
         let valid = true;
 
         if (!codeValid) {
