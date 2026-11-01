@@ -444,10 +444,12 @@ class AuthService
         /*
          * Validar longitud mínima.
          */
-        if (strlen($password) < 8) {
+        // PASSWORD_BCRYPT solo procesa hasta 72 bytes.
+        // Rechazar entradas mayores evita contraseñas truncadas.
+        if (strlen($password) < 8 || strlen($password) > 72) {
 
             throw new DomainException(
-                'La contraseña debe tener mínimo 8 caracteres.',
+                'La contraseña debe tener entre 8 y 72 bytes.',
                 422
             );
         }
