@@ -395,3 +395,371 @@
         min-width: 0;
     }
 }
+
+
+/* =========================================================
+   VELOX SIGNATURE NAVBAR — refined desktop/mobile treatment
+========================================================= */
+.public-navbar {
+    position: sticky;
+    top: 0;
+    z-index: 1050;
+    min-height: 78px;
+    padding: .65rem 0;
+    background: rgba(255, 255, 255, .97);
+    border-bottom: 1px solid rgba(17, 24, 39, .075);
+    box-shadow: 0 5px 24px rgba(17, 24, 39, .045);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+}
+
+.public-navbar > .container {
+    width: 100%;
+    max-width: 1440px;
+    min-height: 58px;
+    gap: clamp(1rem, 2vw, 2rem);
+}
+
+.public-navbar .navbar-brand {
+    max-width: 330px;
+    gap: .78rem;
+    margin: 0 auto 0 0;
+    text-decoration: none;
+}
+
+.public-navbar .brand-mark {
+    flex: 0 0 44px;
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    overflow: hidden;
+    border: 1px solid rgba(109, 40, 217, .12);
+    border-radius: 14px;
+    background: linear-gradient(145deg, #7c3aed 0%, #4f46e5 100%);
+    box-shadow: 0 7px 18px rgba(91, 60, 190, .2);
+    color: #fff;
+}
+
+.public-navbar .brand-mark > i {
+    font-size: 1.1rem;
+}
+
+.public-navbar .velox-brand-name {
+    max-width: 260px;
+    color: #171923;
+    font-size: 1.08rem;
+    font-weight: 750;
+    letter-spacing: -.045em;
+    line-height: 1.15;
+}
+
+.public-navbar .navbar-collapse {
+    flex-grow: 0;
+}
+
+.public-navbar .navbar-nav {
+    align-items: center;
+    gap: .25rem;
+}
+
+.public-navbar .navbar-nav .nav-link {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .52rem;
+    min-height: 44px;
+    padding: .65rem .82rem;
+    border: 1px solid transparent;
+    border-radius: 12px;
+    color: #4b5563;
+    font-size: .875rem;
+    font-weight: 620;
+    letter-spacing: -.018em;
+    line-height: 1;
+    white-space: nowrap;
+    transition: color .18s ease, background .18s ease, border-color .18s ease, transform .18s ease;
+}
+
+.public-navbar .navbar-nav .nav-link > i {
+    color: #7c8493;
+    font-size: .9rem;
+    transition: color .18s ease;
+}
+
+.public-navbar .navbar-nav .nav-link:hover {
+    color: #5b21b6 !important;
+    background: #f7f4ff;
+    border-color: #eee8ff;
+    transform: translateY(-1px);
+}
+
+.public-navbar .navbar-nav .nav-link:hover > i {
+    color: #6d28d9;
+}
+
+.public-navbar .navbar-nav .nav-link.active,
+.public-navbar .navbar-nav .nav-link[aria-current="page"] {
+    color: #5b21b6 !important;
+    background: #f2edff;
+    border-color: #e8ddff;
+    font-weight: 730;
+}
+
+.public-navbar .navbar-nav .nav-link.active > i {
+    color: #6d28d9;
+}
+
+.public-navbar .nav-link.dropdown-toggle::after {
+    margin-left: .1rem;
+    border-top-width: .28em;
+    border-right-width: .28em;
+    border-left-width: .28em;
+    opacity: .55;
+}
+
+.public-navbar .dropdown-menu.velox-dropdown {
+    min-width: 286px;
+    margin-top: .7rem;
+    padding: .55rem;
+    border: 1px solid #ececf2;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 22px 60px rgba(17, 24, 39, .14);
+    animation: veloxNavDropdownIn .16s ease-out both;
+}
+
+.public-navbar .velox-dropdown .dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    min-height: 58px;
+    padding: .7rem .75rem;
+    border-radius: 11px;
+    color: #343847;
+    white-space: normal;
+    transition: background .16s ease, color .16s ease;
+}
+
+.public-navbar .velox-dropdown .dropdown-item > i {
+    display: grid;
+    place-items: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: #f4f1ff;
+    color: #6d28d9;
+    font-size: .9rem;
+}
+
+.public-navbar .velox-dropdown .dropdown-item > span {
+    display: grid;
+    gap: .2rem;
+    min-width: 0;
+}
+
+.public-navbar .velox-dropdown .dropdown-item strong {
+    color: #202332;
+    font-size: .84rem;
+    font-weight: 720;
+}
+
+.public-navbar .velox-dropdown .dropdown-item small {
+    color: #858b99;
+    font-size: .72rem;
+    line-height: 1.3;
+}
+
+.public-navbar .velox-dropdown .dropdown-item:hover,
+.public-navbar .velox-dropdown .dropdown-item.active {
+    background: #f8f6ff;
+    color: #5b21b6;
+}
+
+.public-navbar .nav-account-item {
+    margin-left: .65rem;
+}
+
+.public-navbar .nav-account-item .btn-velox-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .7rem;
+    min-width: 158px;
+    min-height: 46px;
+    padding: .75rem 1.05rem;
+    border: 1px solid #25243a;
+    border-radius: 13px;
+    background: linear-gradient(135deg, #171923 0%, #292548 100%);
+    box-shadow: 0 7px 17px rgba(25, 24, 50, .16);
+    color: #fff;
+    font-size: .84rem;
+    font-weight: 720;
+    letter-spacing: -.01em;
+    line-height: 1;
+    white-space: nowrap;
+    transition: transform .18s ease, box-shadow .18s ease, background .18s ease;
+}
+
+.public-navbar .nav-account-item .btn-velox-primary:hover {
+    transform: translateY(-1px);
+    background: linear-gradient(135deg, #24243a 0%, #393166 100%);
+    box-shadow: 0 11px 24px rgba(25, 24, 50, .22);
+    color: #fff;
+}
+
+.public-navbar .nav-account-item .btn-velox-primary > i {
+    font-size: .88rem;
+}
+
+.public-navbar .store-cart-nav-link {
+    gap: .48rem !important;
+}
+
+.public-navbar .store-cart-nav-count {
+    min-width: 20px;
+    height: 20px;
+    margin-left: -.15rem;
+    border: 2px solid #fff;
+    border-radius: 50px;
+    background: #6d28d9;
+    box-shadow: 0 2px 6px rgba(109, 40, 217, .22);
+    color: #fff;
+    font-size: .64rem;
+    font-weight: 800;
+}
+
+@keyframes veloxNavDropdownIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .public-navbar > .container {
+        gap: .8rem;
+    }
+
+    .public-navbar .navbar-brand {
+        max-width: 240px;
+    }
+
+    .public-navbar .velox-brand-name {
+        max-width: 185px;
+        font-size: .98rem;
+    }
+
+    .public-navbar .navbar-nav {
+        gap: .05rem;
+    }
+
+    .public-navbar .navbar-nav .nav-link {
+        gap: .35rem;
+        padding-right: .56rem;
+        padding-left: .56rem;
+        font-size: .79rem;
+    }
+
+    .public-navbar .nav-account-item {
+        margin-left: .25rem;
+    }
+
+    .public-navbar .nav-account-item .btn-velox-primary {
+        min-width: 132px;
+        padding-right: .7rem;
+        padding-left: .7rem;
+        font-size: .77rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .public-navbar {
+        min-height: 72px;
+        padding: .6rem 0;
+    }
+
+    .public-navbar > .container {
+        flex-wrap: wrap;
+        gap: .65rem;
+    }
+
+    .public-navbar .navbar-brand {
+        max-width: calc(100% - 58px);
+        margin-right: auto;
+    }
+
+    .public-navbar .velox-brand-name {
+        max-width: min(68vw, 320px);
+        font-size: 1.02rem;
+    }
+
+    .public-navbar .navbar-toggler {
+        width: 44px;
+        height: 44px;
+        border: 1px solid #e7e7ee;
+        border-radius: 12px;
+        background: #fff;
+        box-shadow: 0 3px 10px rgba(17, 24, 39, .05);
+    }
+
+    .public-navbar .navbar-collapse {
+        flex-basis: 100%;
+        width: 100%;
+        margin-top: .45rem;
+        padding: .7rem;
+        border: 1px solid #ececf2;
+        border-radius: 17px;
+        background: #fff;
+        box-shadow: 0 18px 45px rgba(17, 24, 39, .1);
+    }
+
+    .public-navbar .navbar-nav {
+        align-items: stretch !important;
+        gap: .18rem;
+    }
+
+    .public-navbar .navbar-nav .nav-link {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 47px;
+        padding: .78rem .85rem;
+        font-size: .9rem;
+    }
+
+    .public-navbar .nav-account-item {
+        margin: .55rem 0 0 !important;
+        padding-top: .6rem;
+        border-top: 1px solid #f0f0f4;
+    }
+
+    .public-navbar .nav-account-item .btn-velox-primary {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .public-navbar .dropdown-menu.velox-dropdown {
+        width: 100%;
+        min-width: 0;
+        margin: .2rem 0 .45rem;
+        padding: .4rem;
+        border: 0;
+        border-radius: 12px;
+        background: #f8f8fb;
+        box-shadow: none;
+    }
+
+    .public-navbar .velox-dropdown .dropdown-item {
+        min-height: 52px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-navbar *,
+    .public-navbar *::before,
+    .public-navbar *::after {
+        animation: none !important;
+        transition: none !important;
+    }
+}
