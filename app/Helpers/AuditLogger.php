@@ -199,7 +199,7 @@ class AuditLogger
             $email = trim((string)($user['email'] ?? ''));
             $safeIdentifier = self::maskIdentifier($identifier);
 
-            if ($email === '' && filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
+            if ($email === '' && $userId !== null && filter_var($identifier, FILTER_VALIDATE_EMAIL)) {
                 $email = strtolower(trim($identifier));
             }
 
