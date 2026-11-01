@@ -762,86 +762,25 @@ class ReservationService
         string $reservationCode = '',
         string $email = ''
     ): array {
+        $reservationCode = strtoupper(trim($reservationCode));
+        $email = strtolower(trim($email));
 
-        $reservationCode = trim($reservationCode);
-        $email = trim($email);
-
-
-        /*
-         * Debe existir al menos un criterio.
-         */
+        // La búsqueda pública siempre exige dos factores de conocimiento.
         if (
-            $reservationCode === '' &&
-            $email === ''
+            $reservationCode === '' ||
+            $email === '' ||
+            !preg_match('/^RSV-[A-Z0-9]{6}$/', $reservationCode) ||
+            !filter_var($email, FILTER_VALIDATE_EMAIL)
         ) {
-
             throw new InvalidArgumentException(
-                'Debes ingresar un código de reserva o un correo electrónico.'
+                'Ingresa un código de reserva y un correo electrónico válidos.'
             );
         }
 
-
-        /*
-         * Si llega código, validamos código.
-         */
-        if ($reservationCode !== '') {
-
-            $reservationCode = strtoupper(
-                $reservationCode
-            );
-
-
-            if (
-                !preg_match(
-                    '/^RSV-[A-Z0-9]{6}$/',
-                    $reservationCode
-                )
-            ) {
-
-                throw new InvalidArgumentException(
-                    'El código de reserva no tiene un formato válido.'
-                );
-            }
-
-
-            /*
-             * IMPORTANTE:
-             *
-             * Si se recibe código, la búsqueda se hace
-             * exclusivamente por código.
-             */
-            return $this->reservationRepository
-                ->searchPublicReservations(
-                    $reservationCode,
-                    ''
-                );
-        }
-
-
-        /*
-         * Si no hay código, usamos correo.
-         */
-        if (
-            !filter_var(
-                $email,
-                FILTER_VALIDATE_EMAIL
-            )
-        ) {
-
-            throw new InvalidArgumentException(
-                'El correo electrónico no tiene un formato válido.'
-            );
-        }
-
-
-        /*
-         * Búsqueda exclusivamente por correo.
-         */
-        return $this->reservationRepository
-            ->searchPublicReservations(
-                '',
-                $email
-            );
+        return $this->reservationRepository->searchPublicReservations(
+            $reservationCode,
+            $email
+        );
     }
 
     /**
