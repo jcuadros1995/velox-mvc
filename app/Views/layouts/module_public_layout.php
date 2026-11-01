@@ -137,6 +137,9 @@ if ($modulePublicPath === '/menu') {
 if ($modulePublicPath === '/tienda') {
     $modulePublicCss[] = 'storefront.css';
 }
+if ($modulePublicPath === '/sedes') {
+    $modulePublicCss[] = 'branches.css';
+}
 if (in_array($modulePublicPath, ['/menu', '/sedes', '/eventos'], true)
     || str_starts_with($modulePublicPath, '/menu/')
     || str_starts_with($modulePublicPath, '/pages/')) {
