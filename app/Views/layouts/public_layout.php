@@ -142,5 +142,6 @@ $siteFaviconUrl =
 <?php endif; ?>
 
 
+<script src="<?= APP_URL ?>/public/js/csrf.js"></script>
 </body>
 </html>
