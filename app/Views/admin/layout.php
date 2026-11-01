@@ -466,6 +466,38 @@ $branchesActive =
             href="<?= APP_URL ?>/public/css/settings.css"
     >
 
+    <?php
+    // Hojas de estilo específicas de cada módulo administrativo.
+    $moduleAdminPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    $moduleAdminBase = parse_url(APP_URL, PHP_URL_PATH) ?: '';
+    if ($moduleAdminBase !== '' && $moduleAdminBase !== '/' && str_starts_with($moduleAdminPath, $moduleAdminBase)) {
+        $moduleAdminPath = substr($moduleAdminPath, strlen($moduleAdminBase));
+    }
+    $moduleAdminPath = '/' . trim($moduleAdminPath, '/');
+
+    $moduleAdminCss = [];
+    if (str_starts_with($moduleAdminPath, '/admin/items')) {
+        $moduleAdminCss = ['admin-items.css', 'admin-item-form.css'];
+    } elseif (str_starts_with($moduleAdminPath, '/admin/categories')) {
+        $moduleAdminCss = ['admin-categories.css'];
+    } elseif (str_starts_with($moduleAdminPath, '/admin/pages')) {
+        $moduleAdminCss = ['admin-pages.css', 'admin-page-form.css'];
+    } elseif (str_starts_with($moduleAdminPath, '/admin/events')) {
+        $moduleAdminCss = ['admin-events.css'];
+    } elseif (str_starts_with($moduleAdminPath, '/admin/coupons')) {
+        $moduleAdminCss = ['admin-coupons.css'];
+    }
+
+    foreach ($moduleAdminCss as $cssFile):
+        $cssPath = __DIR__ . '/../../../public/css/' . $cssFile;
+        if (is_file($cssPath)):
+    ?>
+        <link rel="stylesheet" href="<?= APP_URL ?>/public/css/<?= htmlspecialchars($cssFile, ENT_QUOTES, 'UTF-8') ?>?v=<?= (int) filemtime($cssPath) ?>">
+    <?php
+        endif;
+    endforeach;
+    ?>
+
 
     <!-- =========================================================
          CHART.JS
@@ -1351,6 +1383,28 @@ $branchesActive =
 
 <?php endif; ?>
 
+<?php
+// Scripts específicos de los módulos que comparten el layout administrativo.
+$moduleAdminScripts = [];
+if (isset($contentView)) {
+    if (str_ends_with($contentView, '/admin/items.php')) $moduleAdminScripts[] = 'admin-items.js';
+    if (str_ends_with($contentView, '/admin/item-form.php')) $moduleAdminScripts[] = 'admin-item-form.js';
+    if (str_ends_with($contentView, '/admin/categories.php')) $moduleAdminScripts[] = 'admin-categories.js';
+    if (str_ends_with($contentView, '/admin/category-page.php')) $moduleAdminScripts[] = 'admin-category-page.js';
+    if (str_ends_with($contentView, '/admin/pages.php')) $moduleAdminScripts[] = 'admin-pages.js';
+    if (str_ends_with($contentView, '/admin/page-form.php')) $moduleAdminScripts[] = 'admin-page-form.js';
+    if (str_ends_with($contentView, '/admin/events.php')) $moduleAdminScripts[] = 'admin-events.js';
+    if (str_ends_with($contentView, '/admin/coupons.php')) $moduleAdminScripts[] = 'admin-coupons.js';
+}
+foreach ($moduleAdminScripts as $jsFile):
+    $jsPath = __DIR__ . '/../../../public/js/' . $jsFile;
+    if (is_file($jsPath)):
+?>
+    <script src="<?= APP_URL ?>/public/js/<?= htmlspecialchars($jsFile, ENT_QUOTES, 'UTF-8') ?>?v=<?= (int) filemtime($jsPath) ?>"></script>
+<?php
+    endif;
+endforeach;
+?>
 
 </body>
 
