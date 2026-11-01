@@ -190,7 +190,10 @@
         const response = await fetch(appUrl + path, {
             method: 'POST',
             credentials: 'same-origin',
-            headers: {'Content-Type': 'application/json'},
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-Token': window.CSRF_TOKEN || document.querySelector('meta[name="csrf-token"]')?.content || ''
+            },
             body: JSON.stringify(body)
         });
 
