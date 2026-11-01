@@ -119,6 +119,11 @@ $siteFaviconUrl =
     <script>
         window.APP_URL = "<?= APP_URL ?>";
     </script>
+    <?= Csrf::meta() ?>
+
+    <script>
+        window.CSRF_TOKEN = <?= json_encode(Csrf::token(), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+    </script>
 </head>
 <body>
 
