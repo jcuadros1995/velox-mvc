@@ -24,10 +24,14 @@ class Database
             return self::$instance;
         }
 
-        $appEnv = strtolower(self::env('APP_ENV', 'production'));
-        // DB credentials may be supplied by the hosting environment or local .env.
-        // These defaults support the repository's documented XAMPP/MariaDB setup.
+        // Resolve the host first so a local XAMPP installation works even when
+        // the developer has not created .env yet. An explicitly configured
+        // APP_ENV=production is always respected.
         $host = self::env('DB_HOST', '127.0.0.1');
+        $defaultAppEnv = in_array(strtolower($host), ['127.0.0.1', 'localhost', '::1'], true)
+            ? 'local'
+            : 'production';
+        $appEnv = strtolower(self::env('APP_ENV', $defaultAppEnv));
         $port = self::env('DB_PORT', '3306');
         $name = self::env('DB_NAME', 'velox_core');
         $user = self::env('DB_USER', 'root');
