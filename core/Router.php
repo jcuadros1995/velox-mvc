@@ -464,10 +464,17 @@ class Router
 
             // Auditoría centralizada de páginas y operaciones administrativas.
             // Se ejecuta después de validar autenticación y permisos del middleware.
-            if (
+            $isAdminAuditRoute =
                 str_starts_with($url, '/admin/') ||
-                str_starts_with($url, '/api/admin/')
-            ) {
+                str_starts_with($url, '/api/admin/') ||
+                ($url === '/api/settings/update') ||
+                (
+                    str_starts_with($url, '/api/items/') &&
+                    strtoupper($method) !== 'GET'
+                ) ||
+                ($url === '/api/logout' && Auth::check());
+
+            if ($isAdminAuditRoute) {
                 AuditLogger::record($method, $url, $route['handler']);
             }
 
