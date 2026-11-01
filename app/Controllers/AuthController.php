@@ -122,6 +122,7 @@ class AuthController extends Controller
             $confirmation = (string) ($input['password_confirmation'] ?? '');
 
             if ($token === '' || $password === '' || $confirmation === '') {
+                AuditLogger::recordSecurityEvent('Solicitud de restablecimiento incompleta', '', null, 400, '/api/reset-password');
                 $this->json([
                     'success' => false,
                     'message' => 'Todos los campos son obligatorios.'
@@ -130,6 +131,7 @@ class AuthController extends Controller
             }
 
             if ($password !== $confirmation) {
+                AuditLogger::recordSecurityEvent('Restablecimiento rechazado: las contraseñas no coinciden', '', null, 422, '/api/reset-password');
                 $this->json([
                     'success' => false,
                     'message' => 'Las contraseñas no coinciden.'
@@ -261,6 +263,7 @@ class AuthController extends Controller
             $remember = !empty($input['remember']);
 
             if ($email === '' || $password === '') {
+                AuditLogger::recordSecurityEvent('Intento de inicio de sesión incompleto', $email ?? '', null, 400, '/api/login');
                 $this->json([
                     'success' => false,
                     'message' => 'Todos los campos son obligatorios'
@@ -270,6 +273,7 @@ class AuthController extends Controller
             }
 
             if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+                AuditLogger::recordSecurityEvent('Intento de inicio de sesión con correo no válido', $email, null, 400, '/api/login');
                 $this->json([
                     'success' => false,
                     'message' => 'El correo electrónico no es válido'
