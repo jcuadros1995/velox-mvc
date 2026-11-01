@@ -406,6 +406,28 @@ class Router
             }
 
 
+            $ratePolicies = [
+                '/api/login' => [10, 900],
+                '/api/register' => [5, 3600],
+                '/api/forgot-password' => [5, 3600],
+                '/api/reset-password' => [10, 900],
+                '/api/public/reservations' => [5, 600],
+                '/api/public/reservations/search' => [10, 600],
+                '/api/public/reservations/cancel' => [5, 900],
+                '/api/contact' => [5, 600],
+                '/api/events/register' => [5, 600],
+                '/api/newsletter/subscribe' => [5, 600]
+            ];
+            if (isset($ratePolicies[$url])) {
+                [$maxHits, $window] = $ratePolicies[$url];
+                $ip = (string) ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+                if (!RateLimiter::allow($method . ':' . $url . ':' . $ip, $maxHits, $window)) {
+                    header('Retry-After: ' . $window);
+                    Middleware::jsonError(429, 'Se alcanzó el límite de solicitudes. Inténtalo nuevamente más tarde.');
+                    return;
+                }
+            }
+
             /*
              * CSRF must run after session initialization and before
              * any cookie-authenticated state change. The Wompi webhook
