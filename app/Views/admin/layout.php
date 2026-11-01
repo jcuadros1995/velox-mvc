@@ -208,6 +208,27 @@ $reservationsActive =
                 true
         );
 
+/*
+|--------------------------------------------------------------------------
+| Módulos operativos disponibles
+|--------------------------------------------------------------------------
+*/
+
+$eventsActive = $adminMenuActive('/admin/events', true);
+$productsActive = $adminMenuActive('/admin/items', true);
+$categoriesActive = $adminMenuActive('/admin/categories', true);
+$couponsActive = $adminMenuActive('/admin/coupons', true);
+$pagesActive = $adminMenuActive('/admin/pages', true);
+
+$adminCanViewProducts = Middleware::canAnyPermission([
+    'products.read',
+    'products.create',
+    'products.update'
+]);
+
+$adminCanManageBusinessCatalog = $adminIsSuperAdmin || $adminIsAdmin;
+$adminCanViewEvents = $adminIsSuperAdmin || $adminIsAdmin || $adminIsStaff;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -581,6 +602,59 @@ $branchesActive =
                 </a>
 
             </li>
+
+
+            <!-- =================================================
+                 GESTIÓN DEL NEGOCIO
+            ================================================== -->
+
+            <li class="sidebar-label">Gestión del negocio</li>
+
+            <?php if ($adminCanViewEvents): ?>
+                <li class="nav-item">
+                    <a href="<?= APP_URL ?>/admin/events"
+                       class="nav-link <?= $eventsActive ? 'active' : '' ?>">
+                        <i class="fa-solid fa-calendar-days nav-icon"></i>
+                        <span class="nav-text">Eventos</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+
+            <?php if ($adminCanViewProducts): ?>
+                <li class="nav-item">
+                    <a href="<?= APP_URL ?>/admin/items"
+                       class="nav-link <?= $productsActive ? 'active' : '' ?>">
+                        <i class="fa-solid fa-burger nav-icon"></i>
+                        <span class="nav-text">Productos</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+
+            <?php if ($adminCanManageBusinessCatalog): ?>
+                <li class="nav-item">
+                    <a href="<?= APP_URL ?>/admin/categories"
+                       class="nav-link <?= $categoriesActive ? 'active' : '' ?>">
+                        <i class="fa-solid fa-layer-group nav-icon"></i>
+                        <span class="nav-text">Categorías</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="<?= APP_URL ?>/admin/coupons"
+                       class="nav-link <?= $couponsActive ? 'active' : '' ?>">
+                        <i class="fa-solid fa-ticket nav-icon"></i>
+                        <span class="nav-text">Cupones y promociones</span>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="<?= APP_URL ?>/admin/pages"
+                       class="nav-link <?= $pagesActive ? 'active' : '' ?>">
+                        <i class="fa-solid fa-file-lines nav-icon"></i>
+                        <span class="nav-text">Páginas públicas</span>
+                    </a>
+                </li>
+            <?php endif; ?>
 
 
             <!-- =================================================
