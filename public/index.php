@@ -170,6 +170,14 @@ $router->get(
 );
 
 $router->get(
+    '/admin/audit-logs',
+    'AuditLogController@index',
+    [
+        ['Middleware', 'webRole', ['superadmin', 'admin']]
+    ]
+);
+
+$router->get(
     '/admin/reservations',
     'AdminReservationController@index',
     [
