@@ -15,9 +15,9 @@ document.addEventListener('DOMContentLoaded', () => {
         'reservationSearchInput'
     );
 
-    const searchError = document.getElementById(
-        'reservationSearchError'
-    );
+    const searchError = document.getElementById('reservationSearchError');
+    const emailInput = document.getElementById('reservationSearchEmail');
+    const emailError = document.getElementById('reservationSearchEmailError');
 
     const searchButton = document.getElementById(
         'searchReservationButton'
@@ -115,116 +115,41 @@ document.addEventListener('DOMContentLoaded', () => {
        VALIDACIÓN
     ========================================================= */
 
-    function validateSearch(value) {
+    function validateSearch(code, email) {
+        code = code.trim().toUpperCase();
+        email = email.trim().toLowerCase();
 
-        value = value.trim();
-
-        searchInput.classList.remove('is-invalid');
-        searchInput.classList.remove('is-valid');
-
+        searchInput.classList.remove('is-invalid', 'is-valid');
+        emailInput.classList.remove('is-invalid', 'is-valid');
         searchError.textContent = '';
+        emailError.textContent = '';
 
+        const codeValid = /^RSV-[A-Z0-9]{6}$/.test(code);
+        const emailValid = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email);
+        let valid = true;
 
-        /*
-         * CAMPO VACÍO
-         *
-         * Este caso ahora se maneja con Toast.
-         */
-        if (value === '') {
-
-            showToast(
-                'Por favor, completa el campo de búsqueda.',
-                'warning'
-            );
-
-            return false;
+        if (!codeValid) {
+            searchInput.classList.add('is-invalid');
+            searchError.textContent = 'Ingresa un código de reserva válido (ej. RSV-1FB7BF).';
+            valid = false;
+        } else {
+            searchInput.classList.add('is-valid');
         }
 
-
-        /*
-         * Código:
-         *
-         * RSV-XXXXXX
-         */
-        const reservationCodeRegex =
-            /^RSV-[A-Z0-9]{6}$/i;
-
-
-        /*
-         * Correo.
-         */
-        const emailRegex =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-        /*
-         * Debe ser código o correo.
-         */
-        if (
-            !reservationCodeRegex.test(value) &&
-            !emailRegex.test(value)
-        ) {
-
-            searchInput.classList.add(
-                'is-invalid'
-            );
-
-            searchError.textContent =
-                'Ingresa un código válido (ej. RSV-1FB7BF) o un correo electrónico válido.';
-
-            showToast(
-                'Ingresa un código de reserva o un correo electrónico válido.',
-                'warning'
-            );
-
-            return false;
+        if (!emailValid) {
+            emailInput.classList.add('is-invalid');
+            emailError.textContent = 'Ingresa el correo electrónico asociado a la reserva.';
+            valid = false;
+        } else {
+            emailInput.classList.add('is-valid');
         }
 
+        if (!valid) {
+            showToast('Ingresa un código de reserva y un correo electrónico válidos.', 'warning');
+        }
 
-        searchInput.classList.add(
-            'is-valid'
-        );
-
-        return true;
+        return valid;
     }
-
-
-    /* =========================================================
-       DETECTAR TIPO DE BÚSQUEDA
-    ========================================================= */
-
-    function getSearchType(value) {
-
-        value = value.trim();
-
-
-        const reservationCodeRegex =
-            /^RSV-[A-Z0-9]{6}$/i;
-
-
-        const emailRegex =
-            /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-
-
-        if (
-            reservationCodeRegex.test(value)
-        ) {
-
-            return 'reservation_code';
-        }
-
-
-        if (
-            emailRegex.test(value)
-        ) {
-
-            return 'email';
-        }
-
-
-        return null;
-    }
-
 
     /* =========================================================
        LOADING
@@ -798,280 +723,94 @@ ${getCancellationButton(reservation)}
        CONSULTAR API
     ========================================================= */
 
-    async function searchReservations(
-        value
-    ) {
+    async function searchReservations(code, email) {
+        const params = new URLSearchParams();
+        params.set('reservation_code', code.trim().toUpperCase());
+        params.set('email', email.trim().toLowerCase());
 
-        const type =
-            getSearchType(value);
+        const url = `${window.APP_URL}/api/public/reservations/search?${params.toString()}`;
+        const response = await fetch(url, {
+            method: 'GET',
+            headers: { 'Accept': 'application/json' }
+        });
 
-
-        if (!type) {
-            return;
+        const contentType = response.headers.get('content-type') || '';
+        if (!contentType.includes('application/json')) {
+            const responseText = await response.text();
+            console.error('Respuesta no JSON del servidor:', responseText);
+            throw new Error('El servidor devolvió una respuesta inesperada.');
         }
 
-
-        const params =
-            new URLSearchParams();
-
-
-        /*
-         * Código.
-         */
-        if (
-            type === 'reservation_code'
-        ) {
-
-            params.set(
-                'reservation_code',
-                value.toUpperCase()
-            );
-
+        const data = await response.json();
+        if (!response.ok || !data.success) {
+            throw new Error(data.message || 'No fue posible consultar la reserva.');
         }
 
-        /*
-         * Correo.
-         */
-        else {
-
-            params.set(
-                'email',
-                value.toLowerCase()
-            );
-
-        }
-
-
-        const url =
-            `${window.APP_URL}/api/public/reservations/search?${params.toString()}`;
-
-
-        const response =
-            await fetch(
-                url,
-                {
-                    method: 'GET',
-
-                    headers: {
-                        'Accept':
-                            'application/json'
-                    }
-                }
-            );
-
-
-        /*
-         * Verificar Content-Type.
-         *
-         * Evita:
-         *
-         * Unexpected token '<'
-         */
-        const contentType =
-            response.headers.get(
-                'content-type'
-            ) || '';
-
-
-        if (
-            !contentType.includes(
-                'application/json'
-            )
-        ) {
-
-            const text =
-                await response.text();
-
-
-            console.error(
-                'Respuesta no JSON del servidor:',
-                text
-            );
-
-
-            throw new Error(
-                'El servidor devolvió una respuesta inesperada.'
-            );
-        }
-
-
-        const data =
-            await response.json();
-
-
-        if (
-            !response.ok ||
-            !data.success
-        ) {
-
-            throw new Error(
-                data.message ||
-                'No fue posible consultar la reserva.'
-            );
-        }
-
-
-        renderResults(
-            data.data || [],
-            value
-        );
-
+        renderResults(data.data || [], code.trim().toUpperCase());
     }
-
 
     /* =========================================================
        SUBMIT
     ========================================================= */
 
-    form.addEventListener(
-        'submit',
-        async event => {
+    form.addEventListener('submit', async event => {
+        event.preventDefault();
 
-            event.preventDefault();
+        const code = searchInput.value.trim();
+        const email = emailInput.value.trim();
 
-
-            const value =
-                searchInput.value.trim();
-
-
-            /*
-             * =================================================
-             * CAMPO VACÍO
-             * =================================================
-             *
-             * Aquí hacemos el Toast.
-             */
-
-            if (value === '') {
-
-                showToast(
-                    'Por favor, completa el campo de búsqueda.',
-                    'warning'
-                );
-
-
-                searchInput.focus();
-
-
-                return;
-            }
-
-
-            /*
-             * Validar formato.
-             */
-            if (
-                !validateSearch(value)
-            ) {
-
-                searchInput.focus();
-
-                return;
-            }
-
-
-            /*
-             * Loading.
-             */
-            setLoading(true);
-
-
-            /*
-             * Limpiar resultados anteriores.
-             */
-            resultsContainer.innerHTML = '';
-
-
-            resultsHeader.classList.add(
-                'd-none'
-            );
-
-
-            hideMessage();
-
-
-            try {
-
-                await searchReservations(
-                    value
-                );
-
-            } catch (error) {
-
-                console.error(
-                    'Reservation search error:',
-                    error
-                );
-
-
-                showMessage(
-                    error.message ||
-                    'No fue posible consultar la reserva.',
-                    'error'
-                );
-
-
-            } finally {
-
-                setLoading(false);
-
-            }
-
+        if (code === '' || email === '') {
+            showToast('Completa el código de reserva y el correo electrónico.', 'warning');
+            if (code === '') searchInput.focus();
+            else emailInput.focus();
+            return;
         }
-    );
 
+        if (!validateSearch(code, email)) {
+            if (!/^RSV-[A-Z0-9]{6}$/i.test(code)) searchInput.focus();
+            else emailInput.focus();
+            return;
+        }
+
+        setLoading(true);
+        resultsContainer.innerHTML = '';
+        resultsHeader.classList.add('d-none');
+        hideMessage();
+
+        try {
+            await searchReservations(code, email);
+        } catch (error) {
+            console.error('Reservation search error:', error);
+            showMessage(error.message || 'No fue posible consultar la reserva.', 'error');
+        } finally {
+            setLoading(false);
+        }
+    });
 
     /* =========================================================
        INPUT
     ========================================================= */
 
-    searchInput.addEventListener(
-        'input',
-        () => {
-
-            searchInput.classList.remove(
-                'is-invalid'
-            );
-
-            searchInput.classList.remove(
-                'is-valid'
-            );
-
-
+    [searchInput, emailInput].forEach(input => {
+        input.addEventListener('input', () => {
+            input.classList.remove('is-invalid', 'is-valid');
             searchError.textContent = '';
-
-
-            /*
-             * Si el usuario empieza a escribir,
-             * limpiamos el mensaje anterior.
-             */
+            emailError.textContent = '';
             hideMessage();
+        });
+    });
 
+    searchInput.addEventListener('blur', () => {
+        if (searchInput.value.trim() !== '' || emailInput.value.trim() !== '') {
+            validateSearch(searchInput.value, emailInput.value);
         }
-    );
+    });
 
-
-    /* =========================================================
-       BLUR
-    ========================================================= */
-
-    searchInput.addEventListener(
-        'blur',
-        () => {
-
-            if (
-                searchInput.value.trim() !== ''
-            ) {
-
-                validateSearch(
-                    searchInput.value
-                );
-
-            }
-
+    emailInput.addEventListener('blur', () => {
+        if (searchInput.value.trim() !== '' || emailInput.value.trim() !== '') {
+            validateSearch(searchInput.value, emailInput.value);
         }
-    );
-
+    });
 
     /* =========================================================
        BOTÓN DE CANCELACIÓN
