@@ -1,0 +1,68 @@
+/* Burger Town — public branches page */
+.bt-branches-page{--bt-purple:#7040e8;--bt-ink:#171521;--bt-muted:#737487;--bt-line:#e9e7ef;color:var(--bt-ink);background:#f7f7fb;overflow:hidden}
+.bt-branches-page *{box-sizing:border-box}
+.bt-branches-page .bt-branches-hero{position:relative;isolation:isolate;display:flex;align-items:center;min-height:620px;padding:76px max(6vw,calc((100vw - 1240px)/2));background:linear-gradient(115deg,#100d19 0%,#211638 55%,#33256b 100%);color:#fff;overflow:hidden}
+.bt-branches-page .bt-branches-hero:before,.bt-branches-page .bt-branches-hero:after{content:"";position:absolute;z-index:-1;border:1px solid rgba(255,255,255,.1);border-radius:50%;pointer-events:none}
+.bt-branches-page .bt-branches-hero:before{width:560px;height:560px;right:-100px;top:-220px}
+.bt-branches-page .bt-branches-hero:after{width:420px;height:420px;right:17%;bottom:-300px}
+.bt-branches-page .bt-branches-hero-background{position:absolute;inset:0;z-index:-2;overflow:hidden}
+.bt-branches-page .bt-branches-hero-image{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.48}
+.bt-branches-page .bt-branches-hero-overlay{position:absolute;inset:0;background:linear-gradient(90deg,rgba(13,10,20,.97),rgba(20,14,32,.88) 48%,rgba(25,17,45,.48))}
+.bt-branches-page .bt-branches-hero-placeholder{position:absolute;inset:0;display:grid;place-items:center;color:rgba(255,255,255,.08);font-size:150px}
+.bt-branches-page .bt-branches-hero-content{position:relative;width:min(100%,1240px);margin:0 auto}
+.bt-branches-page .bt-branches-eyebrow,.bt-branches-page .bt-branches-section-eyebrow,.bt-branches-page .bt-branches-cta-eyebrow{display:inline-flex;align-items:center;gap:9px;color:#c6adff;font-size:12px;font-weight:800;letter-spacing:.16em;text-transform:uppercase}
+.bt-branches-page .bt-branches-hero h1{max-width:760px;margin:22px 0 18px;color:#fff;font-size:clamp(42px,6vw,76px);font-weight:800;letter-spacing:-.055em;line-height:1.02}
+.bt-branches-page .bt-branches-hero p{max-width:610px;margin:0;color:rgba(255,255,255,.76);font-size:17px;line-height:1.75}
+.bt-branches-page .bt-branches-selector{display:flex;flex-wrap:wrap;align-items:center;gap:14px;margin-top:32px}
+.bt-branches-page .bt-branches-selector-label{color:#fff;font-size:13px;font-weight:700}
+.bt-branches-page .branch-select-wrapper{position:relative;width:min(100%,360px)}
+.bt-branches-page .branch-select-wrapper .form-select{height:54px;padding:0 48px 0 18px;border:1px solid rgba(255,255,255,.2);border-radius:13px;background-color:rgba(255,255,255,.97);color:#242033;font-size:14px;font-weight:650;box-shadow:0 10px 30px rgba(0,0,0,.15)}
+.bt-branches-page .branch-select-icon{position:absolute;top:50%;right:18px;color:#6e42d8;transform:translateY(-50%);pointer-events:none}
+.bt-branches-page .bt-branches-hero-contact{display:flex;flex-wrap:wrap;gap:22px;margin-top:24px;color:rgba(255,255,255,.83);font-size:13px}
+.bt-branches-page .bt-branches-hero-contact-item{display:flex;align-items:center;gap:9px}
+.bt-branches-page .bt-branches-hero-contact-item i{color:#c6adff}
+.bt-branches-page .bt-branches-page [hidden]{display:none!important}
+.bt-branches-page .bt-branches-information-section,.bt-branches-page .bt-branches-map-section{padding:92px 24px}
+.bt-branches-page .bt-branches-container{width:min(100%,1180px);margin:0 auto}
+.bt-branches-page .bt-branches-section-header{max-width:680px;margin:0 auto 38px;text-align:center}
+.bt-branches-page .bt-branches-section-eyebrow{color:var(--bt-purple)}
+.bt-branches-page .bt-branches-section-header h2{margin:12px 0;color:#191724;font-size:clamp(30px,4vw,44px);font-weight:800;letter-spacing:-.045em}
+.bt-branches-page .bt-branches-section-header p{margin:0;color:var(--bt-muted);font-size:15px;line-height:1.7}
+.bt-branches-page .bt-branches-info-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:16px;margin-bottom:24px}
+.bt-branches-page .bt-branches-info-card,.bt-branches-page .bt-branches-hours-card,.bt-branches-page .bt-branches-map-card{border:1px solid var(--bt-line);border-radius:20px;background:#fff;box-shadow:0 14px 45px rgba(27,22,48,.055)}
+.bt-branches-page .bt-branches-info-card{display:flex;align-items:flex-start;gap:14px;min-height:126px;padding:23px 20px}
+.bt-branches-page .bt-branches-info-icon,.bt-branches-page .bt-branches-hours-icon,.bt-branches-page .bt-branches-map-info-icon{display:grid;flex:0 0 44px;place-items:center;width:44px;height:44px;border-radius:14px;background:#f2edff;color:var(--bt-purple);font-size:17px}
+.bt-branches-page .bt-branches-info-card>div:last-child{min-width:0}
+.bt-branches-page .bt-branches-info-card span{display:block;margin:2px 0 8px;color:#8a8798;font-size:11px;font-weight:800;letter-spacing:.1em;text-transform:uppercase}
+.bt-branches-page .bt-branches-info-card strong{display:block;overflow-wrap:anywhere;color:#252235;font-size:14px;font-weight:700;line-height:1.5}
+.bt-branches-page .bt-branches-hours-card{max-width:760px;margin:0 auto;padding:30px 34px}
+.bt-branches-page .bt-branches-hours-header{display:flex;align-items:center;gap:15px;padding-bottom:22px;border-bottom:1px solid var(--bt-line)}
+.bt-branches-page .bt-branches-hours-header span{color:#8a8798;font-size:11px;font-weight:800;letter-spacing:.12em}
+.bt-branches-page .bt-branches-hours-header h3{margin:5px 0 0;color:#201d2d;font-size:25px;font-weight:800;letter-spacing:-.035em}
+.bt-branches-page .bt-branches-hours-list{display:grid;grid-template-columns:1fr 1fr;column-gap:40px;padding-top:12px}
+.bt-branches-page .bt-branches-hours-row{display:flex;justify-content:space-between;gap:15px;padding:14px 0;border-bottom:1px solid #f0eef4;color:#666477;font-size:14px}
+.bt-branches-page .bt-branches-hours-row strong{color:#262337;font-size:13px;font-weight:750;white-space:nowrap}
+.bt-branches-page .bt-branches-loading,.bt-branches-page .bt-branches-hours-error{padding:22px;color:#777487;text-align:center;font-size:14px}
+.bt-branches-page .bt-branches-map-section{padding-top:28px;background:#fff}
+.bt-branches-page .bt-branches-map-card{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(280px,.75fr);overflow:hidden}
+.bt-branches-page .bt-branches-map-wrapper{position:relative;min-height:430px;background:#efedf4}
+.bt-branches-page .bt-branches-map-wrapper iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.bt-branches-page .bt-branches-map-loading{position:absolute;inset:0;display:grid;place-content:center;gap:12px;background:#f3f1f7;color:#777487;text-align:center;font-size:14px}
+.bt-branches-page .bt-branches-map-info{display:flex;align-items:flex-start;gap:17px;padding:36px 30px}
+.bt-branches-page .bt-branches-map-info-content>span{color:var(--bt-purple);font-size:11px;font-weight:800;letter-spacing:.12em}
+.bt-branches-page .bt-branches-map-info h3{margin:12px 0 8px;color:#211e2e;font-size:24px;font-weight:800;letter-spacing:-.035em}
+.bt-branches-page .bt-branches-map-info p{margin:0 0 22px;color:var(--bt-muted);font-size:14px;line-height:1.6}
+.bt-branches-page .bt-branches-map-link{display:inline-flex;align-items:center;gap:9px;color:var(--bt-purple);font-size:13px;font-weight:750;text-decoration:none}
+.bt-branches-page .bt-branches-cta{position:relative;isolation:isolate;overflow:hidden;padding:88px 24px;background:linear-gradient(115deg,#17121f,#3c176c);color:#fff;text-align:center}
+.bt-branches-page .bt-branches-cta-glow{position:absolute;z-index:-1;top:-180px;left:calc(50% - 220px);width:440px;height:440px;border:1px solid rgba(255,255,255,.12);border-radius:50%;box-shadow:0 0 0 55px rgba(255,255,255,.025),0 0 0 110px rgba(255,255,255,.02)}
+.bt-branches-page .bt-branches-cta-content{max-width:700px;margin:0 auto}
+.bt-branches-page .bt-branches-cta h2{margin:14px 0;color:#fff;font-size:clamp(32px,4vw,48px);font-weight:800;letter-spacing:-.045em}
+.bt-branches-page .bt-branches-cta p{margin:0 auto 26px;color:rgba(255,255,255,.75);font-size:15px;line-height:1.7}
+.bt-branches-page .bt-branches-cta-button{display:inline-flex;align-items:center;justify-content:center;gap:18px;min-height:52px;padding:0 24px;border:1px solid rgba(255,255,255,.18);border-radius:13px;background:#fff;color:#281b43;font-size:14px;font-weight:800;text-decoration:none;box-shadow:0 10px 28px rgba(0,0,0,.16);transition:transform .2s ease,box-shadow .2s ease}
+.bt-branches-page .bt-branches-gallery{display:flex;align-items:center;gap:10px;margin-top:24px}
+.bt-branches-page .bt-branches-gallery-arrow{display:grid;flex:0 0 38px;place-items:center;width:38px;height:38px;border:1px solid rgba(255,255,255,.22);border-radius:50%;background:rgba(255,255,255,.1);color:#fff}
+.bt-branches-page .bt-branches-thumbnails{display:flex;gap:9px;overflow:auto}
+.bt-branches-page .bt-branches-thumbnails button{position:relative;flex:0 0 66px;width:66px;height:54px;padding:0;overflow:hidden;border:2px solid transparent;border-radius:9px;background:rgba(255,255,255,.12)}
+.bt-branches-page .bt-branches-thumbnails img{width:100%;height:100%;object-fit:cover}
+@media(max-width:900px){.bt-branches-page .bt-branches-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bt-branches-page .bt-branches-map-card{grid-template-columns:1fr}.bt-branches-page .bt-branches-map-wrapper{min-height:360px}}
+@media(max-width:600px){.bt-branches-page .bt-branches-hero{min-height:570px;padding:58px 22px}.bt-branches-page .bt-branches-hero h1{font-size:43px}.bt-branches-page .bt-branches-hero p{font-size:15px}.bt-branches-page .bt-branches-selector{align-items:flex-start;flex-direction:column}.bt-branches-page .branch-select-wrapper{width:100%}.bt-branches-page .bt-branches-information-section,.bt-branches-page .bt-branches-map-section{padding:65px 17px}.bt-branches-page .bt-branches-info-grid{grid-template-columns:1fr;gap:11px}.bt-branches-page .bt-branches-info-card{min-height:unset;padding:18px}.bt-branches-page .bt-branches-hours-card{padding:23px 19px}.bt-branches-page .bt-branches-hours-list{grid-template-columns:1fr}.bt-branches-page .bt-branches-map-wrapper{min-height:300px}.bt-branches-page .bt-branches-map-info{padding:25px 20px}.bt-branches-page .bt-branches-cta{padding:68px 20px}}
