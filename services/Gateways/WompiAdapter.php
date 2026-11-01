@@ -97,21 +97,17 @@ class WompiAdapter implements PaymentGatewayInterface
             );
         }
 
-        // Wompi firma el timestamp; limitar su antigüedad reduce
-        // la ventana para reutilizar webhooks capturados previamente.
+        // Wompi documenta este campo como timestamp UNIX en segundos.
+        // Se rechazan marcas futuras anómalas, pero se aceptan eventos antiguos:
+        // el proveedor puede reintentar entregas y el repositorio procesa estados
+        // de forma idempotente/transaccional.
         $eventTimestamp = (int) $timestamp;
-        $allowedDrift = 300; // 5 minutos, configurable por entorno.
-        $configuredDrift = getenv('WOMPI_WEBHOOK_MAX_DRIFT_SECONDS');
-        if ($configuredDrift !== false && ctype_digit((string) $configuredDrift)) {
-            $allowedDrift = max(60, min(900, (int) $configuredDrift));
-        }
-
         if (
             $eventTimestamp <= 0 ||
-            abs(time() - $eventTimestamp) > $allowedDrift
+            $eventTimestamp > (time() + 300)
         ) {
             throw new DomainException(
-                'El evento de Wompi está fuera de la ventana de tiempo permitida.',
+                'El timestamp del evento de Wompi no es válido.',
                 401
             );
         }
