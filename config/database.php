@@ -3,11 +3,14 @@
 
 /**
  * Database connection.
- * Credentials must be injected by the deployment environment.
+ *
+ * Loads a project-local .env file when present. Real environment variables
+ * always take precedence over values from .env.
  */
 class Database
 {
     private static ?PDO $instance = null;
+    private static bool $environmentLoaded = false;
 
     private function __construct()
     {
@@ -15,10 +18,13 @@ class Database
 
     public static function getConnection(): PDO
     {
+        self::loadEnvironment();
+
         if (self::$instance instanceof PDO) {
             return self::$instance;
         }
 
+        $appEnv = strtolower(self::env('APP_ENV', 'production'));
         $host = self::env('DB_HOST', '127.0.0.1');
         $port = self::env('DB_PORT', '3306');
         $name = self::env('DB_NAME', 'velox_core');
@@ -26,9 +32,20 @@ class Database
         $pass = self::env('DB_PASSWORD');
         $charset = 'utf8mb4';
 
-        if ($user === '' || $pass === '') {
-            error_log('[DATABASE] DB_USER/DB_PASSWORD are not configured.');
-            throw new RuntimeException('Database configuration is unavailable.');
+        if ($user === '') {
+            error_log('[DATABASE] DB_USER is not configured.');
+            throw new RuntimeException('Database configuration is unavailable. Check your local .env file.');
+        }
+
+        $isLoopback = in_array(strtolower($host), ['127.0.0.1', 'localhost', '::1'], true);
+        $isLocalRootWithoutPassword = in_array($appEnv, ['local', 'development'], true)
+            && $isLoopback
+            && strtolower($user) === 'root'
+            && $pass === '';
+
+        if ($pass === '' && !$isLocalRootWithoutPassword) {
+            error_log('[DATABASE] Empty DB_PASSWORD is only permitted for local root connections.');
+            throw new RuntimeException('Database configuration is unavailable. Configure DB_PASSWORD.');
         }
 
         if (!preg_match('/^[a-zA-Z0-9_.:-]{1,255}$/', $host) ||
@@ -56,6 +73,58 @@ class Database
 
         self::$instance = new PDO($dsn, $user, $pass, $options);
         return self::$instance;
+    }
+
+    /**
+     * Reads .env without a third-party dependency. Existing process
+     * environment variables are never overwritten.
+     */
+    private static function loadEnvironment(): void
+    {
+        if (self::$environmentLoaded) {
+            return;
+        }
+
+        self::$environmentLoaded = true;
+        $envFile = dirname(__DIR__) . DIRECTORY_SEPARATOR . '.env';
+
+        if (!is_file($envFile) || !is_readable($envFile)) {
+            return;
+        }
+
+        $lines = file($envFile, FILE_IGNORE_NEW_LINES);
+        if ($lines === false) {
+            return;
+        }
+
+        foreach ($lines as $line) {
+            $line = trim($line);
+
+            if ($line === '' || $line[0] === '#' || strpos($line, '=') === false) {
+                continue;
+            }
+
+            [$key, $value] = explode('=', $line, 2);
+            $key = trim($key);
+            $value = trim($value);
+
+            if (!preg_match('/^[A-Z][A-Z0-9_]*$/', $key) || getenv($key) !== false) {
+                continue;
+            }
+
+            // Remove matching surrounding quotes; preserve all other characters.
+            if (strlen($value) >= 2) {
+                $first = $value[0];
+                $last = substr($value, -1);
+                if (($first === '"' && $last === '"') || ($first === "'" && $last === "'")) {
+                    $value = substr($value, 1, -1);
+                }
+            }
+
+            putenv($key . '=' . $value);
+            $_ENV[$key] = $value;
+            $_SERVER[$key] = $value;
+        }
     }
 
     private static function env(string $key, string $default = ''): string
