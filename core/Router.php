@@ -462,6 +462,15 @@ class Router
                 );
 
 
+            // Auditoría centralizada de páginas y operaciones administrativas.
+            // Se ejecuta después de validar autenticación y permisos del middleware.
+            if (
+                str_starts_with($url, '/admin/') ||
+                str_starts_with($url, '/api/admin/')
+            ) {
+                AuditLogger::record($method, $url, $route['handler']);
+            }
+
             $controller =
                 new $controllerName();
 
