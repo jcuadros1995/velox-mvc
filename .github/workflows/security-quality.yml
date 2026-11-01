@@ -44,6 +44,15 @@ jobs:
             php -l "$file"
           done
 
+      - name: Validate JavaScript syntax
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t files < <(git ls-files '*.js')
+          for file in "${files[@]}"; do
+            node --check "$file"
+          done
+
       - name: Detect tracked environment and private-key files
         shell: bash
         run: |
