@@ -64,6 +64,7 @@ $siteFaviconUrl =
     <link href="<?= APP_URL ?>/public/css/fonts.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/public.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/public-navbar.css" rel="stylesheet">
+    <link href="<?= APP_URL ?>/public/css/branches.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/cart-checkout.css" rel="stylesheet">
 
     <style>
