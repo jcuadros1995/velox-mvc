@@ -48,7 +48,37 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          if git ls-files | grep -E '(^|/)\\.env($|\\.)|(^|/)id_rsa$|\\.(pem|p12|pfx)$' | grep -vE '(^|/)\\.env\\.example$'; then
+          tracked_sensitive_files="$(git ls-files | grep -E '(^|/)\\.env($|\\.)|(^|/)id_rsa$|\\.(pem|p12|pfx)
+            echo "::error::Potential environment secret or private key tracked in git."
+            exit 1
+          fi
+
+      - name: Composer dependency audit (when root manifest exists)
+        shell: bash
+        run: |
+          if [ -f composer.json ]; then
+            composer validate --no-check-publish
+            composer audit --no-interaction
+          else
+            echo "No root composer.json; root dependency audit is not configured."
+          fi
+ | grep -vE '(^|/)\\.env\\.example
+            echo "::error::Potential environment secret or private key tracked in git."
+            exit 1
+          fi
+
+      - name: Composer dependency audit (when root manifest exists)
+        shell: bash
+        run: |
+          if [ -f composer.json ]; then
+            composer validate --no-check-publish
+            composer audit --no-interaction
+          else
+            echo "No root composer.json; root dependency audit is not configured."
+          fi
+ || true)"
+          if [ -n "$tracked_sensitive_files" ]; then
+            echo "$tracked_sensitive_files"
             echo "::error::Potential environment secret or private key tracked in git."
             exit 1
           fi
