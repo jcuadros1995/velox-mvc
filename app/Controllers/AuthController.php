@@ -139,11 +139,11 @@ class AuthController extends Controller
                 return;
             }
 
-            $this->authService->resetPassword($token, $password);
+            $resetUser = $this->authService->resetPassword($token, $password);
             AuditLogger::recordSecurityEvent(
                 'Restablecimiento de contraseña completado',
                 '',
-                null,
+                $resetUser,
                 200,
                 '/api/reset-password'
             );
