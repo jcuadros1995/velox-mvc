@@ -3,128 +3,93 @@
 
 class Auth
 {
-
-    private const REMEMBER_COOKIE =
-        'burgertown_remember';
-
-    private const REMEMBER_DAYS =
-        30;
-
+    private const REMEMBER_COOKIE = 'burgertown_remember';
+    private const REMEMBER_DAYS = 30;
     private const REMEMBER_TOKEN_TYPE = 'remember_me';
 
     public static function init(): void
     {
-        if (
-            session_status() !==
-            PHP_SESSION_NONE
-        ) {
+        if (session_status() !== PHP_SESSION_NONE) {
             return;
         }
 
-        ini_set(
-            'session.use_strict_mode',
-            '1'
-        );
+        $https = self::isHttps();
+        ini_set('session.use_strict_mode', '1');
+        ini_set('session.use_only_cookies', '1');
+        ini_set('session.use_trans_sid', '0');
+        ini_set('session.cookie_httponly', '1');
+        ini_set('session.cookie_secure', $https ? '1' : '0');
+        ini_set('session.cookie_samesite', 'Lax');
+        ini_set('session.cookie_lifetime', '0');
 
-        ini_set(
-            'session.use_only_cookies',
-            '1'
-        );
-
-        ini_set(
-            'session.cookie_httponly',
-            '1'
-        );
-
-        ini_set(
-            'session.cookie_samesite',
-            'Lax'
-        );
+        session_set_cookie_params([
+            'lifetime' => 0,
+            'path' => self::cookiePath(),
+            'secure' => $https,
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
 
         session_start();
+    }
+
+    private static function isHttps(): bool
+    {
+        return (
+            (!empty($_SERVER['HTTPS']) && strtolower((string) $_SERVER['HTTPS']) !== 'off') ||
+            (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443)
+        );
+    }
+
+    private static function cookiePath(): string
+    {
+        $path = parse_url(defined('APP_URL') ? APP_URL : '/', PHP_URL_PATH);
+        if (!is_string($path) || $path === '') {
+            return '/';
+        }
+        return rtrim($path, '/') . '/';
     }
 
     public static function login(array $user): void
     {
         self::init();
-
-        // Evita session fixation
-        session_regenerate_id(true);
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_regenerate_id(true);
+        }
 
         $_SESSION['user_id'] = (int) $user['id'];
-        $_SESSION['user_email'] = $user['email'];
+        $_SESSION['user_email'] = (string) ($user['email'] ?? '');
         $_SESSION['user_name'] = trim(
-            ($user['first_name'] ?? '') . ' ' . ($user['last_name'] ?? '')
+            (string) ($user['first_name'] ?? '') . ' ' . (string) ($user['last_name'] ?? '')
         );
+        $_SESSION['role_id'] = (int) ($user['role_id'] ?? 0);
+        $_SESSION['role_name'] = strtolower(trim((string) ($user['role_name'] ?? 'customer')));
 
-        $_SESSION['role_id'] = (int) $user['role_id'];
-
-        // Normalizamos el rol para evitar problemas
-        // entre "SuperAdmin" y "superadmin"
-        $_SESSION['role_name'] = strtolower(
-            trim($user['role_name'] ?? 'customer')
-        );
-
-        $roleName = strtolower(trim($user['role_name'] ?? 'customer'));
-
-        // SuperAdmin tiene alcance global, sin sede fija.
+        $roleName = $_SESSION['role_name'];
         $_SESSION['branch_id'] = $roleName === 'superadmin'
             ? null
-            : (isset($user['branch_id']) && $user['branch_id'] !== null
-                ? (int) $user['branch_id']
-                : null);
-
-        $_SESSION['branch_name'] =
-            $roleName === 'superadmin'
-                ? null
-                : ($user['branch_name'] ?? null);
+            : (isset($user['branch_id']) && $user['branch_id'] !== null ? (int) $user['branch_id'] : null);
+        $_SESSION['branch_name'] = $roleName === 'superadmin' ? null : ($user['branch_name'] ?? null);
     }
 
     public static function check(): bool
     {
         self::init();
-
-        if (
-            !isset($_SESSION['user_id']) ||
-            empty($_SESSION['user_id'])
-        ) {
+        if (empty($_SESSION['user_id'])) {
             return false;
         }
 
-        $userId =
-            (int) $_SESSION['user_id'];
-
         try {
-
-            $securityService =
-                new SecurityService();
-
-            if (
-                !$securityService
-                    ->isSessionValid(
-                        $userId
-                    )
-            ) {
-
+            $securityService = new SecurityService();
+            if (!$securityService->isSessionValid((int) $_SESSION['user_id'])) {
                 self::logout();
-
                 return false;
             }
-
-            $securityService
-                ->refreshActivity();
-
+            $securityService->refreshActivity();
             return true;
-
         } catch (Throwable $e) {
-
-            error_log(
-                '[AUTH] Error validando sesión: ' .
-                $e->getMessage()
-            );
-
+            error_log('[AUTH] Error validating session: ' . $e->getMessage());
             self::logout();
-
             return false;
         }
     }
@@ -132,13 +97,12 @@ class Auth
     public static function user(): ?array
     {
         self::init();
-
         if (!self::check()) {
             return null;
         }
 
         return [
-            'id' => $_SESSION['user_id'],
+            'id' => (int) $_SESSION['user_id'],
             'email' => $_SESSION['user_email'] ?? null,
             'name' => $_SESSION['user_name'] ?? null,
             'role_id' => $_SESSION['role_id'] ?? null,
@@ -153,407 +117,159 @@ class Auth
         if (!self::check()) {
             return false;
         }
-
-        $currentRole = strtolower(
-            trim($_SESSION['role_name'] ?? '')
-        );
-
+        $currentRole = strtolower(trim((string) ($_SESSION['role_name'] ?? '')));
         $allowedRoles = array_map(
-            fn($role) => strtolower(trim($role)),
+            static fn($role) => strtolower(trim((string) $role)),
             $allowedRoles
         );
-
         return in_array($currentRole, $allowedRoles, true);
     }
 
     public static function logout(): void
     {
         self::init();
-
         self::clearRememberToken();
 
-        /*
-         * Intentar limpiar únicamente la sesión
-         * que actualmente pertenece a este navegador.
-         */
-        $userId =
-            isset($_SESSION['user_id'])
-                ? (int) $_SESSION['user_id']
-                : 0;
-
+        $userId = isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : 0;
         if ($userId > 0) {
-
             try {
-
-                $securityService =
-                    new SecurityService();
-
-                $securityService
-                    ->clearCurrentSession(
-                        $userId
-                    );
-
+                (new SecurityService())->clearCurrentSession($userId);
             } catch (Throwable $e) {
-
-                error_log(
-                    '[AUTH_LOGOUT] ' .
-                    $e->getMessage()
-                );
+                error_log('[AUTH_LOGOUT] ' . $e->getMessage());
             }
         }
 
-
         $_SESSION = [];
-
-
-        if (
-            ini_get('session.use_cookies')
-        ) {
-
-            $params =
-                session_get_cookie_params();
-
-            setcookie(
-                session_name(),
-                '',
-                time() - 42000,
-                $params['path'],
-                $params['domain'],
-                $params['secure'],
-                $params['httponly']
-            );
+        if (ini_get('session.use_cookies')) {
+            $params = session_get_cookie_params();
+            setcookie(session_name(), '', [
+                'expires' => time() - 42000,
+                'path' => $params['path'] ?: self::cookiePath(),
+                'domain' => $params['domain'] ?? '',
+                'secure' => (bool) ($params['secure'] ?? self::isHttps()),
+                'httponly' => true,
+                'samesite' => 'Lax'
+            ]);
         }
-
-
-        session_destroy();
+        if (session_status() === PHP_SESSION_ACTIVE) {
+            session_destroy();
+        }
     }
 
-    /**
-     * Crea un token persistente para "Mantener mi sesión iniciada".
-     *
-     * El token plano solamente se envía al navegador.
-     * En la BD se almacena únicamente su SHA-256.
-     */
     public static function createRememberToken(int $userId): void
     {
         self::init();
-
         $db = Database::getConnection();
 
-
-        /*
-         * Eliminar tokens remember anteriores
-         * del usuario.
-         */
-        $delete = $db->prepare("
-        DELETE FROM user_tokens
-        WHERE user_id = :user_id
-          AND type = :type
-    ");
-
-        $delete->execute([
-            'user_id' => $userId,
-            'type'    => self::REMEMBER_TOKEN_TYPE
-        ]);
-
-
-        /*
-         * Generar token criptográficamente seguro.
-         */
-        $plainToken = bin2hex(
-            random_bytes(32)
+        $delete = $db->prepare(
+            'DELETE FROM user_tokens WHERE user_id = :user_id AND type = :type'
         );
+        $delete->execute(['user_id' => $userId, 'type' => self::REMEMBER_TOKEN_TYPE]);
 
+        $plainToken = bin2hex(random_bytes(32));
+        $tokenHash = hash('sha256', $plainToken);
+        $expiresAt = date('Y-m-d H:i:s', time() + self::REMEMBER_DAYS * 86400);
 
-        /*
-         * Nunca guardar el token original
-         * en la base de datos.
-         */
-        $tokenHash = hash(
-            'sha256',
-            $plainToken
+        $insert = $db->prepare(
+            'INSERT INTO user_tokens (user_id, token_hash, type, expires_at)
+             VALUES (:user_id, :token_hash, :type, :expires_at)'
         );
-
-
-        /*
-         * Expira en 30 días.
-         */
-        $expiresAt = date(
-            'Y-m-d H:i:s',
-            time() + (
-                self::REMEMBER_DAYS * 86400
-            )
-        );
-
-
-        /*
-         * Guardar token.
-         */
-        $insert = $db->prepare("
-        INSERT INTO user_tokens
-        (
-            user_id,
-            token_hash,
-            type,
-            expires_at
-        )
-        VALUES
-        (
-            :user_id,
-            :token_hash,
-            :type,
-            :expires_at
-        )
-    ");
-
         $insert->execute([
-            'user_id'    => $userId,
+            'user_id' => $userId,
             'token_hash' => $tokenHash,
-            'type'       => self::REMEMBER_TOKEN_TYPE,
+            'type' => self::REMEMBER_TOKEN_TYPE,
             'expires_at' => $expiresAt
         ]);
 
-
-        /*
-         * Guardar el token original en una cookie
-         * persistente y protegida.
-         */
-        setcookie(
-            self::REMEMBER_COOKIE,
-            $plainToken,
-            [
-                'expires' => time() + (
-                        self::REMEMBER_DAYS * 86400
-                    ),
-
-                'path' => '/',
-
-                'secure' => (
-                    !empty($_SERVER['HTTPS']) &&
-                    $_SERVER['HTTPS'] !== 'off'
-                ),
-
-                'httponly' => true,
-
-                'samesite' => 'Lax'
-            ]
-        );
+        setcookie(self::REMEMBER_COOKIE, $plainToken, [
+            'expires' => time() + self::REMEMBER_DAYS * 86400,
+            'path' => self::cookiePath(),
+            'secure' => self::isHttps(),
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
     }
 
-    /**
-     * Elimina el remember token actual.
-     */
     public static function clearRememberToken(): void
     {
         self::init();
+        $plainToken = (string) ($_COOKIE[self::REMEMBER_COOKIE] ?? '');
 
-
-        $plainToken =
-            $_COOKIE[
-            self::REMEMBER_COOKIE
-            ] ?? '';
-
-
-        if ($plainToken !== '') {
-
-            $tokenHash = hash(
-                'sha256',
-                $plainToken
-            );
-
-
-            $db =
-                Database::getConnection();
-
-
-            $delete =
-                $db->prepare("
-                DELETE FROM user_tokens
-
-                WHERE token_hash = :token_hash
-
-                  AND type = :type
-            ");
-
-
-            $delete->execute([
-                'token_hash' =>
-                    $tokenHash,
-
-                'type' =>
-                    self::REMEMBER_TOKEN_TYPE
-            ]);
+        if ($plainToken !== '' && preg_match('/^[a-f0-9]{64}$/i', $plainToken)) {
+            try {
+                $delete = Database::getConnection()->prepare(
+                    'DELETE FROM user_tokens WHERE token_hash = :token_hash AND type = :type'
+                );
+                $delete->execute([
+                    'token_hash' => hash('sha256', $plainToken),
+                    'type' => self::REMEMBER_TOKEN_TYPE
+                ]);
+            } catch (Throwable $e) {
+                error_log('[AUTH_REMEMBER_CLEAR] ' . $e->getMessage());
+            }
         }
 
-
-        /*
-         * Eliminar cookie del navegador.
-         */
-        setcookie(
-            self::REMEMBER_COOKIE,
-            '',
-            [
-                'expires' => time() - 3600,
-                'path' => '/',
-
-                'secure' => (
-                    !empty($_SERVER['HTTPS']) &&
-                    $_SERVER['HTTPS'] !== 'off'
-                ),
-
-                'httponly' => true,
-
-                'samesite' => 'Lax'
-            ]
-        );
+        setcookie(self::REMEMBER_COOKIE, '', [
+            'expires' => time() - 3600,
+            'path' => self::cookiePath(),
+            'secure' => self::isHttps(),
+            'httponly' => true,
+            'samesite' => 'Lax'
+        ]);
+        unset($_COOKIE[self::REMEMBER_COOKIE]);
     }
 
-    /**
-     * Intenta reconstruir la sesión utilizando
-     * el remember token almacenado en cookie.
-     */
     public static function attemptRemember(): bool
     {
         self::init();
-
-
-        /*
-         * Si ya hay sesión, no hacemos nada.
-         */
-        if (
-            !empty($_SESSION['user_id'])
-        ) {
+        if (!empty($_SESSION['user_id'])) {
             return true;
         }
 
-
-        /*
-         * Leer cookie.
-         */
-        $plainToken =
-            $_COOKIE[
-            self::REMEMBER_COOKIE
-            ] ?? '';
-
-
-        if ($plainToken === '') {
+        $plainToken = (string) ($_COOKIE[self::REMEMBER_COOKIE] ?? '');
+        if (!preg_match('/^[a-f0-9]{64}$/i', $plainToken)) {
+            if ($plainToken !== '') {
+                self::clearRememberToken();
+            }
             return false;
         }
 
-
-        /*
-         * Convertir token a hash.
-         */
-        $tokenHash = hash(
-            'sha256',
-            $plainToken
-        );
-
-
-        $db =
-            Database::getConnection();
-
-
-        /*
-         * Buscar token válido.
-         */
-        $stmt = $db->prepare("
-            SELECT
-                u.*,
-                r.name AS role_name,
-                b.name AS branch_name
-        
-            FROM user_tokens ut
-        
-            INNER JOIN users u
-                ON u.id = ut.user_id
-        
-            INNER JOIN roles r
-                ON r.id = u.role_id
-        
-            LEFT JOIN branches b
-                ON b.id = u.branch_id
-        
-            WHERE ut.token_hash = :token_hash
-        
-              AND ut.type = :type
-        
-              AND ut.expires_at > NOW()
-        
-              AND u.is_active = 1
-        
-            LIMIT 1
-        ");
-
-
-        $stmt->execute([
-
-            'token_hash' =>
-                $tokenHash,
-
-            'type' =>
-                self::REMEMBER_TOKEN_TYPE
-
-        ]);
-
-
-        $user =
-            $stmt->fetch(
-                PDO::FETCH_ASSOC
+        try {
+            $stmt = Database::getConnection()->prepare(
+                "SELECT u.*, r.name AS role_name, b.name AS branch_name
+                 FROM user_tokens ut
+                 INNER JOIN users u ON u.id = ut.user_id
+                 INNER JOIN roles r ON r.id = u.role_id
+                 LEFT JOIN branches b ON b.id = u.branch_id
+                 WHERE ut.token_hash = :token_hash
+                   AND ut.type = :type
+                   AND ut.expires_at > NOW()
+                   AND u.is_active = 1
+                 LIMIT 1"
             );
+            $stmt->execute([
+                'token_hash' => hash('sha256', $plainToken),
+                'type' => self::REMEMBER_TOKEN_TYPE
+            ]);
+            $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+            if (!$user) {
+                self::clearRememberToken();
+                return false;
+            }
 
-        /*
-         * Token inválido o expirado.
-         */
-        if (!$user) {
+            self::login($user);
+            $securityService = new SecurityService();
+            $securityService->initializeSession((int) $user['id']);
+            $_SESSION['password_expired'] = $securityService->isPasswordExpired($user);
 
+            // Rotate the persistent credential every time it is consumed.
+            self::createRememberToken((int) $user['id']);
+            return true;
+        } catch (Throwable $e) {
+            error_log('[AUTH_REMEMBER] ' . $e->getMessage());
             self::clearRememberToken();
-
             return false;
         }
-
-
-        /*
-         * Crear una nueva sesión.
-         */
-        session_regenerate_id(true);
-
-
-        /*
-         * Utilizar exactamente el mismo
-         * mecanismo de login existente.
-         */
-        self::login($user);
-
-        $securityService =
-            new SecurityService();
-
-        $securityService->initializeSession(
-            (int) $user['id']
-        );
-
-        /*
-         * Guardar estado de expiración
-         * de contraseña.
-         */
-        $_SESSION['password_expired'] =
-            $securityService->isPasswordExpired(
-                $user
-            );
-
-
-        /*
-         * Rotar el remember token.
-         *
-         * Esto evita reutilizar indefinidamente
-         * el mismo token.
-         */
-        self::createRememberToken(
-            (int) $user['id']
-        );
-
-
-        return true;
     }
 }
