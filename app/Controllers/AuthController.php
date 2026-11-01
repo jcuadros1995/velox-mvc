@@ -66,6 +66,7 @@ class AuthController extends Controller
             $identifier = trim((string) ($input['identifier'] ?? ''));
 
             if ($identifier === '') {
+                AuditLogger::recordSecurityEvent('Solicitud de recuperación rechazada: identificador vacío', '', null, 400, '/api/forgot-password');
                 $this->json([
                     'success' => false,
                     'message' => 'Ingresa tu correo, teléfono o número de documento.'
@@ -74,6 +75,13 @@ class AuthController extends Controller
             }
 
             $this->authService->requestPasswordReset($identifier);
+            AuditLogger::recordSecurityEvent(
+                'Solicitud de recuperación de contraseña recibida',
+                $identifier,
+                null,
+                200,
+                '/api/forgot-password'
+            );
 
             /* Respuesta genérica para evitar enumeración de cuentas. */
             $this->json([
@@ -82,6 +90,13 @@ class AuthController extends Controller
             ], 200);
 
         } catch (Throwable $e) {
+            AuditLogger::recordSecurityEvent(
+                'Error al procesar solicitud de recuperación de contraseña',
+                $identifier ?? '',
+                null,
+                500,
+                '/api/forgot-password'
+            );
             error_log(
                 '[AUTH_FORGOT_PASSWORD_ERROR] ' .
                 $e->getMessage() . ' | ' .
@@ -123,6 +138,13 @@ class AuthController extends Controller
             }
 
             $this->authService->resetPassword($token, $password);
+            AuditLogger::recordSecurityEvent(
+                'Restablecimiento de contraseña completado',
+                '',
+                null,
+                200,
+                '/api/reset-password'
+            );
 
             $this->json([
                 'success' => true,
@@ -130,12 +152,26 @@ class AuthController extends Controller
             ], 200);
 
         } catch (DomainException $e) {
+            AuditLogger::recordSecurityEvent(
+                'Intento de restablecimiento de contraseña rechazado',
+                '',
+                null,
+                $e->getCode() >= 400 ? $e->getCode() : 400,
+                '/api/reset-password'
+            );
             $this->json([
                 'success' => false,
                 'message' => $e->getMessage()
             ], $e->getCode() ?: 400);
 
         } catch (Throwable $e) {
+            AuditLogger::recordSecurityEvent(
+                'Error interno al restablecer contraseña',
+                '',
+                null,
+                500,
+                '/api/reset-password'
+            );
             error_log(
                 '[AUTH_RESET_PASSWORD_ERROR] ' .
                 $e->getMessage() . ' | ' .
@@ -248,6 +284,14 @@ class AuthController extends Controller
                 $remember
             );
 
+            AuditLogger::recordSecurityEvent(
+                'Inicio de sesión exitoso',
+                $email,
+                Auth::user(),
+                200,
+                '/api/auth/login'
+            );
+
             $this->json([
                 'success' => true,
                 'message' => 'Inicio de sesión exitoso',
@@ -255,12 +299,26 @@ class AuthController extends Controller
             ], 200);
 
         } catch (DomainException $e) {
+            AuditLogger::recordSecurityEvent(
+                'Intento de inicio de sesión fallido',
+                $email ?? '',
+                null,
+                $e->getCode() >= 400 ? $e->getCode() : 401,
+                '/api/auth/login'
+            );
             $this->json([
                 'success' => false,
                 'message' => $e->getMessage()
             ], $e->getCode() ?: 401);
 
         } catch (Throwable $e) {
+            AuditLogger::recordSecurityEvent(
+                'Error interno durante el inicio de sesión',
+                $email ?? '',
+                null,
+                500,
+                '/api/auth/login'
+            );
             error_log(
                 '[AUTH_CRITICAL_ERROR] ' .
                 $e->getMessage() .
