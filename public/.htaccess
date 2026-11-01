@@ -1,11 +1,21 @@
+Options -Indexes
+
+<IfModule mod_headers.c>
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "camera=(), microphone=(), geolocation=()"
+</IfModule>
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
 
-    # Si la petición no es un archivo o directorio real dentro de /public
+    # Block direct access to hidden files and source/configuration artifacts.
+    RewriteRule (^|/)\. - [F,L]
+    RewriteRule \.(env|ini|log|sql|bak|conf|ya?ml)$ - [F,L,NC]
+
+    # Front controller.
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
-
-    # Redirigir todo a index.php pasando la ruta limpia en $_GET['url']
     RewriteRule ^(.*)$ index.php?url=$1 [QSA,L]
 </IfModule>
-

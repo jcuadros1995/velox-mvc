@@ -1,7 +1,15 @@
+# Keep all source/configuration outside the public document root.
+Options -Indexes
+
 <IfModule mod_rewrite.c>
     RewriteEngine On
-
-    # Redirige todo el tráfico entrante directamente a la carpeta /public
+    RewriteRule ^(app|core|config|database|services|docs)(/|$) - [F,L,NC]
+    RewriteRule (^|/)(\.git|\.github|vendor|node_modules)(/|$) - [F,L,NC]
+    RewriteRule (^|/)(\.env|composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|.*\.(sql|bak|log|ini|conf|ya?ml))$ - [F,L,NC]
     RewriteRule ^$ public/ [L]
     RewriteRule (.*) public/$1 [L]
 </IfModule>
+
+<FilesMatch "(^\.env|\.sql$|\.bak$|\.log$|\.ini$|\.conf$)">
+    Require all denied
+</FilesMatch>

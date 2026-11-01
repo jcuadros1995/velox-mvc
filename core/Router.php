@@ -407,6 +407,23 @@ class Router
 
 
             /*
+             * CSRF must run after session initialization and before
+             * any cookie-authenticated state change. The Wompi webhook
+             * is exempt here because its adapter validates the signed
+             * provider event payload.
+             */
+            if (
+                $method !== 'GET' &&
+                $url !== '/api/payments/webhook' &&
+                !in_array($url, ['/api/contact', '/api/events/register', '/api/public/reservations', '/api/public/reservations/cancel', '/api/newsletter/subscribe'], true)
+            ) {
+                Auth::init();
+                if (!Middleware::csrf()) {
+                    return;
+                }
+            }
+
+            /*
              * =================================================
              * MIDDLEWARES
              * =================================================

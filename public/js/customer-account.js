@@ -12,7 +12,7 @@
             try {
                 const response = await fetch(appUrl + '/api/logout', {
                     method:'POST', credentials:'same-origin',
-                    headers:{'X-Requested-With':'XMLHttpRequest'}
+                    headers:{'X-Requested-With':'XMLHttpRequest','X-CSRF-Token':document.querySelector('meta[name="csrf-token"]')?.content || ''}
                 });
                 const result = await response.json();
                 if (!response.ok || !result.success) throw new Error(result.message || 'No fue posible cerrar la sesión.');

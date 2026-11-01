@@ -816,7 +816,11 @@ function initLogoutHandler() {
             fetch(
                 `${window.APP_URL}/api/logout`,
                 {
-                    method: 'POST'
+                    method: 'POST',
+                    credentials: 'same-origin',
+                    headers: {
+                        'X-CSRF-Token': window.CSRF_TOKEN || document.querySelector('meta[name="csrf-token"]')?.content || ''
+                    }
                 }
             )
                 .then(async response => {
