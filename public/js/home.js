@@ -23,37 +23,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
     /*
     |--------------------------------------------------------------------------
-    | NAVBAR SCROLL
-    |--------------------------------------------------------------------------
-    */
-
-    const navbar = document.getElementById('mainNavbar');
-
-    function updateNavbar() {
-
-        if (!navbar) {
-            return;
-        }
-
-        if (window.scrollY > 40) {
-            navbar.classList.add('navbar-scrolled');
-        } else {
-            navbar.classList.remove('navbar-scrolled');
-        }
-
-    }
-
-    updateNavbar();
-
-    window.addEventListener(
-        'scroll',
-        updateNavbar,
-        { passive: true }
-    );
-
-
-    /*
-    |--------------------------------------------------------------------------
     | CLOSE MOBILE MENU AFTER CLICK
     |--------------------------------------------------------------------------
     */
