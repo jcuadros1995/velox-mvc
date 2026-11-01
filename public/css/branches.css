@@ -66,3 +66,261 @@
 .bt-branches-page .bt-branches-thumbnails img{width:100%;height:100%;object-fit:cover}
 @media(max-width:900px){.bt-branches-page .bt-branches-info-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.bt-branches-page .bt-branches-map-card{grid-template-columns:1fr}.bt-branches-page .bt-branches-map-wrapper{min-height:360px}}
 @media(max-width:600px){.bt-branches-page .bt-branches-hero{min-height:570px;padding:58px 22px}.bt-branches-page .bt-branches-hero h1{font-size:43px}.bt-branches-page .bt-branches-hero p{font-size:15px}.bt-branches-page .bt-branches-selector{align-items:flex-start;flex-direction:column}.bt-branches-page .branch-select-wrapper{width:100%}.bt-branches-page .bt-branches-information-section,.bt-branches-page .bt-branches-map-section{padding:65px 17px}.bt-branches-page .bt-branches-info-grid{grid-template-columns:1fr;gap:11px}.bt-branches-page .bt-branches-info-card{min-height:unset;padding:18px}.bt-branches-page .bt-branches-hours-card{padding:23px 19px}.bt-branches-page .bt-branches-hours-list{grid-template-columns:1fr}.bt-branches-page .bt-branches-map-wrapper{min-height:300px}.bt-branches-page .bt-branches-map-info{padding:25px 20px}.bt-branches-page .bt-branches-cta{padding:68px 20px}}
+
+
+/* =========================================================
+   VELOX / BURGER TOWN — REFINAMIENTO PREMIUM DE SEDES
+   Estilos aislados para no afectar otras páginas públicas.
+========================================================= */
+.bt-branches-page {
+    --bt-purple: var(--velox-primary, #6d28d9);
+    --bt-ink: #111827;
+    --bt-muted: #667085;
+    --bt-line: #e8eaf0;
+    background: #f7f8fc;
+    color: var(--bt-ink);
+    font-family: var(--velox-font, Inter, sans-serif);
+}
+.bt-branches-page [hidden] { display: none !important; }
+.bt-branches-page .bt-branches-hero {
+    min-height: 690px;
+    padding-top: 142px;
+    padding-bottom: 82px;
+    background:
+        radial-gradient(circle at 82% 18%, rgba(124,58,237,.30), transparent 28%),
+        radial-gradient(circle at 72% 88%, rgba(37,99,235,.20), transparent 32%),
+        linear-gradient(118deg, #080a12 0%, #111827 56%, #21163d 100%);
+}
+.bt-branches-page .bt-branches-hero:before {
+    width: 720px; height: 720px; right: -210px; top: -300px;
+    border-color: rgba(255,255,255,.075);
+}
+.bt-branches-page .bt-branches-hero:after {
+    width: 520px; height: 520px; right: 12%; bottom: -370px;
+    border-color: rgba(255,255,255,.06);
+}
+.bt-branches-page .bt-branches-hero-overlay {
+    background: linear-gradient(90deg,rgba(7,10,18,.96) 0%,rgba(9,13,24,.83) 48%,rgba(17,14,35,.38) 100%);
+}
+.bt-branches-page .bt-branches-hero-image {
+    opacity: .42;
+    filter: saturate(.82);
+}
+.bt-branches-page .bt-branches-hero-placeholder { color: rgba(255,255,255,.055); }
+.bt-branches-page .bt-branches-hero-content { max-width: 1180px; }
+.bt-branches-page .bt-branches-eyebrow {
+    padding: 9px 13px;
+    border: 1px solid rgba(196,181,253,.25);
+    border-radius: 999px;
+    background: rgba(109,40,217,.14);
+    color: #c4b5fd;
+    letter-spacing: .13em;
+}
+.bt-branches-page .bt-branches-hero h1 {
+    max-width: 790px;
+    margin-top: 25px;
+    font-size: clamp(46px,6vw,78px);
+    letter-spacing: -.065em;
+    line-height: .99;
+    text-wrap: balance;
+}
+.bt-branches-page .bt-branches-hero p {
+    max-width: 590px;
+    color: rgba(226,232,240,.78);
+    font-size: 16px;
+    line-height: 1.8;
+}
+.bt-branches-page .bt-branches-selector {
+    gap: 12px;
+    margin-top: 30px;
+}
+.bt-branches-page .bt-branches-selector-label {
+    display: block;
+    width: 100%;
+    color: #e5e7eb;
+    font-size: 12px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+}
+.bt-branches-page .branch-select-wrapper { width: min(100%, 410px); }
+.bt-branches-page .branch-select-wrapper .form-select {
+    height: 58px;
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 15px;
+    background-color: rgba(255,255,255,.97);
+    box-shadow: 0 16px 38px rgba(0,0,0,.24);
+    font-size: 14px;
+}
+.bt-branches-page .bt-branches-hero-contact {
+    gap: 12px 24px;
+    margin-top: 22px;
+    color: rgba(255,255,255,.84);
+}
+.bt-branches-page .bt-branches-hero-contact-item {
+    max-width: min(100%, 440px);
+    align-items: flex-start;
+    line-height: 1.55;
+}
+.bt-branches-page .bt-branches-hero-contact-item i { margin-top: 3px; color: #a78bfa; }
+.bt-branches-page .bt-branches-information-section,
+.bt-branches-page .bt-branches-map-section { padding: 94px 24px; }
+.bt-branches-page .bt-branches-container { width: min(100%, 1160px); }
+.bt-branches-page .bt-branches-section-header { margin-bottom: 42px; }
+.bt-branches-page .bt-branches-section-eyebrow {
+    color: var(--bt-purple);
+    letter-spacing: .15em;
+}
+.bt-branches-page .bt-branches-section-header h2 {
+    margin: 13px 0 12px;
+    color: #111827;
+    font-size: clamp(32px,4vw,46px);
+    letter-spacing: -.055em;
+}
+.bt-branches-page .bt-branches-section-header p { color: #667085; }
+.bt-branches-page .bt-branches-info-grid { gap: 14px; margin-bottom: 22px; }
+.bt-branches-page .bt-branches-info-card,
+.bt-branches-page .bt-branches-hours-card,
+.bt-branches-page .bt-branches-map-card {
+    border: 1px solid #e8eaf0;
+    border-radius: 22px;
+    box-shadow: 0 10px 32px rgba(16,24,40,.045);
+}
+.bt-branches-page .bt-branches-info-card {
+    min-height: 136px;
+    padding: 22px 19px;
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+}
+.bt-branches-page .bt-branches-info-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(109,40,217,.22);
+    box-shadow: 0 18px 38px rgba(16,24,40,.09);
+}
+.bt-branches-page .bt-branches-info-icon,
+.bt-branches-page .bt-branches-hours-icon,
+.bt-branches-page .bt-branches-map-info-icon {
+    background: linear-gradient(145deg,#f3efff,#e9e4ff);
+    color: var(--bt-purple);
+}
+.bt-branches-page .bt-branches-info-card span {
+    color: #667085;
+    font-size: 10px;
+    letter-spacing: .12em;
+}
+.bt-branches-page .bt-branches-info-card strong {
+    color: #202939;
+    font-size: 13px;
+    line-height: 1.6;
+}
+.bt-branches-page .bt-branches-hours-card {
+    max-width: 820px;
+    padding: 32px 36px;
+}
+.bt-branches-page .bt-branches-hours-header { border-color: #edf0f5; }
+.bt-branches-page .bt-branches-hours-header h3 { color: #111827; }
+.bt-branches-page .bt-branches-hours-row { border-color: #edf0f5; }
+.bt-branches-page .bt-branches-hours-row strong { color: #202939; }
+.bt-branches-page .bt-branches-map-section {
+    padding-top: 84px;
+    background: linear-gradient(180deg,#fff 0%,#f8f9fc 100%);
+}
+.bt-branches-page .bt-branches-map-card {
+    border-radius: 24px;
+    box-shadow: 0 18px 50px rgba(16,24,40,.075);
+}
+.bt-branches-page .bt-branches-map-wrapper { min-height: 450px; }
+.bt-branches-page .bt-branches-map-info {
+    align-items: center;
+    padding: 38px 32px;
+    background: #fff;
+}
+.bt-branches-page .bt-branches-map-info h3 {
+    color: #111827;
+    font-size: 25px;
+}
+.bt-branches-page .bt-branches-map-link {
+    min-height: 44px;
+    padding: 0 15px;
+    border-radius: 11px;
+    background: #f2edff;
+    color: var(--bt-purple);
+    transition: background .2s ease, color .2s ease, transform .2s ease;
+}
+.bt-branches-page .bt-branches-map-link:hover {
+    transform: translateY(-2px);
+    background: var(--bt-purple);
+    color: #fff;
+}
+.bt-branches-page .bt-branches-cta {
+    padding: 96px 24px;
+    background:
+        radial-gradient(circle at 50% 0%,rgba(124,58,237,.32),transparent 42%),
+        linear-gradient(120deg,#090b14,#17152b 62%,#28164a);
+}
+.bt-branches-page .bt-branches-cta-eyebrow { color: #c4b5fd; }
+.bt-branches-page .bt-branches-cta h2 {
+    font-size: clamp(34px,4.5vw,52px);
+    letter-spacing: -.055em;
+}
+.bt-branches-page .bt-branches-cta-button {
+    min-height: 56px;
+    padding: 0 26px;
+    border: 0;
+    border-radius: 13px;
+    background: linear-gradient(135deg,#fff,#ede9fe);
+    color: #241344;
+    box-shadow: 0 14px 32px rgba(0,0,0,.22);
+}
+.bt-branches-page .bt-branches-cta-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 20px 38px rgba(0,0,0,.28);
+}
+.bt-branches-page .bt-branches-gallery { gap: 12px; margin-top: 26px; }
+.bt-branches-page .bt-branches-gallery-arrow {
+    width: 42px; height: 42px; flex-basis: 42px;
+    border-color: rgba(255,255,255,.28);
+    background: rgba(255,255,255,.12);
+    backdrop-filter: blur(10px);
+    transition: background .2s ease, transform .2s ease;
+}
+.bt-branches-page .bt-branches-gallery-arrow:hover {
+    transform: translateY(-2px);
+    background: rgba(255,255,255,.24);
+}
+.bt-branches-page .bt-branches-thumbnails button {
+    width: 74px; height: 58px; flex-basis: 74px;
+    border-radius: 11px;
+}
+.bt-branches-page .bt-branches-thumbnails button.is-active {
+    border-color: #c4b5fd;
+    box-shadow: 0 0 0 3px rgba(196,181,253,.2);
+}
+@media (max-width: 991.98px) {
+    .bt-branches-page .bt-branches-hero { min-height: 650px; padding-top: 126px; }
+    .bt-branches-page .bt-branches-info-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+}
+@media (max-width: 600px) {
+    .bt-branches-page .bt-branches-hero {
+        min-height: 610px;
+        padding: 118px 20px 58px;
+    }
+    .bt-branches-page .bt-branches-hero h1 {
+        margin-top: 20px;
+        font-size: clamp(40px,12vw,52px);
+    }
+    .bt-branches-page .bt-branches-hero p { font-size: 14px; }
+    .bt-branches-page .bt-branches-hero-contact { flex-direction: column; gap: 11px; }
+    .bt-branches-page .bt-branches-information-section,
+    .bt-branches-page .bt-branches-map-section { padding: 66px 17px; }
+    .bt-branches-page .bt-branches-info-grid { grid-template-columns: 1fr; }
+    .bt-branches-page .bt-branches-hours-card { padding: 23px 19px; }
+    .bt-branches-page .bt-branches-map-wrapper { min-height: 310px; }
+    .bt-branches-page .bt-branches-map-info { padding: 25px 20px; }
+    .bt-branches-page .bt-branches-cta { padding: 72px 20px; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .bt-branches-page *, .bt-branches-page *::before, .bt-branches-page *::after {
+        scroll-behavior: auto !important;
+        animation-duration: .01ms !important;
+        transition-duration: .01ms !important;
+    }
+}
