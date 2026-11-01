@@ -1197,3 +1197,30 @@
 .public-navbar#mainNavbar .velox-dropdown .dropdown-item.active {
     background: #f3efff !important;
 }
+
+
+/* Mantener visibles los iconos del desplegable en hover, focus y selección. */
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item > i,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:hover > i,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:focus > i,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:focus-visible > i,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item.active > i,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:active > i {
+    display: grid !important;
+    place-items: center !important;
+    flex: 0 0 36px !important;
+    width: 36px !important;
+    height: 36px !important;
+    color: #6d28d9 !important;
+    -webkit-text-fill-color: #6d28d9 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    transform: none !important;
+}
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:hover > i,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:focus > i,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item.active > i {
+    background: #eee8ff !important;
+    border-radius: 10px !important;
+}
