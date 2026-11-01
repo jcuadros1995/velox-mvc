@@ -93,6 +93,13 @@ class AuditLogger
         ];
         $module = $modules[$moduleKey] ?? ucfirst(str_replace('-', ' ', $moduleKey));
 
+        // Diferenciar configuración general y configuración operativa de sedes.
+        if ($moduleKey === 'settings') {
+            $module = 'Configuración general';
+        } elseif ($moduleKey === 'branches') {
+            $module = 'Configuración de sedes';
+        }
+
         $actionKey = strtolower((string)(count($modulePath) > 1 ? end($modulePath) : 'index'));
         if (!$isApi && strtoupper($method) === 'GET' && in_array($actionKey, ['index', 'dashboard', ''], true)) {
             $action = 'Consulta de módulo';
@@ -115,6 +122,35 @@ class AuditLogger
 
         if (strtoupper($method) === 'POST' && !$isApi) $action = 'Envío de formulario';
         if ($isApi && strtoupper($method) === 'GET' && $action === 'Consulta') $action = 'Consulta de información';
+
+        // Nombrar explícitamente las operaciones sensibles de configuración.
+        if ($moduleKey === 'settings') {
+            $action = strtoupper($method) === 'POST'
+                ? 'Actualización de configuración general'
+                : 'Consulta de configuración general';
+        } elseif ($moduleKey === 'branches') {
+            $branchActions = [
+                'index' => 'Consulta de configuración de sedes',
+                'store' => 'Creación de sede',
+                'update' => 'Actualización de datos de sede',
+                'save-hours' => 'Actualización de horarios de sede',
+                'save-hours' => 'Actualización de horarios de sede',
+                'images' => 'Gestión de imágenes de sede',
+                'save' => 'Actualización de imágenes y recursos',
+                'create' => 'Creación de mesa',
+                'update' => 'Actualización de sede o mesa',
+                'delete' => 'Eliminación de sede o mesa',
+                'delete-permanently' => 'Eliminación permanente de mesa',
+                'show' => 'Consulta de configuración de sede',
+                'tables' => 'Consulta de mesas de sede'
+            ];
+            $action = $branchActions[$actionKey] ?? (
+                strtoupper($method) === 'GET'
+                    ? 'Consulta de configuración de sede'
+                    : 'Actualización de configuración de sede'
+            );
+        }
+
         return [$module, $action];
     }
 
