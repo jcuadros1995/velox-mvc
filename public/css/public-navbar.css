@@ -1170,3 +1170,30 @@
         transition: none !important;
     }
 }
+
+
+/* Legibilidad garantizada en los elementos activos del menú desplegable. */
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:hover,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:focus,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item.active,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item:active {
+    color: #25243a !important;
+    opacity: 1 !important;
+}
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item > span,
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item > span > strong {
+    color: #25243a !important;
+    opacity: 1 !important;
+}
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item > span > small {
+    color: #73778a !important;
+    opacity: 1 !important;
+}
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item > i {
+    color: #6d28d9 !important;
+    opacity: 1 !important;
+}
+.public-navbar#mainNavbar .velox-dropdown .dropdown-item.active {
+    background: #f3efff !important;
+}
