@@ -25,6 +25,8 @@ class Database
         }
 
         $appEnv = strtolower(self::env('APP_ENV', 'production'));
+        // DB credentials may be supplied by the hosting environment or local .env.
+        // These defaults support the repository's documented XAMPP/MariaDB setup.
         $host = self::env('DB_HOST', '127.0.0.1');
         $port = self::env('DB_PORT', '3306');
         $name = self::env('DB_NAME', 'velox_core');
