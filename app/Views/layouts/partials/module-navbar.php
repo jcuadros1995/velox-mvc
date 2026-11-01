@@ -1,397 +1,139 @@
 <?php
 /**
- * app/Views/layouts/partials/navbar.php
- *
- * Navbar público reutilizable.
+ * Navegación pública Velox MVC.
+ * Menú compacto compartido para escritorio y móvil.
  */
-
-$currentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH);
-
-$currentPath = rtrim($currentPath, '/');
-
-if ($currentPath === '') {
-    $currentPath = '/';
-}
-
-$homePath = parse_url(APP_URL, PHP_URL_PATH) ?: '/';
+$currentPath = rtrim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/') ?: '/';
+$basePath = rtrim(parse_url(APP_URL, PHP_URL_PATH) ?: '/', '/');
+$pathIs = static function (string $path) use ($currentPath, $basePath): bool {
+    $normalized = rtrim($basePath . $path, '/') ?: '/';
+    return $currentPath === $normalized || ($normalized !== '/' && strpos($currentPath, $normalized . '/') === 0);
+};
 
 $homeUrl = APP_URL;
-$reservationsUrl = APP_URL . '/reservas';
 $loginUrl = APP_URL . '/login';
+$accountUrl = APP_URL . '/mi-cuenta';
+$reservationsUrl = APP_URL . '/reservas';
 $searchReservationUrl = APP_URL . '/consultar-reserva';
-$moduleStoreUrl = APP_URL . '/tienda';
-$moduleStoreActive = (strpos($moduleCurrentPath, '/tienda') !== false);
-$moduleMenuUrl = APP_URL . '/menu';
-$moduleBranchesUrl = APP_URL . '/sedes';
-$moduleEventsUrl = APP_URL . '/eventos';
-$moduleContactUrl = APP_URL . '/pages/contact';
+$storeUrl = APP_URL . '/tienda';
+$cartUrl = APP_URL . '/carrito';
+$menuUrl = APP_URL . '/menu';
+$branchesUrl = APP_URL . '/sedes';
+$eventsUrl = APP_URL . '/eventos';
+$contactUrl = APP_URL . '/pages/contact';
 
-$isHome = ($currentPath === rtrim($homePath, '/'));
-$isReservations = ($currentPath === rtrim(parse_url($reservationsUrl, PHP_URL_PATH), '/'));
-$isLogin = ($currentPath === rtrim(parse_url($loginUrl, PHP_URL_PATH), '/'));
-$isSearchReservation = ( $currentPath === rtrim(parse_url($searchReservationUrl, PHP_URL_PATH),'/'));
-/*
-|--------------------------------------------------------------------------
-| HOME DROPDOWN
-|--------------------------------------------------------------------------
-|
-| El dropdown se considera activo cuando estamos en Inicio.
-|
-|--------------------------------------------------------------------------
-*/
+$isHome = $currentPath === ($basePath ?: '/');
+$isReservations = $pathIs('/reservas');
+$isSearchReservation = $pathIs('/consultar-reserva');
+$isStore = $pathIs('/tienda');
+$isCart = $pathIs('/carrito');
+$isMenu = $pathIs('/menu');
+$isBranches = $pathIs('/sedes');
+$isEvents = $pathIs('/eventos');
+$isContact = $pathIs('/pages/contact');
 
-$isHomeMenuActive = $isHome;
-$moduleCurrentPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
-$moduleMenuActive = (strpos($moduleCurrentPath, '/menu') !== false);
-$moduleBranchesActive = (strpos($moduleCurrentPath, '/sedes') !== false);
-$moduleEventsActive = (strpos($moduleCurrentPath, '/eventos') !== false);
-$moduleContactActive = (strpos($moduleCurrentPath, '/pages/contact') !== false);
+$siteName = SiteConfig::siteName();
+$logoName = SiteConfig::siteLogo();
+$logoUrl = $logoName !== ''
+    ? rtrim(APP_URL, '/') . '/assets/img/settings/' . rawurlencode($logoName)
+    : '';
 
-$userMenu = Auth::user();
-$isCustomer = $userMenu && strtolower((string)($userMenu['role_name'] ?? '')) === 'customer';
-$customerAccountUrl = APP_URL . '/mi-cuenta';
+$currentUser = Auth::user();
+$isCustomer = $currentUser && strtolower((string)($currentUser['role_name'] ?? '')) === 'customer';
+$exploreActive = $isMenu || $isBranches || $isEvents || $isContact;
+$reservationsActive = $isReservations || $isSearchReservation;
 ?>
-
-<!-- =========================================================
-     NAVBAR PÚBLICO
-========================================================= -->
-
-<nav id="mainNavbar" class="navbar navbar-expand-lg public-navbar">
-
+<nav id="mainNavbar" class="navbar navbar-expand-lg public-navbar" aria-label="Navegación principal">
     <div class="container">
-
-        <!-- =====================================================
-             BRAND
-        ====================================================== -->
-
-        <?php
-        $navbarSiteName =
-                SiteConfig::siteName();
-
-        $navbarLogo =
-                SiteConfig::siteLogo();
-
-        $navbarLogoUrl =
-                $navbarLogo !== ''
-                        ? rtrim(APP_URL, '/') .
-                        '/assets/img/settings/' .
-                        rawurlencode($navbarLogo)
-                        : '';
-        ?>
-
-        <a
-            class="navbar-brand velox-brand"
-            href="<?= htmlspecialchars($homeUrl) ?>"
-            aria-label="<?= htmlspecialchars(
-                    $navbarSiteName . ' - Inicio',
-                    ENT_QUOTES,
-                    'UTF-8'
-            ) ?>"
-        >
-
+        <a class="navbar-brand velox-brand" href="<?= htmlspecialchars($homeUrl, ENT_QUOTES, 'UTF-8') ?>"
+           aria-label="<?= htmlspecialchars($siteName . ' - Inicio', ENT_QUOTES, 'UTF-8') ?>">
             <span class="brand-mark">
-
-                <?php if ($navbarLogoUrl !== ''): ?>
-
-                    <img
-                            src="<?= htmlspecialchars(
-                                    $navbarLogoUrl,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                            ) ?>"
-                            alt="<?= htmlspecialchars(
-                                    $navbarSiteName,
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                            ) ?>"
-                            class="brand-logo"
-                    >
-
+                <?php if ($logoUrl !== ''): ?>
+                    <img src="<?= htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8') ?>"
+                         alt="" class="brand-logo"
+                         onerror="this.remove();this.parentElement.innerHTML='<i class=&quot;fa-solid fa-bolt&quot; aria-hidden=&quot;true&quot;></i>';">
                 <?php else: ?>
-
-                    <i class="fa-solid fa-bolt"></i>
-
+                    <i class="fa-solid fa-bolt" aria-hidden="true"></i>
                 <?php endif; ?>
-
             </span>
-
-            <span>
-                <?= htmlspecialchars(
-                        $navbarSiteName,
-                        ENT_QUOTES,
-                        'UTF-8'
-                ) ?>
-            </span>
-
+            <span class="velox-brand-name"><?= htmlspecialchars($siteName, ENT_QUOTES, 'UTF-8') ?></span>
         </a>
 
-
-        <!-- =====================================================
-             MOBILE TOGGLER
-        ====================================================== -->
-
-        <button
-            class="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#mainNav"
-            aria-controls="mainNav"
-            aria-expanded="false"
-            aria-label="Abrir navegación"
-        >
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#mainNav" aria-controls="mainNav"
+                aria-expanded="false" aria-label="Abrir menú de navegación">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-
-        <!-- =====================================================
-             NAVIGATION
-        ====================================================== -->
-
-        <div
-            class="collapse navbar-collapse"
-            id="mainNav"
-        >
-
-            <ul class="navbar-nav ms-auto align-items-lg-center gap-lg-2">
-
-
-                <!-- =================================================
-                     INICIO - DROPDOWN
-                ================================================== -->
+        <div class="collapse navbar-collapse" id="mainNav">
+            <ul class="navbar-nav ms-auto align-items-lg-center">
+                <li class="nav-item">
+                    <a class="nav-link <?= $isHome ? 'active' : '' ?>"
+                       href="<?= htmlspecialchars($homeUrl, ENT_QUOTES, 'UTF-8') ?>"
+                       <?= $isHome ? 'aria-current="page"' : '' ?>>
+                        <i class="fa-solid fa-house" aria-hidden="true"></i><span>Inicio</span>
+                    </a>
+                </li>
 
                 <li class="nav-item dropdown">
-
-                    <a
-                        class="nav-link dropdown-toggle <?= $isHomeMenuActive ? 'active' : '' ?>"
-                        href="<?= htmlspecialchars($homeUrl) ?>"
-                        id="homeDropdown"
-                        role="button"
-                        data-bs-toggle="dropdown"
-                        aria-expanded="false"
-                        <?= $isHomeMenuActive ? 'aria-current="page"' : '' ?>
-                    >
-                        <i class="fa-solid fa-house me-1"></i>
-                        Inicio
+                    <a class="nav-link dropdown-toggle <?= $exploreActive ? 'active' : '' ?>"
+                       href="#" id="exploreDropdown" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <i class="fa-solid fa-compass" aria-hidden="true"></i><span>Explorar</span>
                     </a>
-
-
-                    <ul
-                        class="dropdown-menu dropdown-menu-end velox-dropdown"
-                        aria-labelledby="homeDropdown"
-                    >
-
-                        <!-- Inicio -->
-
-                        <li>
-                            <a
-                                class="dropdown-item <?= $isHome ? 'active' : '' ?>"
-                                href="<?= htmlspecialchars($homeUrl) ?>"
-                            >
-                                <i class="fa-solid fa-house"></i>
-
-                                <span>
-                                    <strong>Inicio</strong>
-                                    <small>Ir al inicio</small>
-                                </span>
-                            </a>
-                        </li>
-
-
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-
-
-                        <!-- Servicios -->
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="<?= htmlspecialchars($homeUrl) ?>#servicios"
-                            >
-                                <i class="fa-solid fa-layer-group"></i>
-
-                                <span>
-                                    <strong>Servicios</strong>
-                                    <small>Conoce nuestras soluciones</small>
-                                </span>
-                            </a>
-                        </li>
-
-
-                        <!-- Propuesta -->
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="<?= htmlspecialchars($homeUrl) ?>#nosotros"
-                            >
-                                <i class="fa-solid fa-lightbulb"></i>
-
-                                <span>
-                                    <strong>Propuesta</strong>
-                                    <small>Lo que ofrecemos</small>
-                                </span>
-                            </a>
-                        </li>
-
-
-                        <!-- Métricas -->
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="<?= htmlspecialchars($homeUrl) ?>#estadisticas"
-                            >
-                                <i class="fa-solid fa-chart-line"></i>
-
-                                <span>
-                                    <strong>Métricas</strong>
-                                    <small>Resultados y estadísticas</small>
-                                </span>
-                            </a>
-                        </li>
-
-
-                        <!-- Testimonios -->
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="<?= htmlspecialchars($homeUrl) ?>#testimonios"
-                            >
-                                <i class="fa-solid fa-comments"></i>
-
-                                <span>
-                                    <strong>Testimonios</strong>
-                                    <small>Experiencias de clientes</small>
-                                </span>
-                            </a>
-                        </li>
-
-
-                        <!-- Contacto -->
-
-                        <li>
-                            <a
-                                class="dropdown-item"
-                                href="<?= htmlspecialchars($homeUrl) ?>#contacto"
-                            >
-                                <i class="fa-solid fa-envelope"></i>
-
-                                <span>
-                                    <strong>Contacto</strong>
-                                    <small>Hablemos contigo</small>
-                                </span>
-                            </a>
-                        </li>
-
+                    <ul class="dropdown-menu dropdown-menu-end velox-dropdown" aria-labelledby="exploreDropdown">
+                        <li><a class="dropdown-item <?= $isMenu ? 'active' : '' ?>" href="<?= htmlspecialchars($menuUrl, ENT_QUOTES, 'UTF-8') ?>">
+                            <i class="fa-solid fa-utensils" aria-hidden="true"></i><span><strong>Menú</strong><small>Descubre nuestros productos</small></span></a></li>
+                        <li><a class="dropdown-item <?= $isBranches ? 'active' : '' ?>" href="<?= htmlspecialchars($branchesUrl, ENT_QUOTES, 'UTF-8') ?>">
+                            <i class="fa-solid fa-location-dot" aria-hidden="true"></i><span><strong>Sedes</strong><small>Encuentra tu punto más cercano</small></span></a></li>
+                        <li><a class="dropdown-item <?= $isEvents ? 'active' : '' ?>" href="<?= htmlspecialchars($eventsUrl, ENT_QUOTES, 'UTF-8') ?>">
+                            <i class="fa-solid fa-calendar-days" aria-hidden="true"></i><span><strong>Eventos</strong><small>Conoce nuestras actividades</small></span></a></li>
+                        <li><a class="dropdown-item <?= $isContact ? 'active' : '' ?>" href="<?= htmlspecialchars($contactUrl, ENT_QUOTES, 'UTF-8') ?>">
+                            <i class="fa-solid fa-envelope" aria-hidden="true"></i><span><strong>Contacto</strong><small>Estamos para ayudarte</small></span></a></li>
                     </ul>
-
                 </li>
 
-
-                <!-- =================================================
-                     RESERVAS
-                ================================================== -->
-
-                <li class="nav-item">
-
-                    <a
-                        class="nav-link reservation-nav-link <?= $isReservations ? 'active' : '' ?>"
-                        href="<?= htmlspecialchars($reservationsUrl) ?>"
-                        <?= $isReservations ? 'aria-current="page"' : '' ?>
-                    >
-
-                        <i class="fa-regular fa-calendar-check me-1"></i>
-
-                        Reservas
-
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle <?= $reservationsActive ? 'active' : '' ?>"
+                       href="#" id="reservationsDropdown" role="button" data-bs-toggle="dropdown"
+                       aria-expanded="false">
+                        <i class="fa-regular fa-calendar-check" aria-hidden="true"></i><span>Reservas</span>
                     </a>
-
+                    <ul class="dropdown-menu dropdown-menu-end velox-dropdown" aria-labelledby="reservationsDropdown">
+                        <li><a class="dropdown-item <?= $isReservations ? 'active' : '' ?>" href="<?= htmlspecialchars($reservationsUrl, ENT_QUOTES, 'UTF-8') ?>">
+                            <i class="fa-solid fa-calendar-plus" aria-hidden="true"></i><span><strong>Crear reserva</strong><small>Reserva tu mesa</small></span></a></li>
+                        <li><a class="dropdown-item <?= $isSearchReservation ? 'active' : '' ?>" href="<?= htmlspecialchars($searchReservationUrl, ENT_QUOTES, 'UTF-8') ?>">
+                            <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i><span><strong>Consultar reserva</strong><small>Revisa o gestiona tu reserva</small></span></a></li>
+                    </ul>
                 </li>
 
-                <!-- =================================================
-                     CONSULTAR RESERVA
-                ================================================== -->
-
                 <li class="nav-item">
-
-                    <a
-                        class="nav-link reservation-search-nav-link <?= $isSearchReservation ? 'active' : '' ?>"
-                        href="<?= htmlspecialchars($searchReservationUrl) ?>"
-                        <?= $isSearchReservation ? 'aria-current="page"' : '' ?>
-                    >
-                        <i class="fa-solid fa-magnifying-glass me-1"></i>
-                        Consultar reserva
-                    </a>
-
-                </li>
-
-
-                <li class="nav-item">
-                    <a class="nav-link <?= $moduleStoreActive ? 'active' : '' ?>" href="<?= htmlspecialchars($moduleStoreUrl, ENT_QUOTES, 'UTF-8') ?>" <?= $moduleStoreActive ? 'aria-current="page"' : '' ?>>
-                        <i class="fa-solid fa-store me-1"></i> Tienda
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $moduleMenuActive ? 'active' : '' ?>" href="<?= htmlspecialchars($moduleMenuUrl, ENT_QUOTES, 'UTF-8') ?>">
-                        <i class="fa-solid fa-utensils me-1"></i> Menú
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $moduleBranchesActive ? 'active' : '' ?>" href="<?= htmlspecialchars($moduleBranchesUrl, ENT_QUOTES, 'UTF-8') ?>">
-                        <i class="fa-solid fa-location-dot me-1"></i> Sedes
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $moduleEventsActive ? 'active' : '' ?>" href="<?= htmlspecialchars($moduleEventsUrl, ENT_QUOTES, 'UTF-8') ?>">
-                        <i class="fa-solid fa-calendar-days me-1"></i> Eventos
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link <?= $moduleContactActive ? 'active' : '' ?>" href="<?= htmlspecialchars($moduleContactUrl, ENT_QUOTES, 'UTF-8') ?>">
-                        <i class="fa-solid fa-envelope me-1"></i> Contacto
+                    <a class="nav-link <?= $isStore ? 'active' : '' ?>" href="<?= htmlspecialchars($storeUrl, ENT_QUOTES, 'UTF-8') ?>"
+                       <?= $isStore ? 'aria-current="page"' : '' ?>>
+                        <i class="fa-solid fa-store" aria-hidden="true"></i><span>Tienda</span>
                     </a>
                 </li>
 
                 <li class="nav-item">
-                    <a href="<?= htmlspecialchars(APP_URL . '/carrito', ENT_QUOTES, 'UTF-8') ?>" class="nav-link store-cart-nav-link">
-                        <i class="fa-solid fa-basket-shopping"></i>
-                        Carrito
+                    <a class="nav-link store-cart-nav-link <?= $isCart ? 'active' : '' ?>"
+                       href="<?= htmlspecialchars($cartUrl, ENT_QUOTES, 'UTF-8') ?>" <?= $isCart ? 'aria-current="page"' : '' ?>>
+                        <i class="fa-solid fa-basket-shopping" aria-hidden="true"></i><span>Carrito</span>
                         <span class="store-cart-nav-count d-none" data-cart-count>0</span>
                     </a>
                 </li>
 
-                <!-- =================================================
-                     ACCESO AL PANEL
-                ================================================== -->
-
-                <li class="nav-item ms-lg-3 mt-3 mt-lg-0">
+                <li class="nav-item nav-account-item">
                     <?php if ($isCustomer): ?>
-                        <a
-                            href="<?= htmlspecialchars($customerAccountUrl, ENT_QUOTES, 'UTF-8') ?>"
-                            class="btn btn-velox-primary"
-                        >
-                            <i class="fa-solid fa-user-circle me-2"></i>
-                            Mi cuenta
+                        <a href="<?= htmlspecialchars($accountUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-velox-primary">
+                            <i class="fa-solid fa-user-circle" aria-hidden="true"></i><span>Mi cuenta</span>
                         </a>
                     <?php else: ?>
-                        <a
-                            href="<?= htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8') ?>"
-                            class="btn btn-velox-primary <?= $isLogin ? 'active' : '' ?>"
-                            <?= $isLogin ? 'aria-current="page"' : '' ?>
-                        >
-                            Acceso al panel
-                            <i class="fa-solid fa-arrow-right ms-2"></i>
+                        <a href="<?= htmlspecialchars($loginUrl, ENT_QUOTES, 'UTF-8') ?>" class="btn btn-velox-primary">
+                            <span>Acceso al panel</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                         </a>
                     <?php endif; ?>
                 </li>
-
             </ul>
-
         </div>
-
     </div>
-
 </nav>
