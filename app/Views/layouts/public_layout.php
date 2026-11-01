@@ -63,9 +63,9 @@ $siteFaviconUrl =
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/fonts.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/public.css" rel="stylesheet">
-    <link href="<?= APP_URL ?>/public/css/public-navbar.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/branches.css" rel="stylesheet">
     <link href="<?= APP_URL ?>/public/css/cart-checkout.css" rel="stylesheet">
+    <link href="<?= APP_URL ?>/public/css/public-navbar.css?v=<?= (int) @filemtime(__DIR__ . '/../../../public/css/public-navbar.css') ?>" rel="stylesheet">
 
     <style>
         :root {
