@@ -51,7 +51,7 @@ $reservationsActive = $isReservations || $isSearchReservation;
                 <?php if ($logoUrl !== ''): ?>
                     <img src="<?= htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8') ?>"
                          alt="" class="brand-logo"
-                         onerror="this.remove();this.parentElement.innerHTML='<i class=&quot;fa-solid fa-bolt&quot; aria-hidden=&quot;true&quot;></i>';">
+                         onerror="this.onerror=null;this.parentNode.innerHTML='<i class=&quot;fa-solid fa-bolt&quot; aria-hidden=&quot;true&quot;></i>';">
                 <?php else: ?>
                     <i class="fa-solid fa-bolt" aria-hidden="true"></i>
                 <?php endif; ?>
