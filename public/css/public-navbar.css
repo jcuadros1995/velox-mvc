@@ -1,0 +1,258 @@
+/* =========================================================
+   VELOX — PUBLIC NAVBAR SYSTEM
+   Isolated overrides: does not alter page sections or admin UI.
+========================================================= */
+
+:root {
+    --velox-nav-height: 82px;
+    --velox-nav-bg: rgba(255, 255, 255, .92);
+    --velox-nav-border: rgba(15, 23, 42, .07);
+    --velox-nav-shadow: 0 12px 38px rgba(15, 23, 42, .075);
+}
+
+.public-navbar {
+    min-height: var(--velox-nav-height);
+    padding: .85rem 0;
+    background: var(--velox-nav-bg);
+    border-bottom: 1px solid var(--velox-nav-border);
+    box-shadow: 0 3px 18px rgba(15, 23, 42, .035);
+    backdrop-filter: saturate(180%) blur(20px);
+    -webkit-backdrop-filter: saturate(180%) blur(20px);
+    transition: padding .22s ease, background .22s ease, box-shadow .22s ease;
+}
+
+.public-navbar .container {
+    gap: 1.25rem;
+}
+
+.public-navbar .navbar-brand {
+    flex: 0 0 auto;
+    margin-right: 1.5rem;
+}
+
+.public-navbar .velox-brand {
+    gap: .75rem;
+    font-size: 1.22rem;
+    letter-spacing: -.045em;
+    line-height: 1.1;
+}
+
+.public-navbar .brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 13px;
+}
+
+.public-navbar .navbar-collapse {
+    align-items: center;
+}
+
+.public-navbar .navbar-nav {
+    gap: .15rem;
+}
+
+.public-navbar .navbar-nav .nav-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: .65rem .78rem;
+    border-radius: 11px;
+    color: #475569;
+    font-size: .875rem;
+    font-weight: 600;
+    letter-spacing: -.012em;
+    white-space: nowrap;
+    transition: color .18s ease, background .18s ease, transform .18s ease;
+}
+
+.public-navbar .navbar-nav .nav-link::after {
+    display: none;
+}
+
+.public-navbar .navbar-nav .nav-link:hover {
+    color: var(--velox-primary, #6d28d9) !important;
+    background: rgba(109, 40, 217, .065);
+    transform: translateY(-1px);
+}
+
+.public-navbar .navbar-nav .nav-link.active,
+.public-navbar .navbar-nav .nav-link[aria-current="page"] {
+    color: var(--velox-primary, #6d28d9) !important;
+    background: rgba(109, 40, 217, .085);
+    font-weight: 700;
+}
+
+.public-navbar .nav-link > i {
+    font-size: .88em;
+    opacity: .82;
+}
+
+.public-navbar .btn-velox-primary {
+    min-height: 44px;
+    justify-content: center;
+    padding: .72rem 1.12rem;
+    border: 1px solid rgba(15, 23, 42, .08);
+    border-radius: 12px;
+    background: linear-gradient(135deg, #18181b 0%, #312e81 100%);
+    box-shadow: 0 7px 18px rgba(30, 27, 75, .17);
+    font-size: .86rem;
+    white-space: nowrap;
+}
+
+.public-navbar .btn-velox-primary:hover {
+    background: linear-gradient(135deg, #27272a 0%, #4338ca 100%);
+    box-shadow: 0 10px 24px rgba(30, 27, 75, .23);
+}
+
+.public-navbar .dropdown-menu.velox-dropdown {
+    margin-top: .65rem;
+    padding: .55rem;
+    border: 1px solid rgba(15, 23, 42, .08);
+    border-radius: 16px;
+    box-shadow: 0 22px 55px rgba(15, 23, 42, .14);
+}
+
+.public-navbar .velox-dropdown .dropdown-item {
+    min-height: 54px;
+    padding: .62rem .7rem;
+}
+
+.public-navbar .store-cart-nav-link {
+    position: relative;
+    gap: .45rem;
+}
+
+.public-navbar .store-cart-nav-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 999px;
+    color: #fff;
+    background: var(--velox-primary, #6d28d9);
+    font-size: .68rem;
+    font-weight: 800;
+    line-height: 1;
+}
+
+.public-navbar .navbar-toggler {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    padding: 0;
+    border: 1px solid rgba(15, 23, 42, .11);
+    border-radius: 12px;
+    background: #fff;
+    box-shadow: 0 3px 10px rgba(15, 23, 42, .045);
+}
+
+.public-navbar .navbar-toggler:focus {
+    box-shadow: 0 0 0 .2rem rgba(109, 40, 217, .15);
+}
+
+.public-navbar .navbar-toggler-icon {
+    width: 19px;
+    height: 19px;
+}
+
+@media (min-width: 992px) {
+    .public-navbar .navbar-collapse {
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 1199.98px) and (min-width: 992px) {
+    .public-navbar .container {
+        gap: .6rem;
+    }
+    .public-navbar .navbar-brand {
+        margin-right: .4rem;
+    }
+    .public-navbar .navbar-nav .nav-link {
+        padding-right: .55rem;
+        padding-left: .55rem;
+        font-size: .82rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    :root {
+        --velox-nav-height: 72px;
+    }
+
+    .public-navbar {
+        padding: .65rem 0;
+    }
+
+    .public-navbar .container {
+        flex-wrap: wrap;
+    }
+
+    .public-navbar .navbar-brand {
+        margin-right: auto;
+    }
+
+    .public-navbar .navbar-collapse {
+        flex-basis: 100%;
+        width: 100%;
+        margin-top: .85rem;
+        padding: .7rem;
+        border: 1px solid rgba(15, 23, 42, .07);
+        border-radius: 17px;
+        background: rgba(255, 255, 255, .98);
+        box-shadow: 0 18px 42px rgba(15, 23, 42, .09);
+    }
+
+    .public-navbar .navbar-nav {
+        align-items: stretch !important;
+        gap: .18rem;
+    }
+
+    .public-navbar .navbar-nav .nav-link {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        min-height: 46px;
+        padding: .75rem .85rem;
+        white-space: normal;
+    }
+
+    .public-navbar .navbar-nav .nav-item.ms-lg-3 {
+        margin: .55rem 0 0 !important;
+    }
+
+    .public-navbar .btn-velox-primary {
+        display: flex;
+        width: 100%;
+    }
+
+    .public-navbar .dropdown-menu.velox-dropdown {
+        width: 100%;
+        margin: .2rem 0 .45rem;
+        padding: .4rem;
+        border-radius: 13px;
+        background: #f8fafc;
+        box-shadow: none;
+    }
+
+    .public-navbar .velox-dropdown .dropdown-item {
+        min-height: 50px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .public-navbar,
+    .public-navbar *,
+    .public-navbar *::before,
+    .public-navbar *::after {
+        scroll-behavior: auto !important;
+        transition-duration: .01ms !important;
+        animation-duration: .01ms !important;
+        animation-iteration-count: 1 !important;
+    }
+}
