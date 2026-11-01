@@ -238,6 +238,18 @@ class RestaurantReservationRepository
         string $reservationCode = '',
         string $email = ''
     ): array {
+        // Nunca permitir búsquedas públicas por un solo dato personal.
+        $reservationCode = strtoupper(trim($reservationCode));
+        $email = strtolower(trim($email));
+        if (
+            $reservationCode === '' ||
+            $email === '' ||
+            !preg_match('/^RSV-[A-Z0-9]{6}$/', $reservationCode) ||
+            !filter_var($email, FILTER_VALIDATE_EMAIL)
+        ) {
+            return [];
+        }
+
         $conditions = [];
         $params = [];
 
