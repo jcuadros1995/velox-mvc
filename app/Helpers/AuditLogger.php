@@ -88,7 +88,8 @@ class AuditLogger
             'events' => 'Eventos', 'users' => 'Usuarios',
             'branches' => 'Sedes', 'settings' => 'Configuración',
             'profile' => 'Perfil', 'orders' => 'Pedidos',
-            'payments' => 'Pagos', 'audit-logs' => 'Auditoría',\n            'metrics' => 'Indicadores', 'email' => 'Correo', 'notifications' => 'Notificaciones'
+            'payments' => 'Pagos', 'audit-logs' => 'Auditoría',
+            'metrics' => 'Indicadores', 'email' => 'Correo', 'notifications' => 'Notificaciones'
         ];
         $module = $modules[$moduleKey] ?? ucfirst(str_replace('-', ' ', $moduleKey));
 
