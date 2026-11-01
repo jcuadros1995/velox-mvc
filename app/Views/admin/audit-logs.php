@@ -2,6 +2,7 @@
 $filters = $auditFilters ?? [];
 $stats = $auditStats ?? ['total'=>0,'today'=>0,'users'=>0,'errors'=>0];
 $options = $auditOptions ?? ['modules'=>[],'actions'=>[],'users'=>[]];
+$logs = is_array($auditLogs ?? null) ? $auditLogs : [];
 $pagination = $auditPagination ?? ['page'=>1,'pages'=>1,'total'=>0,'per_page'=>25];
 $baseQuery = $filters;
 unset($baseQuery['page']);
