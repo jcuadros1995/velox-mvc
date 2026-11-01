@@ -462,19 +462,10 @@ class Router
                 );
 
 
-            // Auditoría centralizada de páginas y operaciones administrativas.
-            // Se ejecuta después de validar autenticación y permisos del middleware.
-            $isAdminAuditRoute =
-                str_starts_with($url, '/admin/') ||
-                str_starts_with($url, '/api/admin/') ||
-                ($url === '/api/settings/update') ||
-                (
-                    str_starts_with($url, '/api/items/') &&
-                    strtoupper($method) !== 'GET'
-                ) ||
-                ($url === '/api/logout' && Auth::check());
-
-            if ($isAdminAuditRoute) {
+            // Auditoría centralizada: registra páginas del panel y cualquier
+            // endpoint protegido por roles/permisos administrativos.
+            // Se ejecuta después de que todos los middlewares hayan autorizado.
+            if ($this->isAdminActivity($url, $route)) {
                 AuditLogger::record($method, $url, $route['handler']);
             }
 
@@ -531,6 +522,51 @@ class Router
             'path' =>
                 $url
         ]);
+    }
+
+    /**
+     * Determina si una solicitud pertenece al panel administrativo.
+     *
+     * Además de las rutas /admin y /api/admin, reconoce cualquier API
+     * protegida por roles administrativos o permisos de módulos del panel.
+     * Así, las nuevas acciones AJAX quedan auditadas automáticamente sin
+     * tener que mantener una lista manual de endpoints.
+     */
+    private function isAdminActivity(string $url, array $route): bool
+    {
+        if (
+            $url === '/admin' ||
+            str_starts_with($url, '/admin/') ||
+            str_starts_with($url, '/api/admin/')
+        ) {
+            return true;
+        }
+
+        foreach (($route['middlewares'] ?? []) as $middleware) {
+            if (!is_array($middleware) || count($middleware) < 3) {
+                continue;
+            }
+
+            [$class, $method, $allowed] = $middleware;
+            $method = strtolower((string)$method);
+            $allowed = is_array($allowed) ? $allowed : [];
+
+            if (
+                in_array($method, ['role', 'webrole'], true) &&
+                array_intersect(
+                    array_map('strtolower', $allowed),
+                    ['superadmin', 'admin', 'staff']
+                )
+            ) {
+                return true;
+            }
+
+            if (in_array($method, ['anypermission', 'webanypermission'], true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**
