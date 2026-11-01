@@ -57,6 +57,8 @@ class Auth
             session_regenerate_id(true);
         }
 
+        // A new authenticated principal must not inherit pre-login CSRF state.
+        unset($_SESSION['_csrf_token']);
         $_SESSION['user_id'] = (int) $user['id'];
         $_SESSION['user_email'] = (string) ($user['email'] ?? '');
         $_SESSION['user_name'] = trim(
