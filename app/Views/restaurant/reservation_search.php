@@ -24,7 +24,7 @@
                     <h1>Consulta tu reserva</h1>
 
                     <p>
-                        Ingresa tu código de reserva o tu correo electrónico
+                        Ingresa el código de reserva y el correo electrónico asociado
                         para consultar los detalles de tu reserva.
                     </p>
 
@@ -50,7 +50,7 @@
                                     for="reservationSearchInput"
                                     class="form-label"
                                 >
-                                    Código de reserva o correo electrónico
+                                    Código de reserva
                                 </label>
 
                                 <div class="reservation-search-input">
@@ -64,9 +64,9 @@
                                         id="reservationSearchInput"
                                         name="search"
                                         class="form-control"
-                                        placeholder="Ej. RSV-1FB7BF o correo@ejemplo.com"
+                                        placeholder="Ej. RSV-1FB7BF"
                                         autocomplete="off"
-                                        maxlength="150"
+                                        maxlength="40"
                                     >
 
                                 </div>
@@ -75,6 +75,23 @@
                                     class="invalid-feedback"
                                     id="reservationSearchError"
                                 ></div>
+
+                                <label for="reservationSearchEmail" class="form-label mt-3">
+                                    Correo electrónico asociado a la reserva
+                                </label>
+                                <div class="reservation-search-input">
+                                    <i class="fa-solid fa-envelope"></i>
+                                    <input
+                                        type="email"
+                                        id="reservationSearchEmail"
+                                        name="email"
+                                        class="form-control"
+                                        placeholder="correo@ejemplo.com"
+                                        autocomplete="email"
+                                        maxlength="190"
+                                    >
+                                </div>
+                                <div class="invalid-feedback" id="reservationSearchEmailError"></div>
 
                             </div>
 
@@ -124,8 +141,7 @@
 
                             <i class="fa-solid fa-circle-info"></i>
 
-                            Puedes buscar utilizando tu código de reserva
-                            <strong>o</strong> tu correo electrónico.
+                            Por seguridad, se requieren ambos datos: código de reserva y correo electrónico.
 
                         </div>
 
