@@ -505,6 +505,9 @@ $branchesActive =
     endforeach;
     ?>
 
+    <!-- Escala tipográfica global del panel: debe cargarse después de los CSS de cada módulo. -->
+    <link rel="stylesheet"
+          href="<?= APP_URL ?>/public/css/admin-typography.css?v=<?= (int) filemtime(__DIR__ . '/../../../public/css/admin-typography.css') ?>">
 
     <!-- =========================================================
          CHART.JS
