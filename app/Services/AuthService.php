@@ -144,9 +144,7 @@ class AuthService
          */
         if (!$user) {
 
-            error_log(
-                "[AUTH] Usuario no encontrado: {$email}"
-            );
+            error_log('[AUTH] Login rejected: account not found.');
 
             throw new DomainException(
                 'Credenciales incorrectas',
@@ -166,12 +164,10 @@ class AuthService
             (int) $user['is_active'] !== 1
         ) {
 
-            error_log(
-                "[AUTH] Usuario inactivo: {$email}"
-            );
+            error_log('[AUTH] Login rejected: inactive account.');
 
             throw new DomainException(
-                'Usuario inactivo en el sistema',
+                'Credenciales incorrectas',
                 401
             );
         }
@@ -185,13 +181,11 @@ class AuthService
                 ->isLocked($userId)
         ) {
 
-            error_log(
-                "[AUTH] Usuario bloqueado: {$email}"
-            );
+            error_log('[AUTH] Login rejected: account temporarily restricted.');
 
             throw new DomainException(
-                'La cuenta está temporalmente bloqueada. Intenta nuevamente más tarde.',
-                429
+                'Credenciales incorrectas',
+                401
             );
         }
 
@@ -215,9 +209,7 @@ class AuthService
                     (int) $user['id']
                 );
 
-            error_log(
-                "[AUTH] password_verify() falló para: {$email}"
-            );
+            error_log('[AUTH] Login rejected: invalid credentials.');
 
             /*
              * Después de registrar el intento
