@@ -5,6 +5,9 @@ class AuditLogController extends Controller
     public function index(): void
     {
         $repository = new AuditLogRepository();
+        $currentUser = Auth::user() ?? [];
+        $isSuperAdmin = strtolower((string)($currentUser['role_name'] ?? '')) === 'superadmin';
+        $branchScope = $isSuperAdmin ? null : (int)($currentUser['branch_id'] ?? 0);
         $filters = [
             'search' => trim((string)($_GET['search'] ?? '')),
             'module' => trim((string)($_GET['module'] ?? '')),
@@ -20,17 +23,17 @@ class AuditLogController extends Controller
 
         $page = max(1, (int)($_GET['page'] ?? 1));
         $perPage = 25;
-        $total = $repository->count($filters);
+        $total = $repository->count($filters, $branchScope);
         $pages = max(1, (int)ceil($total / $perPage));
         $page = min($page, $pages);
-        $logs = $repository->paginate($filters, $perPage, ($page - 1) * $perPage);
+        $logs = $repository->paginate($filters, $perPage, ($page - 1) * $perPage, $branchScope);
 
         $this->view('admin/layout', [
             'contentView' => __DIR__ . '/../Views/admin/audit-logs.php',
             'auditLogs' => $logs,
             'auditFilters' => $filters,
-            'auditStats' => $repository->stats(),
-            'auditOptions' => $repository->filterOptions(),
+            'auditStats' => $repository->stats($branchScope),
+            'auditOptions' => $repository->filterOptions($branchScope),
             'auditPagination' => ['page' => $page, 'pages' => $pages, 'total' => $total, 'per_page' => $perPage]
         ]);
     }
