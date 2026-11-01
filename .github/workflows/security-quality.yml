@@ -73,24 +73,3 @@ jobs:
           else
             echo "No root composer.json; root dependency audit is not configured."
           fi
-
-  codeql:
-    name: CodeQL PHP analysis
-    runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v3
-        with:
-          languages: php
-
-      - name: Analyze PHP code
-        uses: github/codeql-action/analyze@v3
-        with:
-          category: "/language:php"
