@@ -1797,7 +1797,7 @@ textarea.is-valid {
 }
 .bt-contact-hero {
     min-height: 350px;
-    margin-top: 0;
+    margin-top: 100px;
     background:
         radial-gradient(ellipse at 82% 18%, rgba(124, 58, 237, .34), transparent 34%),
         radial-gradient(ellipse at 58% 110%, rgba(59, 130, 246, .17), transparent 38%),
