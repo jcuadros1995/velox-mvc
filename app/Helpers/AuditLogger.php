@@ -73,7 +73,13 @@ class AuditLogger
     {
         $segments = array_values(array_filter(explode('/', trim($path, '/'))));
         $isApi = str_starts_with($path, '/api/');
-        if (str_starts_with($path, '/api/admin/')) {\n            $modulePath = array_slice($segments, 2);\n        } elseif ($isApi) {\n            $modulePath = array_slice($segments, 1);\n        } else {\n            $modulePath = array_slice($segments, 1);\n        }
+        if (str_starts_with($path, '/api/admin/')) {
+            $modulePath = array_slice($segments, 2);
+        } elseif ($isApi) {
+            $modulePath = array_slice($segments, 1);
+        } else {
+            $modulePath = array_slice($segments, 1);
+        }
         $moduleKey = strtolower((string)($modulePath[0] ?? 'general'));
         $modules = [
             'dashboard' => 'Dashboard', 'reservations' => 'Reservas',
