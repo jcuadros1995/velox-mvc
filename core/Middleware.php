@@ -262,6 +262,25 @@ class Middleware
         }
     }
 
+    /**
+     * Consulta permisos para construir interfaces sin emitir respuestas 403.
+     * Mantiene exactamente las mismas reglas de permisos efectivos que las rutas.
+     */
+    public static function canAnyPermission(array $permissions): bool
+    {
+        if (!Auth::check()) {
+            return false;
+        }
+
+        foreach ($permissions as $permission) {
+            if (self::userHasPermission((string) $permission)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     /** API: permite acceso si el usuario tiene al menos uno de los permisos. */
     public static function anyPermission(array $permissions): bool
     {
