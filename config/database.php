@@ -28,14 +28,10 @@ class Database
         $host = self::env('DB_HOST', '127.0.0.1');
         $port = self::env('DB_PORT', '3306');
         $name = self::env('DB_NAME', 'velox_core');
-        $user = self::env('DB_USER');
-        $pass = self::env('DB_PASSWORD');
+        $user = self::env('DB_USER', 'root');
+        $pass = self::env('DB_PASSWORD', '');
         $charset = 'utf8mb4';
 
-        if ($user === '') {
-            error_log('[DATABASE] DB_USER is not configured.');
-            throw new RuntimeException('Database configuration is unavailable. Check your local .env file.');
-        }
 
         $isLoopback = in_array(strtolower($host), ['127.0.0.1', 'localhost', '::1'], true);
         $isLocalRootWithoutPassword = in_array($appEnv, ['local', 'development'], true)
