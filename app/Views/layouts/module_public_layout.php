@@ -176,5 +176,6 @@ foreach (array_unique($modulePublicCss) as $cssFile):
 <script src="<?= APP_URL ?>/public/js/<?= htmlspecialchars($script, ENT_QUOTES, 'UTF-8') ?>.js"></script>
 <?php endif; ?>
 
+<script src="<?= APP_URL ?>/public/js/csrf.js"></script>
 </body>
 </html>
