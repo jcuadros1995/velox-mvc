@@ -2225,3 +2225,10 @@ textarea.is-valid {
         transition-duration:.01ms !important;
     }
 }
+
+
+/* Ajuste de separación: evita el hueco entre navbar y hero. */
+.bt-events-page .bt-events-hero { margin-top: 0 !important; }
+@media (max-width: 700px) {
+    .bt-events-page .bt-events-hero { margin-top: 0 !important; }
+}
