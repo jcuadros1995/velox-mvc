@@ -86,7 +86,7 @@ class AuditLogger
         ];
         $module = $modules[$moduleKey] ?? ucfirst(str_replace('-', ' ', $moduleKey));
 
-        $actionKey = strtolower((string)($modulePath[1] ?? 'index'));
+        $actionKey = strtolower((string)(count($modulePath) > 1 ? end($modulePath) : 'index'));
         if (!$isApi && strtoupper($method) === 'GET' && in_array($actionKey, ['index', 'dashboard', ''], true)) {
             $action = 'Consulta de módulo';
         } elseif (str_contains($actionKey, 'login')) {
