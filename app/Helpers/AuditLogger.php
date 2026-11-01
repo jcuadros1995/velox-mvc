@@ -73,7 +73,7 @@ class AuditLogger
     {
         $segments = array_values(array_filter(explode('/', trim($path, '/'))));
         $isApi = str_starts_with($path, '/api/');
-        $modulePath = $isApi ? array_slice($segments, 2) : array_slice($segments, 1);
+        if (str_starts_with($path, '/api/admin/')) {\n            $modulePath = array_slice($segments, 2);\n        } elseif ($isApi) {\n            $modulePath = array_slice($segments, 1);\n        } else {\n            $modulePath = array_slice($segments, 1);\n        }
         $moduleKey = strtolower((string)($modulePath[0] ?? 'general'));
         $modules = [
             'dashboard' => 'Dashboard', 'reservations' => 'Reservas',
@@ -82,7 +82,7 @@ class AuditLogger
             'events' => 'Eventos', 'users' => 'Usuarios',
             'branches' => 'Sedes', 'settings' => 'Configuración',
             'profile' => 'Perfil', 'orders' => 'Pedidos',
-            'payments' => 'Pagos', 'audit-logs' => 'Auditoría'
+            'payments' => 'Pagos', 'audit-logs' => 'Auditoría',\n            'metrics' => 'Indicadores', 'email' => 'Correo', 'notifications' => 'Notificaciones'
         ];
         $module = $modules[$moduleKey] ?? ucfirst(str_replace('-', ' ', $moduleKey));
 
