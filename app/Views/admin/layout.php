@@ -208,6 +208,9 @@ $reservationsActive =
                 true
         );
 
+$auditLogsActive = $adminMenuActive('/admin/audit-logs', true);
+$adminCanViewAuditLogs = $adminIsSuperAdmin || $adminIsAdmin;
+
 /*
 |--------------------------------------------------------------------------
 | Módulos operativos disponibles
@@ -466,6 +469,10 @@ $branchesActive =
             href="<?= APP_URL ?>/public/css/settings.css"
     >
 
+    <?php if ($adminCanViewAuditLogs): ?>
+        <link rel="stylesheet" href="<?= APP_URL ?>/public/css/admin-audit-logs.css?v=1">
+    <?php endif; ?>
+
     <?php
     // Hojas de estilo específicas de cada módulo administrativo.
     $moduleAdminPath = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
@@ -684,6 +691,18 @@ $branchesActive =
                        class="nav-link <?= $pagesActive ? 'active' : '' ?>">
                         <i class="fa-solid fa-file-lines nav-icon"></i>
                         <span class="nav-text">Páginas públicas</span>
+                    </a>
+                </li>
+            <?php endif; ?>
+
+
+            <?php if ($adminCanViewAuditLogs): ?>
+                <li class="sidebar-label">Seguridad y control</li>
+                <li class="nav-item">
+                    <a href="<?= APP_URL ?>/admin/audit-logs"
+                       class="nav-link <?= $auditLogsActive ? 'active' : '' ?>">
+                        <i class="fa-solid fa-shield-halved nav-icon"></i>
+                        <span class="nav-text">Auditoría y actividad</span>
                     </a>
                 </li>
             <?php endif; ?>
