@@ -425,7 +425,7 @@ class AuthService
     public function resetPassword(
         string $token,
         string $password
-    ): void {
+    ): array {
 
         $token = trim($token);
 
@@ -549,6 +549,14 @@ class AuthService
             $userId,
             'password_reset'
         );
+
+        // Devolver solo la identidad necesaria para auditoría; nunca el token.
+        return [
+            'id' => $userId,
+            'email' => (string)($tokenData['email'] ?? ''),
+            'first_name' => (string)($tokenData['first_name'] ?? ''),
+            'last_name' => (string)($tokenData['last_name'] ?? '')
+        ];
     }
 
     /**
