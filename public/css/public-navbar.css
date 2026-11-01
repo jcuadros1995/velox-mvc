@@ -256,3 +256,142 @@
         animation-iteration-count: 1 !important;
     }
 }
+
+
+/* =========================================================
+   NAVBAR REFINEMENT — compact hierarchy and no text wrapping
+========================================================= */
+.public-navbar {
+    padding: .72rem 0;
+}
+
+.public-navbar > .container {
+    min-height: 58px;
+    flex-wrap: nowrap;
+}
+
+.public-navbar .navbar-brand {
+    display: inline-flex;
+    align-items: center;
+    min-width: 0;
+    max-width: 310px;
+    margin-right: clamp(1rem, 2vw, 2rem);
+}
+
+.public-navbar .velox-brand-name {
+    display: block;
+    overflow: hidden;
+    max-width: 245px;
+    color: #171923;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.public-navbar .navbar-collapse {
+    min-width: 0;
+}
+
+.public-navbar .navbar-nav {
+    flex-wrap: nowrap;
+    gap: .15rem;
+}
+
+.public-navbar .navbar-nav .nav-link {
+    gap: .48rem;
+    min-height: 42px;
+    padding: .62rem .72rem;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.public-navbar .navbar-nav .nav-link > span:not(.store-cart-nav-count) {
+    white-space: nowrap;
+}
+
+.public-navbar .nav-account-item {
+    flex: 0 0 auto;
+    margin-left: .75rem;
+}
+
+.public-navbar .nav-account-item .btn-velox-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: .65rem;
+    min-width: 154px;
+    min-height: 44px;
+    padding: .7rem 1rem;
+    white-space: nowrap;
+    line-height: 1;
+}
+
+.public-navbar .dropdown-menu.velox-dropdown {
+    min-width: 270px;
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+    .public-navbar .navbar-brand {
+        max-width: 235px;
+        margin-right: .65rem;
+    }
+
+    .public-navbar .velox-brand-name {
+        max-width: 175px;
+        font-size: 1.02rem;
+    }
+
+    .public-navbar .navbar-nav {
+        gap: 0;
+    }
+
+    .public-navbar .navbar-nav .nav-link {
+        gap: .35rem;
+        padding-right: .5rem;
+        padding-left: .5rem;
+        font-size: .79rem;
+    }
+
+    .public-navbar .nav-account-item {
+        margin-left: .35rem;
+    }
+
+    .public-navbar .nav-account-item .btn-velox-primary {
+        min-width: 135px;
+        padding-right: .75rem;
+        padding-left: .75rem;
+        font-size: .78rem;
+    }
+}
+
+@media (max-width: 991.98px) {
+    .public-navbar > .container {
+        flex-wrap: wrap;
+    }
+
+    .public-navbar .navbar-brand {
+        max-width: calc(100% - 60px);
+        margin-right: auto;
+    }
+
+    .public-navbar .velox-brand-name {
+        max-width: min(65vw, 300px);
+    }
+
+    .public-navbar .navbar-nav {
+        flex-wrap: nowrap;
+    }
+
+    .public-navbar .navbar-nav .nav-link {
+        justify-content: flex-start;
+        line-height: 1.25;
+    }
+
+    .public-navbar .nav-account-item {
+        margin: .55rem 0 0 !important;
+    }
+
+    .public-navbar .nav-account-item .btn-velox-primary {
+        width: 100%;
+        min-width: 0;
+    }
+}
