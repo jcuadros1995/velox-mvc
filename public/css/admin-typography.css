@@ -1,0 +1,40 @@
+/*
+|--------------------------------------------------------------------------
+| VELOX ADMIN — TYPOGRAPHY STANDARD
+|--------------------------------------------------------------------------
+| Escala tipográfica uniforme de 13px en todas las vistas del administrador.
+| Se carga al final del layout para prevalecer sobre estilos de módulos.
+*/
+
+.app-container,
+.app-container :where(
+    h1, h2, h3, h4, h5, h6,
+    p, span, a, label, small, strong, b, em, li, dt, dd,
+    th, td, caption, legend, figcaption,
+    button, input, select, textarea, option,
+    .form-control, .form-select, .form-label, .form-text,
+    .btn, .badge, .nav-link, .dropdown-item,
+    .breadcrumb, .pagination, .page-link,
+    .card-title, .card-text, .modal-title,
+    .alert, .toast, .tooltip, .popover,
+    .table, .table th, .table td
+) {
+    font-size: 13px !important;
+}
+
+/* Mantener los iconos visuales con su tamaño definido por cada componente. */
+.app-container :where(
+    i, svg, .fa, [class^="fa-"], [class*=" fa-"],
+    .bi, [class^="bi-"], [class*=" bi-"],
+    .nav-icon, .submenu-arrow, .icon
+) {
+    /* No imponer font-size: los tamaños propios de los iconos se conservan. */
+}
+
+/* Modales y alertas que Bootstrap/SweetAlert renderizan fuera del contenedor. */
+body > .modal,
+body > .modal :where(h1,h2,h3,h4,h5,h6,p,span,a,label,small,strong,li,th,td,button,input,select,textarea,.btn,.form-control,.form-select,.form-label,.modal-title),
+.swal2-container :where(h1,h2,h3,h4,h5,h6,p,span,label,small,strong,button,input,textarea,.swal2-title,.swal2-html-container,.swal2-confirm,.swal2-cancel),
+.tooltip, .popover {
+    font-size: 13px !important;
+}
