@@ -154,6 +154,11 @@ foreach (array_unique($modulePublicCss) as $cssFile):
 <link rel="stylesheet" href="<?= APP_URL ?>/public/css/<?= htmlspecialchars($cssFile, ENT_QUOTES, 'UTF-8') ?>?v=<?= (int) filemtime($cssPath) ?>">
 <?php endif; endforeach; ?>
 
+    <?= Csrf::meta() ?>
+
+    <script>
+        window.CSRF_TOKEN = <?= json_encode(Csrf::token(), JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT) ?>;
+    </script>
 </head>
 <body>
 
