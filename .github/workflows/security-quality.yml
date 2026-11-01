@@ -80,7 +80,6 @@ jobs:
         uses: github/codeql-action/init@v3
         with:
           languages: php
-          build-mode: none
 
       - name: Analyze PHP code
         uses: github/codeql-action/analyze@v3
