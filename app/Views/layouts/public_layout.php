@@ -137,6 +137,7 @@ $siteFaviconUrl =
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= APP_URL ?>/public/js/toast.js"></script>
 <script src="<?= APP_URL ?>/public/js/cart.js"></script>
+<script src="<?= APP_URL ?>/public/js/public-navbar.js"></script>
 
 <?php if (isset($script)): ?>
     <script src="<?= APP_URL ?>/public/js/<?= $script ?>.js"></script>
