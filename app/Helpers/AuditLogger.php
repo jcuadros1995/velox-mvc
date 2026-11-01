@@ -23,6 +23,35 @@ class AuditLogger
             $branchId = isset($user['branch_id']) ? (int)$user['branch_id'] : null;
 
             [$module, $action] = self::describe($method, $path, $handler);
+
+            // Para cambios de configuración guardamos únicamente los nombres
+            // de los campos enviados; nunca sus valores ni archivos/credenciales.
+            if (
+                in_array($module, ['Configuración general', 'Configuración de sedes'], true) &&
+                strtoupper($method) !== 'GET'
+            ) {
+                $fieldNames = array_merge(
+                    array_keys($_POST ?? []),
+                    array_keys($_FILES ?? [])
+                );
+                $safeFields = [];
+                foreach ($fieldNames as $fieldName) {
+                    $fieldName = preg_replace('/[^a-zA-Z0-9_.-]/', '', (string)$fieldName);
+                    if (
+                        $fieldName === '' ||
+                        preg_match('/password|passwd|secret|token|credential|private|api.?key|csrf/i', $fieldName)
+                    ) {
+                        continue;
+                    }
+                    $safeFields[] = $fieldName;
+                }
+                $safeFields = array_slice(array_values(array_unique($safeFields)), 0, 5);
+                if ($safeFields) {
+                    $action .= ' · Campos: ' . implode(', ', $safeFields);
+                }
+                $action = substr($action, 0, 160);
+            }
+
             $ip = self::clientIp();
 
             $db = Database::getConnection();
@@ -133,7 +162,6 @@ class AuditLogger
                 'index' => 'Consulta de configuración de sedes',
                 'store' => 'Creación de sede',
                 'update' => 'Actualización de datos de sede',
-                'save-hours' => 'Actualización de horarios de sede',
                 'save-hours' => 'Actualización de horarios de sede',
                 'images' => 'Gestión de imágenes de sede',
                 'save' => 'Actualización de imágenes y recursos',
