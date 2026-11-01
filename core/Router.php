@@ -542,6 +542,15 @@ class Router
             return true;
         }
 
+        // El cierre de sesión también forma parte de la trazabilidad del panel.
+        if ($url === '/api/logout' && Auth::check()) {
+            $user = Auth::user() ?? [];
+            $role = strtolower((string)($user['role_name'] ?? ''));
+            if (in_array($role, ['superadmin', 'admin', 'staff'], true)) {
+                return true;
+            }
+        }
+
         foreach (($route['middlewares'] ?? []) as $middleware) {
             if (!is_array($middleware) || count($middleware) < 3) {
                 continue;
