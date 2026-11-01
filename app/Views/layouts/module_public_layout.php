@@ -154,6 +154,9 @@ foreach (array_unique($modulePublicCss) as $cssFile):
 <link rel="stylesheet" href="<?= APP_URL ?>/public/css/<?= htmlspecialchars($cssFile, ENT_QUOTES, 'UTF-8') ?>?v=<?= (int) filemtime($cssPath) ?>">
 <?php endif; endforeach; ?>
 
+    <!-- Navbar público compartido: se carga después de los estilos específicos de cada página. -->
+    <link rel="stylesheet" href="<?= APP_URL ?>/public/css/public-navbar.css?v=<?= (int) @filemtime(__DIR__ . '/../../../public/css/public-navbar.css') ?>">
+
     <?= Csrf::meta() ?>
 
     <script>
@@ -162,7 +165,7 @@ foreach (array_unique($modulePublicCss) as $cssFile):
 </head>
 <body>
 
-<?php require_once __DIR__ . '/partials/module-navbar.php'; ?>
+<?php require_once __DIR__ . '/partials/navbar.php'; ?>
 
 <!-- Inyección dinámica del contenido -->
 <?php require_once $contentView; ?>
@@ -171,6 +174,7 @@ foreach (array_unique($modulePublicCss) as $cssFile):
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?= APP_URL ?>/public/js/toast.js"></script>
 <script src="<?= APP_URL ?>/public/js/cart.js"></script>
+<script src="<?= APP_URL ?>/public/js/public-navbar.js?v=<?= (int) @filemtime(__DIR__ . '/../../../public/js/public-navbar.js') ?>"></script>
 
 <?php if (isset($script) && preg_match('/^[a-z0-9_-]+$/i', (string)$script)): ?>
 <script src="<?= APP_URL ?>/public/js/<?= htmlspecialchars($script, ENT_QUOTES, 'UTF-8') ?>.js"></script>
