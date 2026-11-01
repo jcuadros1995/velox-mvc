@@ -1433,6 +1433,7 @@ foreach ($moduleAdminScripts as $jsFile):
 endforeach;
 ?>
 
+<script src="<?= APP_URL ?>/public/js/csrf.js"></script>
 </body>
 
 </html>
